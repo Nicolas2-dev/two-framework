@@ -3,14 +3,15 @@
 namespace Two\Database;
 
 
-use Two\Events\Dispatcher;
-use Two\Database\Query\Processors\Processor;
-
-use Doctrine\DBAL\Connection as DoctrineConnection;
-
 use PDO;
 use Closure;
+
 use DateTime;
+
+use Two\Support\Str;
+use Two\Events\Dispatcher;
+use Two\Database\Query\Processors\Processor;
+use Doctrine\DBAL\Connection as DoctrineConnection;
 
 
 class Connection implements ConnectionInterface
@@ -658,7 +659,7 @@ class Connection implements ConnectionInterface
      */
     protected function causedByLostConnection(QueryException $e)
     {
-        return str_contains($e->getMessage(), array(
+        return Str::contains($e->getMessage(), array(
             'server has gone away',
             'no connection to the server',
             'Lost connection',
