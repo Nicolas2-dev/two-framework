@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Routing;
 
 use Two\Routing\Route;
@@ -10,14 +15,14 @@ use Symfony\Component\Routing\Route as SymfonyRoute;
 class RouteCompiler
 {
     /**
-     * The route instance.
+     * L'instance d'itinéraire.
      *
      * @var \Two\Routing\Route
      */
     protected $route;
 
     /**
-     * Create a new Route compiler instance.
+     * Créez une nouvelle instance du compilateur Route.
      *
      * @param  \Two\Routing\Route  $route
      * @return void
@@ -28,7 +33,7 @@ class RouteCompiler
     }
 
     /**
-     * Compile the route.
+     * Compilez l'itinéraire.
      *
      * @return \Symfony\Component\Routing\CompiledRoute
      */
@@ -51,7 +56,7 @@ class RouteCompiler
     }
 
     /**
-     * Get the optional parameters for the route.
+     * Obtenez les paramètres facultatifs pour l’itinéraire.
      *
      * @param string $uri
      *
@@ -65,7 +70,7 @@ class RouteCompiler
     }
 
     /**
-     * Get the inner Route instance.
+     * Obtenez l’instance de route interne.
      *
      * @return \Two\Routing\Route
      */

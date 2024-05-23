@@ -1,10 +1,16 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support;
 
-use Two\Support\Traits\MacroableTrait;
-
 use Closure;
+
+use Two\Collection\Collection;
+use Two\Support\Traits\MacroableTrait;
 
 
 class Arr

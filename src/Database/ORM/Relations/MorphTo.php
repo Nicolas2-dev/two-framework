@@ -1,45 +1,50 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM\Relations;
 
 use Two\Database\ORM\Model;
 use Two\Database\ORM\Builder;
 use Two\Database\ORM\Collection;
-use Two\Support\Collection as BaseCollection;
+use Two\Collection\Collection as BaseCollection;
 
 
 class MorphTo extends BelongsTo
 {
     /**
-     * The type of the polymorphic relation.
+     * Le type de relation polymorphe.
      *
      * @var string
      */
     protected $morphType;
 
     /**
-     * The models whose relations are being eager loaded.
+     * Les modèles dont les relations sont chargées avec impatience.
      *
      * @var \Two\Database\ORM\Collection
      */
     protected $models;
 
     /**
-     * All of the models keyed by ID.
+     * Tous les modèles saisis par ID.
      *
      * @var array
      */
     protected $dictionary = array();
 
     /*
-     * Indicates if soft-deleted model instances should be fetched.
+     * Indique si les instances de modèle supprimées de manière réversible doivent être récupérées.
      *
      * @var bool
      */
     protected $withTrashed = false;
 
     /**
-     * Create a new belongs to relationship instance.
+     * Créez une nouvelle instance de relation Appartient à.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Model  $parent
@@ -57,7 +62,7 @@ class MorphTo extends BelongsTo
     }
 
     /**
-     * Set the constraints for an eager load of the relation.
+     * Définissez les contraintes pour un chargement hâtif de la relation.
      *
      * @param  array  $models
      * @return void
@@ -68,7 +73,7 @@ class MorphTo extends BelongsTo
     }
 
     /**
-     * Build a dictionary with the models.
+     * Construisez un dictionnaire avec les modèles.
      *
      * @param  \Two\Database\ORM\Collection  $models
      * @return void
@@ -89,7 +94,7 @@ class MorphTo extends BelongsTo
     }
 
     /**
-     * Match the eagerly loaded results to their parents.
+     * Faites correspondre les résultats chargés avec impatience à leurs parents.
      *
      * @param  array   $models
      * @param  \Two\Database\ORM\Collection  $results
@@ -102,7 +107,7 @@ class MorphTo extends BelongsTo
     }
 
     /**
-     * Associate the model instance to the given parent.
+     * Associez l'instance de modèle au parent donné.
      *
      * @param  \Two\Database\ORM\Model  $model
      * @return \Two\Database\ORM\Model
@@ -117,9 +122,9 @@ class MorphTo extends BelongsTo
     }
 
     /**
-     * Get the results of the relationship.
+     * Obtenez les résultats de la relation.
      *
-     * Called via eager load method of ORM query builder.
+     * Appelé via la méthode de chargement impatient du générateur de requêtes ORM.
      *
      * @return mixed
      */
@@ -133,7 +138,7 @@ class MorphTo extends BelongsTo
     }
 
     /**
-     * Match the results for a given type to their parents.
+     * Faites correspondre les résultats pour un type donné à leurs parents.
      *
      * @param  string  $type
      * @param  \Two\Database\ORM\Collection  $results
@@ -153,7 +158,7 @@ class MorphTo extends BelongsTo
     }
 
     /**
-     * Get all of the relation results for a type.
+     * Obtenez tous les résultats de relation pour un type.
      *
      * @param  string  $type
      * @return \Two\Database\ORM\Collection
@@ -168,11 +173,12 @@ class MorphTo extends BelongsTo
 
         $query = $this->useWithTrashed($query);
 
+        // Collection
         return $query->whereIn($key, $this->gatherKeysByType($type)->all())->get();
     }
 
     /**
-     * Gather all of the foreign keys for a given type.
+     * Rassemblez toutes les clés étrangères pour un type donné.
      *
      * @param  string  $type
      * @return array
@@ -194,7 +200,7 @@ class MorphTo extends BelongsTo
     }
 
     /**
-     * Create a new model instance by type.
+     * Créez une nouvelle instance de modèle par type.
      *
      * @param  string  $type
      * @return \Two\Database\ORM\Model
@@ -205,7 +211,7 @@ class MorphTo extends BelongsTo
     }
 
     /**
-     * Get the foreign key "type" name.
+     * Obtenez le nom du « type » de clé étrangère.
      *
      * @return string
      */
@@ -215,7 +221,7 @@ class MorphTo extends BelongsTo
     }
 
     /**
-     * Get the dictionary used by the relationship.
+     * Obtenez le dictionnaire utilisé par la relation.
      *
      * @return array
      */
@@ -225,7 +231,7 @@ class MorphTo extends BelongsTo
     }
 
     /**
-     * Fetch soft-deleted model instances with query
+     * Récupérer les instances de modèle supprimées de manière logicielle avec une requête
      *
      * @return $this
      */
@@ -239,7 +245,7 @@ class MorphTo extends BelongsTo
     }
 
     /**
-     * Return trashed models with query if told so
+     * Renvoyez les modèles supprimés avec une requête si cela vous est demandé
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @return \Two\Database\ORM\Builder

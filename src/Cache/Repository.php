@@ -1,14 +1,20 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Cache;
-
-use Two\Support\Traits\MacroableTrait;
-
-use Carbon\Carbon;
 
 use Closure;
 use DateTime;
 use ArrayAccess;
+
+use Two\Support\Traits\MacroableTrait;
+use Two\Cache\Contracts\StoreInterface;
+
+use Carbon\Carbon;
 
 
 class Repository implements ArrayAccess
@@ -18,14 +24,14 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * The cache store implementation.
+     * L’implémentation du cache store.
      *
-     * @var \Two\Cache\StoreInterface
+     * @var \Two\Cache\Contracts\StoreInterface
      */
     protected $store;
 
     /**
-     * The default number of minutes to store items.
+     * Le nombre de minutes par défaut pour stocker les éléments.
      *
      * @var int
      */
@@ -33,9 +39,9 @@ class Repository implements ArrayAccess
 
 
     /**
-     * Create a new cache repository instance.
+     * Créez une nouvelle instance de référentiel de cache.
      *
-     * @param  \Two\Cache\StoreInterface  $store
+     * @param  \Two\Cache\Contracts\StoreInterface  $store
      */
     public function __construct(StoreInterface $store)
     {
@@ -43,7 +49,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Determine if an item exists in the cache.
+     * Déterminez si un élément existe dans le cache.
      *
      * @param  string  $key
      * @return bool
@@ -54,7 +60,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Retrieve an item from the cache by key.
+     * Récupérer un élément du cache par clé.
      *
      * @param  string  $key
      * @param  mixed   $default
@@ -72,7 +78,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Retrieve an item from the cache and delete it.
+     * Récupérez un élément du cache et supprimez-le.
      *
      * @param  string  $key
      * @param  mixed   $default
@@ -88,7 +94,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Store an item in the cache.
+     * Stocker un élément dans le cache.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -105,7 +111,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Store an item in the cache if the key does not exist.
+     * Stockez un élément dans le cache si la clé n'existe pas.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -124,7 +130,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Get an item from the cache, or store the default value.
+     * Récupérez un élément du cache ou stockez la valeur par défaut.
      *
      * @param  string  $key
      * @param  \DateTime|int  $minutes
@@ -133,9 +139,9 @@ class Repository implements ArrayAccess
      */
     public function remember($key, $minutes, Closure $callback)
     {
-        // If the item exists in the cache we will just return this immediately
-        // otherwise we will execute the given Closure and cache the result
-        // of that execution for the given number of minutes in storage.
+        // Si l'élément existe dans le cache, nous le renverrons immédiatement
+        // sinon nous exécuterons la fermeture donnée et mettrons en cache le résultat
+        // de cette exécution pendant le nombre de minutes de stockage donné.
 
         if (! is_null($value = $this->get($key))) {
             return $value;
@@ -149,7 +155,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Get an item from the cache, or store the default value forever.
+     * Récupérez un élément du cache ou stockez la valeur par défaut pour toujours.
      *
      * @param  string   $key
      * @param  \Closure  $callback
@@ -161,7 +167,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Get an item from the cache, or store the default value forever.
+     * Récupérez un élément du cache ou stockez la valeur par défaut pour toujours.
      *
      * @param  string   $key
      * @param  \Closure  $callback
@@ -169,9 +175,9 @@ class Repository implements ArrayAccess
      */
     public function rememberForever($key, Closure $callback)
     {
-        // If the item exists in the cache we will just return this immediately
-        // otherwise we will execute the given Closure and cache the result
-        // of that execution for the given number of minutes. It's easy.
+        // Si l'élément existe dans le cache, nous le renverrons immédiatement
+        // sinon nous exécuterons la fermeture donnée et mettrons en cache le résultat
+        // de cette exécution pendant le nombre de minutes donné. C'est facile.
 
         if (! is_null($value = $this->get($key))) {
             return $value;
@@ -183,7 +189,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Get the default cache time.
+     * Obtenez l'heure du cache par défaut.
      *
      * @return int
      */
@@ -193,7 +199,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Set the default cache time in minutes.
+     * Définissez la durée du cache par défaut en minutes.
      *
      * @param  int   $minutes
      * @return void
@@ -204,9 +210,9 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Get the cache store implementation.
+     * Obtenez l’implémentation du magasin de cache.
      *
-     * @return \Two\Cache\StoreInterface
+     * @return \Two\Cache\Contracts\StoreInterface
      */
     public function getStore()
     {
@@ -214,7 +220,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Determine if a cached value exists.
+     * Déterminez si une valeur mise en cache existe.
      *
      * @param  string  $key
      * @return bool
@@ -225,7 +231,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Retrieve an item from the cache by key.
+     * Récupérer un élément du cache par clé.
      *
      * @param  string  $key
      * @return mixed
@@ -236,7 +242,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Store an item in the cache for the default time.
+     * Stockez un élément dans le cache pendant la durée par défaut.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -248,7 +254,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Remove an item from the cache.
+     * Supprimer un élément du cache.
      *
      * @param  string  $key
      * @return void
@@ -259,7 +265,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Calculate the number of minutes with the given duration.
+     * Calculez le nombre de minutes avec la durée donnée.
      *
      * @param  \DateTime|int  $duration
      * @return int|null
@@ -276,7 +282,7 @@ class Repository implements ArrayAccess
     }
 
     /**
-     * Handle dynamic calls into macros or pass missing methods to the store.
+     * Gérez les appels dynamiques dans les macros ou transmettez les méthodes manquantes au magasin.
      *
      * @param  string  $method
      * @param  array   $parameters

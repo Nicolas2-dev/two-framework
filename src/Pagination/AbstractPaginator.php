@@ -1,118 +1,122 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Pagination;
 
-use Two\Contracts\HtmlableInterface;
-
-use Two\Support\Collection;
-
-use ArrayIterator;
 use Closure;
+use ArrayIterator;
 use RuntimeException;
+
+use Two\Collection\Collection;
+use Two\Application\Contracts\HtmlableInterface;
 
 
 abstract class AbstractPaginator implements HtmlableInterface
 {
     /**
-     * All of the items being paginated.
+     * Tous les éléments étant paginés.
      *
-     * @var \Two\Support\Collection
+     * @var \Two\Collection\Collection
      */
     protected $items;
 
     /**
-     * The number of items to be shown per page.
+     * Le nombre d'éléments à afficher par page.
      *
      * @var int
      */
     protected $perPage;
 
     /**
-     * The current page being "viewed".
+     * La page actuelle en cours de "visualisation".
      *
      * @var int
      */
     protected $currentPage;
 
     /**
-     * The base path to assign to all URLs.
+     * Le chemin de base à attribuer à toutes les URL.
      *
      * @var string
      */
     protected $path = '/';
 
     /**
-     * The query parameters to add to all URLs.
+     * Paramètres de requête à ajouter à toutes les URL.
      *
      * @var array
      */
     protected $query = array();
 
     /**
-     * The URL fragment to add to all URLs.
+     * Fragment d'URL à ajouter à toutes les URL.
      *
      * @var string|null
      */
     protected $fragment;
 
     /**
-     * The query string variable used to store the page.
+     * La variable de chaîne de requête utilisée pour stocker la page.
      *
      * @var string
      */
     protected $pageName = 'page';
 
     /**
-     * The number of links to display on each side of current page link.
+     * Le nombre de liens à afficher de chaque côté du lien de la page actuelle.
      *
      * @var int
      */
     public $onEachSide = 3;
 
     /**
-     * The URL Generator instance.
+     * L'instance du générateur d'URL.
      *
      * @var \Two\Pagination\UrlGenerator
      */
     protected $urlGenerator;
 
     /**
-     * The URL Generator resolver callback.
+     * Le rappel du résolveur du générateur d’URL.
      *
      * @var \Closure
      */
     protected static $urlGeneratorResolver;
 
     /**
-     * The current page resolver callback.
+     * Le rappel du résolveur de page actuel.
      *
      * @var \Closure
      */
     protected static $currentPathResolver;
 
     /**
-     * The current page resolver callback.
+     * Le rappel du résolveur de page actuel.
      *
      * @var \Closure
      */
     protected static $currentPageResolver;
 
     /**
-     * The view factory resolver callback.
+     * Le rappel du résolveur de fabrique de vues.
      *
      * @var \Closure
      */
     protected static $viewFactoryResolver;
 
     /**
-     * The default pagination view.
+     * La vue de pagination par défaut.
      *
      * @var string
      */
     public static $defaultView = 'Partials/Pagination/Default';
 
     /**
-     * The default "simple" pagination view.
+     * La vue de pagination "simple" par défaut.
      *
      * @var string
      */
@@ -120,7 +124,7 @@ abstract class AbstractPaginator implements HtmlableInterface
 
 
     /**
-     * Determine if the given value is a valid page number.
+     * Déterminez si la valeur donnée est un numéro de page valide.
      *
      * @param  int  $page
      * @return bool
@@ -131,7 +135,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get the URL for the previous page.
+     * Obtenez l'URL de la page précédente.
      *
      * @return string|null
      */
@@ -143,7 +147,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Create a range of pagination URLs.
+     * Créez une plage d'URL de pagination.
      *
      * @param  int  $start
      * @param  int  $end
@@ -159,7 +163,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get the URL for a given page number.
+     * Obtenez l'URL d'un numéro de page donné.
      *
      * @param  int  $page
      * @return string
@@ -174,7 +178,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get / set the URL fragment to be appended to URLs.
+     * Obtenez/définissez le fragment d’URL à ajouter aux URL.
      *
      * @param  string|null  $fragment
      * @return $this|string|null
@@ -191,7 +195,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Add a set of query string values to the paginator.
+     * Ajoutez un ensemble de valeurs de chaîne de requête au paginateur.
      *
      * @param  array|string  $keys
      * @param  string|null  $value
@@ -211,7 +215,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Add a query string value to the paginator.
+     * Ajoutez une valeur de chaîne de requête au paginateur.
      *
      * @param  string  $key
      * @param  string  $value
@@ -227,7 +231,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get the set of query string values to the paginator.
+     * Obtenez l’ensemble des valeurs de chaîne de requête au paginateur.
      *
      * @return array
      */
@@ -237,7 +241,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get the slice of items being paginated.
+     * Obtenez la tranche d’éléments en cours de pagination.
      *
      * @return array
      */
@@ -247,7 +251,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get the number of the first item in the slice.
+     * Obtenez le numéro du premier élément de la tranche.
      *
      * @return int
      */
@@ -259,7 +263,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get the number of the last item in the slice.
+     * Obtenez le numéro du dernier élément de la tranche.
      *
      * @return int
      */
@@ -271,7 +275,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get the number of items shown per page.
+     * Obtenez le nombre d’éléments affichés par page.
      *
      * @return int
      */
@@ -281,7 +285,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Determine if there are enough items to split into multiple pages.
+     * Déterminez s’il y a suffisamment d’éléments à diviser en plusieurs pages.
      *
      * @return bool
      */
@@ -291,7 +295,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Determine if the paginator is on the first page.
+     * Déterminez si le paginateur est sur la première page.
      *
      * @return bool
      */
@@ -301,7 +305,8 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get the current page.
+     * Obtenez la page actuelle.
+
      *
      * @return int
      */
@@ -311,7 +316,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get the query string variable used to store the page.
+     * Obtenez la variable de chaîne de requête utilisée pour stocker la page.
      *
      * @return string
      */
@@ -321,7 +326,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Set the query string variable used to store the page.
+     * Définissez la variable de chaîne de requête utilisée pour stocker la page.
      *
      * @param  string  $name
      * @return $this
@@ -334,7 +339,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get the base path to assign to all URLs.
+     * Obtenez le chemin de base à attribuer à toutes les URL.
      *
      * @return string
      */
@@ -344,7 +349,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Set the base path to assign to all URLs.
+     * Définissez le chemin de base à attribuer à toutes les URL.
      *
      * @param  string  $path
      * @return $this
@@ -357,7 +362,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Set the number of links to display on each side of current page link.
+     * Définissez le nombre de liens à afficher de chaque côté du lien de la page actuelle.
      *
      * @param  int  $count
      * @return this
@@ -370,7 +375,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get the URL Generator instance.
+     * Obtenez l'instance du générateur d'URL.
      *
      * @return \Two\Pagination\UrlGenerator
      */
@@ -380,7 +385,7 @@ abstract class AbstractPaginator implements HtmlableInterface
             return $this->urlGenerator;
         }
 
-        // Check if an URL Generator resolver was set.
+        // Vérifiez si un résolveur de générateur d'URL a été défini.
         else if (! isset(static::$urlGeneratorResolver)) {
             throw new RuntimeException("URL Generator resolver not set on Paginator.");
         }
@@ -389,7 +394,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Set the URL Generator resolver callback.
+     * Définissez le rappel du résolveur du générateur d'URL.
      *
      * @param  \Closure  $resolver
      * @return void
@@ -400,7 +405,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Resolve the current request path or return the default value.
+     * Résolvez le chemin de requête actuel ou renvoyez la valeur par défaut.
      *
      * @param  string  $pageName
      * @param  string  $default
@@ -416,7 +421,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Set the current request path resolver callback.
+     * Définissez le rappel actuel du résolveur de chemin de requête.
      *
      * @param  \Closure  $resolver
      * @return void
@@ -427,7 +432,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Resolve the current page or return the default value.
+     * Résolvez la page actuelle ou renvoyez la valeur par défaut.
      *
      * @param  string  $pageName
      * @param  int  $default
@@ -443,7 +448,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Set the current page resolver callback.
+     * Définissez le rappel du résolveur de page actuel.
      *
      * @param  \Closure  $resolver
      * @return void
@@ -454,9 +459,9 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get an instance of the view factory from the resolver.
+     * Obtenez une instance de la fabrique de vues à partir du résolveur.
      *
-     * @return \Two\Contracts\View\Factory
+     * @return \Two\View\Factory
      */
     public static function viewFactory()
     {
@@ -464,7 +469,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Set the view factory resolver callback.
+     * Définissez le rappel du résolveur de fabrique de vues.
      *
      * @param  \Closure  $resolver
      * @return void
@@ -475,7 +480,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Set the default pagination view.
+     * Définissez la vue de pagination par défaut.
      *
      * @param  string  $view
      * @return void
@@ -486,7 +491,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Set the default "simple" pagination view.
+     * Définissez la vue de pagination « simple » par défaut.
      *
      * @param  string  $view
      * @return void
@@ -497,7 +502,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get an iterator for the items.
+     * Obtenez un itérateur pour les éléments.
      *
      * @return \ArrayIterator
      */
@@ -507,7 +512,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Determine if the list of items is empty or not.
+     * Déterminez si la liste des éléments est vide ou non.
      *
      * @return bool
      */
@@ -517,7 +522,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get the number of items for the current page.
+     * Obtenez le nombre d'éléments pour la page actuelle.
      *
      * @return int
      */
@@ -527,9 +532,9 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get the paginator's underlying collection.
+     * Obtenez la collection sous-jacente du paginateur.
      *
-     * @return \Two\Support\Collection
+     * @return \Two\Collection\Collection
      */
     public function getItems()
     {
@@ -537,7 +542,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Set the paginator's underlying collection.
+     * Définissez la collection sous-jacente du paginateur.
      *
      * @param  mixed  $items
      * @return $this
@@ -550,7 +555,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Determine if the given item exists.
+     * Déterminez si l’élément donné existe.
      *
      * @param  mixed  $key
      * @return bool
@@ -561,7 +566,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Get the item at the given offset.
+     * Obtenez l'article au décalage donné.
      *
      * @param  mixed  $key
      * @return mixed
@@ -572,7 +577,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Set the item at the given offset.
+     * Définissez l'élément au décalage donné.
      *
      * @param  mixed  $key
      * @param  mixed  $value
@@ -584,7 +589,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Unset the item at the given key.
+     * Désactivez l'élément à la clé donnée.
      *
      * @param  mixed  $key
      * @return void
@@ -595,7 +600,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Render the contents of the paginator to HTML.
+     * Rendre le contenu du paginateur au format HTML.
      *
      * @return string
      */
@@ -605,7 +610,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Make dynamic calls into the collection.
+     * Effectuez des appels dynamiques dans la collection.
      *
      * @param  string  $method
      * @param  array  $parameters
@@ -617,7 +622,7 @@ abstract class AbstractPaginator implements HtmlableInterface
     }
 
     /**
-     * Render the contents of the paginator when casting to string.
+     * Rendre le contenu du paginateur lors de la conversion en chaîne.
      *
      * @return string
      */

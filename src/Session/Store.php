@@ -1,77 +1,83 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Session;
 
-use Two\Session\ExistenceAwareInterface;
-use Two\Session\SessionInterface;
+use SessionHandlerInterface;
+use InvalidArgumentException;
+
+use Two\Session\Contracts\SessionInterface;
+use Two\Session\Contracts\ExistenceAwareInterface;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MetadataBag;
 
-use SessionHandlerInterface;
-
 
 class Store implements SessionInterface
 {
     /**
-     * The session ID.
+     * L'identifiant de la session.
      *
      * @var string
      */
     protected $id;
 
     /**
-     * The session name.
+     * Le nom de la session.
      *
      * @var string
      */
     protected $name;
 
     /**
-     * The session attributes.
+     * Les attributs de la session.
      *
      * @var array
      */
     protected $attributes = array();
 
     /**
-     * The session bags.
+     * Les sacs de séance.
      *
      * @var array
      */
     protected $bags = array();
 
     /**
-     * The meta-data bag instance.
+     * L'instance du sac de métadonnées.
      *
      * @var \Symfony\Component\HttpFoundation\Session\Storage\MetadataBag
      */
     protected $metaBag;
 
     /**
-     * Local copies of the session bag data.
+     * Copies locales des données du sac de session.
      *
      * @var array
      */
     protected $bagData = array();
 
     /**
-     * The session handler implementation.
+     * L’implémentation du gestionnaire de session.
      *
      * @var \SessionHandlerInterface
      */
     protected $handler;
 
     /**
-     * Session store started status.
+     * Statut démarré du magasin de sessions.
      *
      * @var bool
      */
     protected $started = false;
 
     /**
-     * Create a new session instance.
+     * Créez une nouvelle instance de session.
      *
      * @param  string  $name
      * @param  \SessionHandlerInterface  $handler
@@ -101,7 +107,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Load the session data from the handler.
+     * Chargez les données de session à partir du gestionnaire.
      *
      * @return void
      */
@@ -118,7 +124,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Read the session data from the handler.
+     * Lisez les données de session du gestionnaire.
      *
      * @return array
      */
@@ -130,7 +136,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Initialize a bag in storage if it doesn't exist.
+     * Initialisez un sac en stockage s'il n'existe pas.
      *
      * @param  \Symfony\Component\HttpFoundation\Session\SessionBagInterface  $bag
      * @return void
@@ -161,7 +167,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Determine if this is a valid session ID.
+     * Déterminez s’il s’agit d’un ID de session valide.
      *
      * @param  string  $id
      * @return bool
@@ -172,7 +178,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Get a new, random session ID.
+     * Obtenez un nouvel identifiant de session aléatoire.
      *
      * @return string
      */
@@ -222,7 +228,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Generate a new session identifier.
+     * Générez un nouvel identifiant de session.
      *
      * @param  bool  $destroy
      * @return bool
@@ -247,7 +253,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Merge all of the bag data into the session.
+     * Fusionnez toutes les données du sac dans la session.
      *
      * @return void
      */
@@ -263,7 +269,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Age the flash data for the session.
+     * Faites vieillir les données flash de la session.
      *
      * @return void
      */
@@ -295,7 +301,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Get the value of a given key and then forget it.
+     * Obtenez la valeur d'une clé donnée, puis oubliez-la.
      *
      * @param  string  $key
      * @param  string  $default
@@ -307,7 +313,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Determine if the session contains old input.
+     * Déterminez si la session contient d’anciennes entrées.
      *
      * @param  string  $key
      * @return bool
@@ -320,7 +326,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Get the requested item from the flashed input array.
+     * Obtenez l'élément demandé à partir du tableau d'entrée flashé.
      *
      * @param  string  $key
      * @param  mixed   $default
@@ -330,9 +336,9 @@ class Store implements SessionInterface
     {
         $input = $this->get('_old_input', array());
 
-        // Input that is flashed to the session can be easily retrieved by the
-        // developer, making repopulating old forms and the like much more
-        // convenient, since the request's previous input is available.
+        // Les entrées flashées dans la session peuvent être facilement récupérées par le
+        // développeur, rendant le repeuplement d'anciens formulaires et autres bien plus
+        // pratique, puisque l'entrée précédente de la requête est disponible.
         return array_get($input, $key, $default);
     }
 
@@ -345,7 +351,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Put a key / value pair or array of key / value pairs in the session.
+     * Mettez une paire clé/valeur ou un tableau de paires clé/valeur dans la session.
      *
      * @param  string|array  $key
      * @param  mixed|null       $value
@@ -361,7 +367,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Push a value onto a session array.
+     * Poussez une valeur sur un tableau de session.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -377,7 +383,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Flash a key / value pair to the session.
+     * Flashez une paire clé/valeur dans la session.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -393,7 +399,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Flash an input array to the session.
+     * Flashez un tableau d’entrée dans la session.
      *
      * @param  array  $value
      * @return void
@@ -404,7 +410,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Reflash all of the session flash data.
+     * Reflashez toutes les données flash de la session.
      *
      * @return void
      */
@@ -416,7 +422,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Reflash a subset of the current flash data.
+     * Reflasher un sous-ensemble des données flash actuelles.
      *
      * @param  array|mixed  $keys
      * @return void
@@ -431,7 +437,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Merge new flash keys into the new flash array.
+     * Fusionnez les nouvelles clés flash dans la nouvelle matrice flash.
      *
      * @param  array  $keys
      * @return void
@@ -444,7 +450,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Remove the given keys from the old flash data.
+     * Supprimez les clés données des anciennes données flash.
      *
      * @param  array  $keys
      * @return void
@@ -481,7 +487,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Remove an item from the session.
+     * Supprimer un élément de la session.
      *
      * @param  string  $key
      * @return void
@@ -504,7 +510,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Remove all of the items from the session.
+     * Supprimez tous les éléments de la session.
      *
      * @return void
      */
@@ -536,7 +542,7 @@ class Store implements SessionInterface
     {
         return array_get($this->bags, $name, function()
         {
-            throw new \InvalidArgumentException("Bag not registered.");
+            throw new InvalidArgumentException("Bag not registered.");
         });
     }
 
@@ -549,7 +555,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Get the raw bag data array for a given bag.
+     * Obtenez le tableau de données du sac brut pour un sac donné.
      *
      * @param  string  $name
      * @return array
@@ -560,7 +566,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Get the CSRF token value.
+     * Obtenez la valeur du jeton CSRF.
      *
      * @return string
      */
@@ -570,7 +576,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Get the CSRF token value.
+     * Obtenez la valeur du jeton CSRF.
      *
      * @return string
      */
@@ -580,7 +586,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Regenerate the CSRF token value.
+     * Régénérez la valeur du jeton CSRF.
      *
      * @return void
      */
@@ -590,7 +596,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Get the previous URL from the session.
+     * Obtenez l'URL précédente de la session.
      *
      * @return string|null
      */
@@ -600,7 +606,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Set the "previous" URL in the session.
+     * Définissez l'URL "précédente" dans la session.
      *
      * @param  string  $url
      * @return void
@@ -611,7 +617,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Set the existence of the session on the handler if applicable.
+     * Définissez l'existence de la session sur le gestionnaire, le cas échéant.
      *
      * @param  bool  $value
      * @return void
@@ -624,7 +630,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Get the underlying session handler implementation.
+     * Obtenez l’implémentation du gestionnaire de session sous-jacent.
      *
      * @return \SessionHandlerInterface
      */
@@ -634,7 +640,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Determine if the session handler needs a request.
+     * Déterminez si le gestionnaire de session a besoin d’une demande.
      *
      * @return bool
      */
@@ -644,7 +650,7 @@ class Store implements SessionInterface
     }
 
     /**
-     * Set the request on the handler instance.
+     * Définissez la requête sur l'instance du gestionnaire.
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @return void

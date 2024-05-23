@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Cache;
 
 use Two\Cache\Repository;
@@ -8,7 +13,7 @@ use Two\Cache\Repository;
 class RateLimiter
 {
     /**
-     * The cache store implementation.
+     * L’implémentation du cache store.
      *
      * @var \Two\Cache\Repository
      */
@@ -16,7 +21,7 @@ class RateLimiter
 
 
     /**
-     * Create a new rate limiter instance.
+     * Créez une nouvelle instance de limiteur de débit.
      *
      * @param  \Two\Cache\Repository  $cache
      * @return void
@@ -27,7 +32,7 @@ class RateLimiter
     }
 
     /**
-     * Determine if the given key has been "accessed" too many times.
+     * Déterminez si la clé donnée a été « accédée » trop de fois.
      *
      * @param  string  $key
      * @param  int  $maxAttempts
@@ -50,7 +55,7 @@ class RateLimiter
     }
 
     /**
-     * Increment the counter for a given key for a given decay time.
+     * Incrémentez le compteur pour une clé donnée pendant un temps de décroissance donné.
      *
      * @param  string  $key
      * @param  int  $decayMinutes
@@ -64,7 +69,7 @@ class RateLimiter
     }
 
     /**
-     * Get the number of attempts for the given key.
+     * Obtenez le nombre de tentatives pour la clé donnée.
      *
      * @param  string  $key
      * @return mixed
@@ -75,7 +80,7 @@ class RateLimiter
     }
 
     /**
-     * Get the number of retries left for the given key.
+     * Obtenez le nombre de tentatives restantes pour la clé donnée.
      *
      * @param  string  $key
      * @param  int  $maxAttempts
@@ -89,7 +94,7 @@ class RateLimiter
     }
 
     /**
-     * Clear the hits and lockout for the given key.
+     * Effacez les hits et le verrouillage pour la clé donnée.
      *
      * @param  string  $key
      * @return void
@@ -102,7 +107,7 @@ class RateLimiter
     }
 
     /**
-     * Get the number of seconds until the "key" is accessible again.
+     * Obtenez le nombre de secondes jusqu'à ce que la "clé" soit à nouveau accessible.
      *
      * @param  string  $key
      * @return int

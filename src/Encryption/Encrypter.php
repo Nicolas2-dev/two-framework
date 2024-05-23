@@ -1,39 +1,37 @@
 <?php
 /**
- * Encryption - A simple Encrypter Class using OpenSSL.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
  */
-
 namespace Two\Encryption;
 
-use Two\Support\Str;
-
-use Two\Encryption\EncryptException;
-use Two\Encryption\DecryptException;
-
 use RuntimeException;
+
+use Two\Support\Str;
+use Two\Encryption\Exception\EncryptException;
+use Two\Encryption\Exception\DecryptException;
 
 
 class Encrypter
 {
     /**
-     * The encryption key.
+     * La clé de cryptage.
      *
      * @var string
      */
     protected $key;
 
     /**
-     * The algorithm used for encryption.
+     * L'algorithme utilisé pour le cryptage.
      *
      * @var string
      */
     protected $cipher;
 
     /**
-     * Create a new Encrypter instance.
+     * Créez une nouvelle instance Encrypter.
      *
      * @param  string $key
      * @param  string $cipher
@@ -56,7 +54,7 @@ class Encrypter
     }
 
     /**
-     * Determine if the given key and cipher combination is valid.
+     * Déterminez si la combinaison de clé et de chiffrement donnée est valide.
      *
      * @param  string $key
      * @param  string $cipher
@@ -70,12 +68,12 @@ class Encrypter
     }
 
     /**
-     * Encrypt the given value.
+     * Chiffrez la valeur donnée.
      *
      * @param  string $value
      * @return string
      *
-     * @throws \Two\Encryption\EncryptException
+     * @throws \Two\Encryption\Exception\EncryptException
      */
     public function encrypt($value)
     {
@@ -93,12 +91,12 @@ class Encrypter
     }
 
     /**
-     * Decrypt the given value.
+     * Décryptez la valeur donnée.
      *
      * @param  string $payload
      * @return string
      *
-     * @throws \Two\Encryption\DecryptException
+     * @throws \Two\Encryption\Exception\DecryptException
      */
     public function decrypt($payload)
     {
@@ -116,7 +114,7 @@ class Encrypter
     }
 
     /**
-     * Get the IV size for the cipher.
+     * Obtenez la taille IV pour le chiffre.
      *
      * @return int
      */
@@ -126,7 +124,7 @@ class Encrypter
     }
 
     /**
-     * Create a MAC for the given value.
+     * Créez un MAC pour la valeur donnée.
      *
      * @param  string $iv
      * @param  string $value
@@ -138,12 +136,12 @@ class Encrypter
     }
 
     /**
-     * Get the JSON array from the given payload.
+     * Obtenez le tableau JSON à partir de la charge utile donnée.
      *
      * @param  string $payload
      * @return array
      *
-     * @throws \Two\Encryption\DecryptException
+     * @throws \Two\Encryption\Exception\DecryptException
      */
     protected function getJsonPayload($payload)
     {
@@ -161,7 +159,7 @@ class Encrypter
     }
 
     /**
-     * Verify that the encryption payload is valid.
+     * Vérifiez que la charge utile de chiffrement est valide.
      *
      * @param  array|mixed $data
      * @return bool
@@ -172,7 +170,7 @@ class Encrypter
     }
 
     /**
-     * Determine if the MAC for the given payload is valid.
+     * Déterminez si le MAC pour la charge utile donnée est valide.
      *
      * @param  array $payload
      * @return bool

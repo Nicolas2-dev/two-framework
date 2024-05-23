@@ -1,17 +1,22 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Connectors;
 
-use Two\Database\Connector;
-use Two\Database\ConnectorInterface;
-
 use PDO;
+
+use Two\Database\Connector;
+use Two\Database\Contracts\ConnectorInterface;
 
 
 class PostgresConnector extends Connector implements ConnectorInterface
 {
     /**
-     * The default PDO connection options.
+     * Les options de connexion PDO par défaut.
      *
      * @var array
      */
@@ -24,7 +29,7 @@ class PostgresConnector extends Connector implements ConnectorInterface
 
 
     /**
-     * Establish a database connection.
+     * Établissez une connexion à la base de données.
      *
      * @param  array  $config
      * @return PDO
@@ -52,7 +57,7 @@ class PostgresConnector extends Connector implements ConnectorInterface
     }
 
     /**
-     * Create a DSN string from a configuration.
+     * Créez une chaîne DSN à partir d'une configuration.
      *
      * @param  array   $config
      * @return string

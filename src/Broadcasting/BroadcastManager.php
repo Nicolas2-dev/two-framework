@@ -1,19 +1,24 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Broadcasting;
 
+use Closure;
+use InvalidArgumentException;
+
+use Two\Support\Arr;
+use Two\Application\Two;
+use Two\Broadcasting\PendingBroadcast;
+use Two\Broadcasting\Contracts\FactoryInterface;
 use Two\Broadcasting\Broadcasters\LogBroadcaster;
 use Two\Broadcasting\Broadcasters\NullBroadcaster;
 use Two\Broadcasting\Broadcasters\RedisBroadcaster;
 use Two\Broadcasting\Broadcasters\PusherBroadcaster;
 use Two\Broadcasting\Broadcasters\QuasarBroadcaster;
-use Two\Broadcasting\FactoryInterface;
-use Two\Broadcasting\PendingBroadcast;
-
-use Two\Support\Arr;
-
-use Closure;
-use InvalidArgumentException;
 
 use Pusher\Pusher;
 
@@ -21,39 +26,39 @@ use Pusher\Pusher;
 class BroadcastManager implements FactoryInterface
 {
     /**
-     * The application instance.
+     * L'instance d'application.
      *
-     * @var \Two\Foundation\Application
+     * @var \Two\Application\Two
      */
     protected $app;
 
     /**
-     * The array of resolved broadcast drivers.
+     * Tableau des pilotes de diffusion résolus.
      *
      * @var array
      */
     protected $drivers = array();
 
     /**
-     * The registered custom driver creators.
+     * Les créateurs de pilotes personnalisés enregistrés.
      *
      * @var array
      */
     protected $customCreators = array();
 
     /**
-     * Create a new manager instance.
+     * Créez une nouvelle instance de gestionnaire.
      *
-     * @param  \Two\Foundation\Application  $app
+     * @param  \Two\Application\Two  $app
      * @return void
      */
-    public function __construct($app)
+    public function __construct(Two $app)
     {
         $this->app = $app;
     }
 
     /**
-     * Get the socket ID for the given request.
+     * Obtenez l'ID de socket pour la requête donnée.
      *
      * @param  \Two\Http\Request|null  $request
      * @return string|null
@@ -72,7 +77,7 @@ class BroadcastManager implements FactoryInterface
     }
 
     /**
-     * Begin broadcasting an event.
+     * Commencez à diffuser un événement.
      *
      * @param  mixed|null  $event
      * @return \Two\Broadcasting\PendingBroadcast|void
@@ -83,7 +88,7 @@ class BroadcastManager implements FactoryInterface
     }
 
     /**
-     * Get a driver instance.
+     * Obtenez une instance de pilote.
      *
      * @param  string  $driver
      * @return mixed
@@ -94,7 +99,7 @@ class BroadcastManager implements FactoryInterface
     }
 
     /**
-     * Get a driver instance.
+     * Obtenez une instance de pilote.
      *
      * @param  string  $name
      * @return mixed
@@ -111,10 +116,10 @@ class BroadcastManager implements FactoryInterface
     }
 
     /**
-     * Resolve the given store.
+     * Résolvez le magasin donné.
      *
      * @param  string  $name
-     * @return \Two\Broadcasting\BroadcasterInterface
+     * @return \Two\Broadcasting\Contracts\BroadcasterInterface
      *
      * @throws \InvalidArgumentException
      */
@@ -142,7 +147,7 @@ class BroadcastManager implements FactoryInterface
     }
 
     /**
-     * Call a custom driver creator.
+     * Appelez un créateur de pilotes personnalisés.
      *
      * @param  array  $config
      * @return mixed
@@ -155,74 +160,94 @@ class BroadcastManager implements FactoryInterface
     }
 
     /**
-     * Create an instance of the driver.
+     * Créez une instance du pilote.
      *
      * @param  array  $config
-     * @return \Two\Broadcasting\BroadcasterInterface
+     * @return \Two\Broadcasting\Contracts\BroadcasterInterface
      */
     protected function createQuasarDriver(array $config)
     {
+        //$container = $this->resolveUser();
+
         return new QuasarBroadcaster($this->app, $config);
     }
 
     /**
-     * Create an instance of the driver.
+     * Créez une instance du pilote.
      *
      * @param  array  $config
-     * @return \Two\Broadcasting\BroadcasterInterface
+     * @return \Two\Broadcasting\Contracts\BroadcasterInterface
      */
     protected function createPusherDriver(array $config)
     {
         $options = Arr::get($config, 'options', array());
 
-        // Create a Pusher instance.
+        // Créez une instance Pusher.
         $pusher = new Pusher($config['key'], $config['secret'], $config['app_id'], $options);
+
+        //$container = $this->resolveContainer();
 
         return new PusherBroadcaster($this->app, $pusher);
     }
 
     /**
-     * Create an instance of the driver.
+     * Créez une instance du pilote.
      *
      * @param  array  $config
-     * @return \Two\Broadcasting\BroadcasterInterface
+     * @return \Two\Broadcasting\Contracts\BroadcasterInterface
      */
     protected function createRedisDriver(array $config)
     {
         $connection = Arr::get($config, 'connection');
 
-        // Create a Redis Database instance.
+        // Créez une instance de base de données Redis.
         $redis = $this->app->make('redis');
+
+        //$container = $this->resolveContainer();
 
         return new RedisBroadcaster($this->app, $redis, $connection);
     }
 
     /**
-     * Create an instance of the driver.
+     * Créez une instance du pilote.
      *
      * @param  array  $config
-     * @return \Two\Broadcasting\BroadcasterInterface
+     * @return \Two\Broadcasting\Contracts\BroadcasterInterface
      */
     protected function createLogDriver(array $config)
     {
         $logger = $this->app->make('Psr\Log\LoggerInterface');
 
+        //$container = $this->resolveContainer();
+
         return new LogBroadcaster($this->app, $logger);
     }
 
     /**
-     * Create an instance of the driver.
+     * Créez une instance du pilote.
      *
      * @param  array  $config
-     * @return \Two\Broadcasting\BroadcasterInterface
+     * @return \Two\Broadcasting\Contracts\BroadcasterInterface
      */
     protected function createNullDriver(array $config)
     {
+        //$container = $this->resolveContainer();
+
         return new NullBroadcaster($this->app);
     }
 
     /**
-     * Get the connection configuration.
+     * Résolvez l'intance du container.
+     *
+     * @return mixed
+     */
+    protected function resolveContainer()
+    {
+        return $this->app['container'];
+    }
+
+    /**
+     * Obtenez la configuration de la connexion.
      *
      * @param  string  $name
      * @return array
@@ -233,7 +258,7 @@ class BroadcastManager implements FactoryInterface
     }
 
     /**
-     * Get the default driver name.
+     * Obtenez le nom du pilote par défaut.
      *
      * @return string
      */
@@ -243,7 +268,7 @@ class BroadcastManager implements FactoryInterface
     }
 
     /**
-     * Set the default driver name.
+     * Définissez le nom du pilote par défaut.
      *
      * @param  string  $name
      * @return void
@@ -254,7 +279,7 @@ class BroadcastManager implements FactoryInterface
     }
 
     /**
-     * Register a custom driver creator Closure.
+     * Enregistrez un créateur de pilote personnalisé Closure.
      *
      * @param  string    $driver
      * @param  \Closure  $callback
@@ -268,7 +293,7 @@ class BroadcastManager implements FactoryInterface
     }
 
     /**
-     * Dynamically call the default driver instance.
+     * Appelez dynamiquement l’instance de pilote par défaut.
      *
      * @param  string  $method
      * @param  array   $parameters

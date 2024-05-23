@@ -1,16 +1,23 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Validation;
 
-use Two\Support\ServiceProvider;
-use Two\Validation\DatabasePresenceVerifier;
 use Two\Validation\Factory;
+
+use Two\Validation\DatabasePresenceVerifier;
+
+use Two\Application\Providers\ServiceProvider;
 
 
 class ValidationServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the Provider is deferred.
+     * Indique si le chargement du Provider est différé.
      *
      * @var bool
      */
@@ -18,7 +25,7 @@ class ValidationServiceProvider extends ServiceProvider
 
 
     /**
-     * Register the Service Provider.
+     * Enregistrez le fournisseur de services.
      *
      * @return void
      */
@@ -30,7 +37,7 @@ class ValidationServiceProvider extends ServiceProvider
         {
             $config = $app['config'];
 
-            // Get a Validation Factory instance.
+            // Obtenez une instance de Validation Factory.
             $validator = new Factory($config);
 
             if (isset($app['validation.presence'])) {
@@ -44,7 +51,7 @@ class ValidationServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Database Presence Verifier.
+     * Enregistrez le vérificateur de présence de base de données.
      *
      * @return void
      */
@@ -57,7 +64,7 @@ class ValidationServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get the services provided by the Provider.
+     * Obtenez les services fournis par le fournisseur.
      *
      * @return array
      */

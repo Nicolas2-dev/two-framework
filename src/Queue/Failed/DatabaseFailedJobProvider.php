@@ -1,9 +1,14 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Failed;
 
-use Two\Database\ConnectionResolverInterface;
-use Two\Queue\Failed\FailedJobProviderInterface;
+use Two\Database\Contracts\ConnectionResolverInterface;
+use Two\Queue\Contracts\Failed\FailedJobProviderInterface;
 
 use Carbon\Carbon;
 
@@ -12,30 +17,30 @@ class DatabaseFailedJobProvider implements FailedJobProviderInterface
 {
 
     /**
-     * The connection resolver implementation.
+     * L’implémentation du résolveur de connexion.
      *
-     * @var \Two\Database\ConnectionResolverInterface
+     * @var \Two\Database\Contracts\ConnectionResolverInterface
      */
     protected $resolver;
 
     /**
-     * The database connection name.
+     * Le nom de la connexion à la base de données.
      *
      * @var string
      */
     protected $database;
 
     /**
-     * The database table.
+     * Le tableau de la base de données.
      *
      * @var string
      */
     protected $table;
 
     /**
-     * Create a new database failed job provider.
+     * Créez un nouveau fournisseur de tâches de base de données ayant échoué.
      *
-     * @param  \Two\Database\ConnectionResolverInterface  $resolver
+     * @param  \Two\Database\Contracts\ConnectionResolverInterface  $resolver
      * @param  string  $database
      * @param  string  $table
      * @return void
@@ -49,7 +54,7 @@ class DatabaseFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Log a failed job into storage.
+     * Enregistrez une tâche ayant échoué dans le stockage.
      *
      * @param  string  $connection
      * @param  string  $queue
@@ -64,7 +69,7 @@ class DatabaseFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Get a list of all of the failed jobs.
+     * Obtenez une liste de toutes les tâches ayant échoué.
      *
      * @return array
      */
@@ -74,7 +79,7 @@ class DatabaseFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Get a single failed job.
+     * Obtenez un seul travail échoué.
      *
      * @param  mixed  $id
      * @return array
@@ -85,7 +90,7 @@ class DatabaseFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Delete a single failed job from storage.
+     * Supprimez une seule tâche ayant échoué du stockage.
      *
      * @param  mixed  $id
      * @return bool
@@ -98,7 +103,7 @@ class DatabaseFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Flush all of the failed jobs from storage.
+     * Videz toutes les tâches ayant échoué du stockage.
      *
      * @return void
      */
@@ -108,7 +113,7 @@ class DatabaseFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Get a new query builder instance for the table.
+     * Obtenez une nouvelle instance du générateur de requêtes pour la table.
      *
      * @return \Two\Database\Query\Builder
      */

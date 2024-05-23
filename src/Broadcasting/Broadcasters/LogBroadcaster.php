@@ -1,11 +1,14 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Broadcasting\Broadcasters;
 
 use Two\Broadcasting\Broadcaster;
-
 use Two\Container\Container;
-
 use Two\Http\Request;
 
 use Psr\Log\LoggerInterface;
@@ -14,7 +17,7 @@ use Psr\Log\LoggerInterface;
 class LogBroadcaster extends Broadcaster
 {
     /**
-     * The logger implementation.
+     * L'implémentation de l'enregistreur.
      *
      * @var \Psr\Log\LoggerInterface
      */
@@ -22,7 +25,7 @@ class LogBroadcaster extends Broadcaster
 
 
     /**
-     * Create a new broadcaster instance.
+     * Créez une nouvelle instance de diffuseur.
      *
      * @param  \Psr\Log\LoggerInterface  $logger
      * @return void

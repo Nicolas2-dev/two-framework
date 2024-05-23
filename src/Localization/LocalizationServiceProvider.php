@@ -1,15 +1,22 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Localization;
 
+
 use Two\Localization\LanguageManager;
-use Two\Support\ServiceProvider;
+
+use Two\Application\Providers\ServiceProvider;
 
 
 class LocalizationServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the Provider is deferred.
+     * Indique si le chargement du Provider est différé.
      *
      * @var bool
      */
@@ -17,7 +24,7 @@ class LocalizationServiceProvider extends ServiceProvider
 
 
     /**
-     * Register the Service Provider.
+     * Enregistrez le fournisseur de services.
      *
      * @return void
      */
@@ -30,7 +37,7 @@ class LocalizationServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get the services provided by the provider.
+     * Obtenez les services fournis par le fournisseur.
      *
      * @return array
      */

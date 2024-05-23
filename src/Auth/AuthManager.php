@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Auth;
 
 use Two\Auth\DatabaseUserProvider;
@@ -7,7 +12,7 @@ use Two\Auth\ExtendedUserProvider;
 use Two\Auth\RequestGuard;
 use Two\Auth\SessionGuard;
 use Two\Auth\TokenGuard;
-use Two\Foundation\Application;
+use Two\Application\Two;
 
 use Closure;
 use InvalidArgumentException;
@@ -18,7 +23,7 @@ class AuthManager
     /**
      * The application instance.
      *
-     * @var \Two\Foundation\Application
+     * @var \Two\Application\Two;
      */
     protected $app;
 
@@ -56,10 +61,10 @@ class AuthManager
     /**
      * Create a new manager instance.
      *
-     * @param  \Two\Foundation\Application  $app
+     * @param  \Two\Application\Two;  $app
      * @return void
      */
-    public function __construct(Application $app)
+    public function __construct(Two $app)
     {
         $this->app = $app;
 
@@ -186,7 +191,7 @@ class AuthManager
      * Create the user provider implementation for the driver.
      *
      * @param  string  $provider
-     * @return \Two\Auth\UserProviderInterface
+     * @return \Two\Auth\Contracts\UserProviderInterface
      *
      * @throws \InvalidArgumentException
      */

@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Localization;
 
 use Two\Localization\LanguageManager;
@@ -7,32 +12,32 @@ use Two\Localization\MessageFormatter;
 
 
 /**
- * A Language class to load the requested language file.
+ * Une classe Language pour charger le fichier de langue demandé.
  */
 class Language
 {
     
     /**
-     * The Language Manager Instance.
+     * L'instance du gestionnaire de langues.
      *
      * @var \Two\Localization\LanguageManager
      */
     protected $manager;
 
     /**
-     * Holds an array with the Domain's Messages.
+     * Contient un tableau avec les messages du domaine.
      *
      * @var array
      */
     private $messages = array();
 
     /**
-     * The current Language Domain.
+     * Le domaine linguistique actuel.
      */
     private $domain = null;
 
     /**
-     * The current Language information.
+     * Les informations de langue actuelles.
      */
     private $code      = 'en';
     private $info      = 'English';
@@ -42,7 +47,7 @@ class Language
 
 
     /**
-     * Create an new Language instance.
+     * Créez une nouvelle instance de langage.
      *
      * @param string $domain
      * @param string $code
@@ -68,22 +73,22 @@ class Language
 
         $this->domain = $domain;
 
-        // Determine the current Language file path.
+        // Déterminez le chemin actuel du fichier de langue.
         $namespaces = $manager->getNamespaces();
 
-        // Check if the language file is readable.
+        // Vérifiez si le fichier de langue est lisible.
         if (! array_key_exists($domain, $namespaces)) return;
 
-        // Determine the Language(s) path.
+        // Déterminez le chemin de la ou des langues.
         $namespace = $namespaces[$domain];
 
         $filePath = $namespace .DS .strtoupper($code) .DS .'messages.php';
 
         if (is_readable($filePath)) {
-            // The requested language file exists; retrieve the messages from it.
+            // Le fichier de langue demandé existe ; récupérer les messages de celui-ci.
             $messages = require $filePath;
 
-            // Some consistency check of the messages, before setting them.
+            // Une vérification de cohérence des messages, avant de les paramétrer.
             if (is_array($messages) && ! empty($messages)) {
                 $this->messages = $messages;
             }
@@ -91,14 +96,14 @@ class Language
     }
 
     /**
-     * Translate a message with optional formatting
-     * @param string $message Original message.
-     * @param array $params Optional params for formatting.
+     * Traduire un message avec une mise en forme facultative
+     * @param string $message Message original.
+     * @param array $params Paramètres facultatifs pour le formatage.
      * @return string
      */
     public function translate($message, array $params = array())
     {
-        // Update the current message with the domain translation, if we have one.
+        // Mettez à jour le message actuel avec la traduction du domaine, si nous en avons une.
         if (isset($this->messages[$message]) && ! empty($this->messages[$message])) {
             $message = $this->messages[$message];
         }
@@ -112,10 +117,8 @@ class Language
         return $formatter->format($message, $params, $this->locale);
     }
 
-    // Public Getters
-
     /**
-     * Get current domain
+     * Obtenir le domaine actuel
      * @return string
      */
     public function domain()
@@ -124,7 +127,7 @@ class Language
     }
 
     /**
-     * Get current code
+     * Obtenir le code actuel
      * @return string
      */
     public function code()
@@ -133,7 +136,7 @@ class Language
     }
 
     /**
-     * Get current info
+     * Obtenir des informations actuelles
      * @return string
      */
     public function info()
@@ -142,7 +145,7 @@ class Language
     }
 
     /**
-     * Get current name
+     * Obtenir le nom actuel
      * @return string
      */
     public function name()
@@ -151,7 +154,7 @@ class Language
     }
 
     /**
-     * Get current locale
+     * Obtenir les paramètres régionaux actuels
      * @return string
      */
     public function locale()
@@ -160,7 +163,7 @@ class Language
     }
 
     /**
-     * Get all messages
+     * Recevez tous les messages
      * @return array
      */
     public function messages()
@@ -169,7 +172,7 @@ class Language
     }
 
     /**
-     * Get the current direction
+     * Obtenez la direction actuelle
      *
      * @return string rtl or ltr
      */

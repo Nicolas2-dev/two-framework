@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM\Relations;
 
 use Two\Database\ORM\Model;
@@ -13,35 +18,35 @@ use Closure;
 abstract class Relation
 {
     /**
-     * The ORM query builder instance.
+     * L'instance du générateur de requêtes ORM.
      *
      * @var \Two\Database\ORM\Builder
      */
     protected $query;
 
     /**
-     * The parent model instance.
+     * Instance de modèle parent.
      *
      * @var \Two\Database\ORM\Model
      */
     protected $parent;
 
     /**
-     * The related model instance.
+     * L'instance de modèle associée.
      *
      * @var \Two\Database\ORM\Model
      */
     protected $related;
 
     /**
-     * Indicates if the relation is adding constraints.
+     * Indique si la relation ajoute des contraintes.
      *
      * @var bool
      */
     protected static $constraints = true;
 
     /**
-     * Create a new relation instance.
+     * Créez une nouvelle instance de relation.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Model  $parent
@@ -58,14 +63,14 @@ abstract class Relation
     }
 
     /**
-     * Set the base constraints on the relation query.
+     * Définissez les contraintes de base sur la requête relationnelle.
      *
      * @return void
      */
     abstract public function addConstraints();
 
     /**
-     * Set the constraints for an eager load of the relation.
+     * Définissez les contraintes pour un chargement hâtif de la relation.
      *
      * @param  array  $models
      * @return void
@@ -73,7 +78,7 @@ abstract class Relation
     abstract public function addEagerConstraints(array $models);
 
     /**
-     * Initialize the relation on a set of models.
+     * Initialisez la relation sur un ensemble de modèles.
      *
      * @param  array   $models
      * @param  string  $relation
@@ -82,7 +87,7 @@ abstract class Relation
     abstract public function initRelation(array $models, $relation);
 
     /**
-     * Match the eagerly loaded results to their parents.
+     * Faites correspondre les résultats chargés avec impatience à leurs parents.
      *
      * @param  array   $models
      * @param  \Two\Database\ORM\Collection  $results
@@ -92,14 +97,14 @@ abstract class Relation
     abstract public function match(array $models, Collection $results, $relation);
 
     /**
-     * Get the results of the relationship.
+     * Obtenez les résultats de la relation.
      *
      * @return mixed
      */
     abstract public function getResults();
 
     /**
-     * Get the relationship for eager loading.
+     * Obtenez la relation pour un chargement impatient.
      *
      * @return \Two\Database\ORM\Collection
      */
@@ -109,7 +114,7 @@ abstract class Relation
     }
 
     /**
-     * Touch all of the related models for the relationship.
+     * Touchez tous les modèles associés à la relation.
      *
      * @return void
      */
@@ -121,7 +126,7 @@ abstract class Relation
     }
 
     /**
-     * Run a raw update against the base query.
+     * Exécutez une mise à jour brute sur la requête de base.
      *
      * @param  array  $attributes
      * @return int
@@ -132,7 +137,7 @@ abstract class Relation
     }
 
     /**
-     * Add the constraints for a relationship count query.
+     * Ajoutez les contraintes pour une requête de nombre de relations.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Builder  $parent
@@ -148,7 +153,7 @@ abstract class Relation
     }
 
     /**
-     * Run a callback with constraints disabled on the relation.
+     * Exécutez un rappel avec les contraintes désactivées sur la relation.
      *
      * @param  \Closure  $callback
      * @return mixed
@@ -166,7 +171,7 @@ abstract class Relation
     }
 
     /**
-     * Get all of the primary keys for an array of models.
+     * Obtenez toutes les clés primaires d’un éventail de modèles.
      *
      * @param  array   $models
      * @param  string  $key
@@ -182,7 +187,7 @@ abstract class Relation
     }
 
     /**
-     * Get the underlying query for the relation.
+     * Obtenez la requête sous-jacente pour la relation.
      *
      * @return \Two\Database\ORM\Builder
      */
@@ -192,7 +197,7 @@ abstract class Relation
     }
 
     /**
-     * Get the base query builder driving the ORM builder.
+     * Obtenez le générateur de requêtes de base pilotant le générateur ORM.
      *
      * @return \Two\Database\Query\Builder
      */
@@ -202,7 +207,7 @@ abstract class Relation
     }
 
     /**
-     * Get the parent model of the relation.
+     * Obtenez le modèle parent de la relation.
      *
      * @return \Two\Database\ORM\Model
      */
@@ -212,7 +217,7 @@ abstract class Relation
     }
 
     /**
-     * Get the fully qualified parent key name.
+     * Obtenez le nom complet de la clé parent.
      *
      * @return string
      */
@@ -222,7 +227,7 @@ abstract class Relation
     }
 
     /**
-     * Get the related model of the relation.
+     * Obtenez le modèle associé de la relation.
      *
      * @return \Two\Database\ORM\Model
      */
@@ -232,7 +237,7 @@ abstract class Relation
     }
 
     /**
-     * Get the name of the "created at" column.
+     * Obtenez le nom de la colonne "créé à".
      *
      * @return string
      */
@@ -242,7 +247,7 @@ abstract class Relation
     }
 
     /**
-     * Get the name of the "updated at" column.
+     * Obtenez le nom de la colonne « mis à jour à ».
      *
      * @return string
      */
@@ -252,7 +257,7 @@ abstract class Relation
     }
 
     /**
-     * Get the name of the related model's "updated at" column.
+     * Obtenez le nom de la colonne « mis à jour à » du modèle associé.
      *
      * @return string
      */
@@ -262,7 +267,7 @@ abstract class Relation
     }
 
     /**
-     * Wrap the given value with the parent query's grammar.
+     * Enveloppez la valeur donnée avec la grammaire de la requête parent.
      *
      * @param  string  $value
      * @return string
@@ -273,7 +278,7 @@ abstract class Relation
     }
 
     /**
-     * Handle dynamic method calls to the relationship.
+     * Gérez les appels de méthode dynamique à la relation.
      *
      * @param  string  $method
      * @param  array   $parameters

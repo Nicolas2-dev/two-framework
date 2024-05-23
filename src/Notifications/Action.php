@@ -1,25 +1,31 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications;
+
 
 class Action
 {
     /**
-     * The action text.
+     * Le texte de l'action.
      *
      * @var string
      */
     public $text;
 
     /**
-     * The action URL.
+     * L'URL de l'action.
      *
      * @var string
      */
     public $url;
 
     /**
-     * Create a new action instance.
+     * Créez une nouvelle instance d'action.
      *
      * @param  string  $text
      * @param  string  $url

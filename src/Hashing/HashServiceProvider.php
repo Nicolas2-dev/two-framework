@@ -1,16 +1,22 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Hashing;
 
 use Two\Hashing\BcryptHasher;
-use Two\Support\ServiceProvider;
+
+use Two\Application\Providers\ServiceProvider;
 
 
 class HashServiceProvider extends ServiceProvider
 {
     
     /**
-     * Indicates if loading of the Provider is deferred.
+     * Indique si le chargement du Provider est différé.
      *
      * @var bool
      */
@@ -18,7 +24,7 @@ class HashServiceProvider extends ServiceProvider
 
 
     /**
-     * Register the Service Provider.
+     * Enregistrez le fournisseur de services.
      *
      * @return void
      */
@@ -31,7 +37,7 @@ class HashServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get the Services provided by the Provider.
+     * Obtenez les services fournis par le fournisseur.
      *
      * @return array
      */

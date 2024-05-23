@@ -1,36 +1,43 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Http;
 
-use Two\Session\Store as SessionStore;
-use Two\Support\MessageBag;
-use Two\Support\ViewErrorBag;
+use BadMethodCallException;
+
 use Two\Support\Str;
-use Two\Contracts\MessageProviderInterface;
+use Two\Support\MessageBag;
+use Two\View\ViewErrorBag;
+use Two\Session\Store as SessionStore;
+use Two\Application\Contracts\MessageProviderInterface;
 
 use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
-use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile as SymfonyUploadedFile;
+use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 
 
 class RedirectResponse extends SymfonyRedirectResponse
 {
     /**
-     * The request instance.
+     * L’instance de requête.
      *
      * @var \Two\Http\Request
      */
     protected $request;
 
     /**
-     * The session store implementation.
+     * L’implémentation du magasin de sessions.
      *
      * @var \Two\Session\Store
      */
     protected $session;
 
     /**
-     * Set a header on the Response.
+     * Définissez un en-tête sur la réponse.
      *
      * @param  string  $key
      * @param  string  $value
@@ -45,7 +52,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Flash a piece of data to the session.
+     * Flashez une donnée dans la session.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -63,7 +70,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Add a cookie to the response.
+     * Ajoutez un cookie à la réponse.
      *
      * @param  \Symfony\Component\HttpFoundation\Cookie  $cookie
      * @return $this
@@ -76,7 +83,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Add multiple cookies to the response.
+     * Ajoutez plusieurs cookies à la réponse.
      *
      * @param  array  $cookie
      * @return $this
@@ -92,7 +99,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Flash an array of input to the session.
+     * Flashez un tableau d’entrées dans la session.
      *
      * @param  array  $input
      * @return $this
@@ -110,7 +117,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Flash an array of input to the session.
+     * Flashez un tableau d’entrées dans la session.
      *
      * @param  mixed  string
      * @return $this
@@ -121,7 +128,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Flash an array of input to the session.
+     * Flashez un tableau d’entrées dans la session.
      *
      * @param  mixed  string
      * @return \Two\Http\RedirectResponse
@@ -132,9 +139,9 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Flash a container of errors to the session.
+     * Flashez un conteneur d’erreurs dans la session.
      *
-     * @param  \Two\Support\Contracts\MessageProviderInterface|array  $provider
+     * @param  \Two\Application\Contracts\MessageProviderInterface|array  $provider
      * @param  string  $key
      * @return $this
      */
@@ -150,9 +157,9 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Parse the given errors into an appropriate value.
+     * Analysez les erreurs données en une valeur appropriée.
      *
-     * @param  \Two\Contracts\MessageProviderInterface|array  $provider
+     * @param  \Two\Application\Contracts\MessageProviderInterface|array  $provider
      * @return \Two\Support\MessageBag
      */
     protected function parseErrors($provider)
@@ -167,7 +174,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Get the request instance.
+     * Obtenez l’instance de requête.
      *
      * @return  \Two\Http\Request
      */
@@ -177,7 +184,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Set the request instance.
+     * Définissez l'instance de requête.
      *
      * @param  \Two\Http\Request  $request
      * @return void
@@ -188,7 +195,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Get the session store implementation.
+     * Obtenez l’implémentation du magasin de sessions.
      *
      * @return \Two\Session\Store
      */
@@ -198,7 +205,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Set the session store implementation.
+     * Définissez l’implémentation du magasin de sessions.
      *
      * @param  \Two\Session\Store  $session
      * @return void
@@ -209,7 +216,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Dynamically bind flash data in the session.
+     * Liez dynamiquement les données Flash dans la session.
      *
      * @param  string  $method
      * @param  array  $parameters
@@ -223,7 +230,7 @@ class RedirectResponse extends SymfonyRedirectResponse
             return $this->with(Str::snake(substr($method, 4)), $parameters[0]);
         }
 
-        throw new \BadMethodCallException("Method [$method] does not exist on Redirect.");
+        throw new BadMethodCallException("Method [$method] does not exist on Redirect.");
     }
 
 }

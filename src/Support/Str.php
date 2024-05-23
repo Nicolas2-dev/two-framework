@@ -1,13 +1,18 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support;
+
+use RuntimeException;
 
 use Two\Support\Traits\MacroableTrait;
 use Two\Support\Pluralizer;
 
 use Stringy\StaticStringy;
-
-use RuntimeException;
 
 
 class Str
@@ -384,8 +389,7 @@ class Str
 
         $title = preg_replace('!['.preg_quote($flip).']+!u', $separator, $title);
 
-        // Supprime tous les caractères autres que le séparateur, les lettres, 
-        // les chiffres ou les espaces.
+        // Supprime tous les caractères autres que le séparateur, les lettres, les chiffres ou les espaces.
         $title = preg_replace('![^'.preg_quote($separator).'\pL\pN\s]+!u', '', mb_strtolower($title));
 
         // Remplace tous les caractères de séparation et les espaces blancs par un seul séparateur

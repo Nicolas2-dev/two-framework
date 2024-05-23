@@ -1,13 +1,17 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Queues;
 
 use Two\Http\Request;
 use Two\Http\Response;
-
 use Two\Queue\Jobs\IronJob;
 use Two\Queue\Queue;
-use Two\Queue\QueueInterface;
+use Two\Queue\Contracts\QueueInterface;
 
 use IronMQ;
 
@@ -15,28 +19,28 @@ use IronMQ;
 class IronQueue extends Queue implements QueueInterface
 {
     /**
-     * The IronMQ instance.
+     * L'instance IronMQ.
      *
      * @var IronMQ
      */
     protected $iron;
 
     /**
-     * The current request instance.
+     * L’instance de requête actuelle.
      *
      * @var \Two\Http\Request
      */
     protected $request;
 
     /**
-     * The name of the default tube.
+     * Le nom du tube par défaut.
      *
      * @var string
      */
     protected $default;
 
     /**
-     * Indicates if the messages should be encrypted.
+     * Indique si les messages doivent être chiffrés.
      *
      * @var bool
      */
@@ -48,7 +52,7 @@ class IronQueue extends Queue implements QueueInterface
     protected $crypt;
 
     /**
-     * Create a new IronMQ queue instance.
+     * Créez une nouvelle instance de file d'attente IronMQ.
      *
      * @param  \IronMQ  $iron
      * @param  \Two\Http\Request  $request
@@ -65,7 +69,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a new job onto the queue.
+     * Placez un nouveau travail dans la file d'attente.
      *
      * @param  string  $job
      * @param  mixed   $data
@@ -78,7 +82,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a raw payload onto the queue.
+     * Insérez une charge utile brute dans la file d'attente.
      *
      * @param  string  $payload
      * @param  string  $queue
@@ -93,7 +97,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a raw payload onto the queue after encrypting the payload.
+     * Insérez une charge utile brute dans la file d'attente après avoir chiffré la charge utile.
      *
      * @param  string  $payload
      * @param  string  $queue
@@ -108,7 +112,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a new job onto the queue after a delay.
+     * Placez une nouvelle tâche dans la file d'attente après un certain délai.
      *
      * @param  \DateTime|int  $delay
      * @param  string  $job
@@ -126,7 +130,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Pop the next job off of the queue.
+     * Retirez le travail suivant de la file d'attente.
      *
      * @param  string  $queue
      * @return \Two\Queue\Jobs\Job|null
@@ -137,9 +141,9 @@ class IronQueue extends Queue implements QueueInterface
 
         $job = $this->iron->getMessage($queue);
 
-        // If we were able to pop a message off of the queue, we will need to decrypt
-        // the message body, as all Iron.io messages are encrypted, since the push
-        // queues will be a security hazard to unsuspecting developers using it.
+        // Si nous parvenons à retirer un message de la file d'attente, nous devrons le déchiffrer
+        // le corps du message, car tous les messages Iron.io sont cryptés, depuis le push
+        // les files d'attente constitueront un risque de sécurité pour les développeurs peu méfiants qui l'utilisent.
         if ( ! is_null($job))
         {
             $job->body = $this->parseJobBody($job->body);
@@ -149,7 +153,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Delete a message from the Iron queue.
+     * Supprimez un message de la file d'attente Iron.
      *
      * @param  string  $queue
      * @param  string  $id
@@ -161,7 +165,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Marshal a push queue request and fire the job.
+     * Organisez une demande de file d’attente push et lancez la tâche.
      *
      * @return \Two\Http\Response
      */
@@ -173,7 +177,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Marshal out the pushed job and payload.
+     * Organisez le travail poussé et la charge utile.
      *
      * @return object
      */
@@ -189,7 +193,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Create a new IronJob for a pushed job.
+     * Créez un nouvel IronJob pour un travail poussé.
      *
      * @param  object  $job
      * @return \Two\Queue\Jobs\IronJob
@@ -200,7 +204,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Create a payload string from the given job and data.
+     * Créez une chaîne de charge utile à partir de la tâche et des données données.
      *
      * @param  string  $job
      * @param  mixed   $data
@@ -215,7 +219,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Parse the job body for firing.
+     * Analyser le corps de travail pour le tir.
      *
      * @param  string  $body
      * @return string
@@ -226,7 +230,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the queue or return the default.
+     * Obtenez la file d'attente ou renvoyez la valeur par défaut.
      *
      * @param  string|null  $queue
      * @return string
@@ -237,7 +241,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the underlying IronMQ instance.
+     * Obtenez l'instance IronMQ sous-jacente.
      *
      * @return \IronMQ
      */
@@ -247,7 +251,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the request instance.
+     * Obtenez l’instance de requête.
      *
      * @return \Symfony\Component\HttpFoundation\Request
      */
@@ -257,7 +261,7 @@ class IronQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Set the request instance.
+     * Définissez l'instance de requête.
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @return void

@@ -1,12 +1,17 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support\Facades;
 
 use Two\Support\Facades\Facade;
 
 
 /**
- * @see \Two\Foundation\Application
+ * @see \Two\Application\Two
  */
 class App extends Facade
 {
@@ -14,7 +19,7 @@ class App extends Facade
     /**
      * Renvoie l'instance Application.
      *
-     * @return \Two\Foundation\Application
+     * @return \Two\Application\Two
      */
     public static function instance()
     {

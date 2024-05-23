@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support\Facades;
 
 
@@ -9,7 +14,7 @@ namespace Two\Support\Facades;
 class Redis extends Facade
 {
     /**
-     * Get the registered name of the component.
+     * Obtenez le nom enregistré du composant.
      *
      * @return string
      */

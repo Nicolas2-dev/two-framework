@@ -1,8 +1,13 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications\Messages;
 
-use Two\Bus\QueueableTrait;
+use Two\Bus\Traits\QueueableTrait;
 
 
 class BroadcastMessage
@@ -10,14 +15,14 @@ class BroadcastMessage
     use QueueableTrait;
 
     /**
-     * The data for the notification.
+     * Les données pour la notification.
      *
      * @var array
      */
     public $data;
 
     /**
-     * Create a new message instance.
+     * Créez une nouvelle instance de message.
      *
      * @param  string  $content
      * @return void
@@ -28,7 +33,7 @@ class BroadcastMessage
     }
 
     /**
-     * Set the message data.
+     * Définissez les données du message.
      *
      * @param  array  $data
      * @return $this

@@ -2,26 +2,24 @@
 
 namespace Two\Broadcasting\Broadcasters;
 
+
 use Two\Broadcasting\Broadcaster;
-
 use Two\Container\Container;
-
 use Two\Http\Request;
-
 use Two\Redis\Database as RedisDatabase;
 
 
 class RedisBroadcaster implements Broadcaster
 {
     /**
-     * The Redis instance.
+     * L'instance Redis.
      *
-     * @var \Two\Contracts\Redis\Database
+     * @var \Two\Redis\Database
      */
     protected $redis;
 
     /**
-     * The Redis connection to use for broadcasting.
+     * La connexion Redis à utiliser pour la diffusion.
      *
      * @var string
      */
@@ -29,16 +27,14 @@ class RedisBroadcaster implements Broadcaster
 
 
     /**
-     * Create a new broadcaster instance.
+     * Créez une nouvelle instance de diffuseur.
      *
-     * @param  \Two\Contracts\Redis\Database  $redis
+     * @param  \Two\Redis\Database  $redis
      * @param  string  $connection
      * @return void
      */
     public function __construct(Container $container, RedisDatabase $redis, $connection = null)
     {
-        parent::__construct($container);
-
         //
         $this->redis = $redis;
 
@@ -46,7 +42,7 @@ class RedisBroadcaster implements Broadcaster
     }
 
     /**
-     * Return the valid authentication response.
+     * Renvoie la réponse d'authentification valide.
      *
      * @param  \Two\Http\Request  $request
      * @param  mixed  $result

@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications\Models;
 
 use Two\Database\ORM\Model as BaseModel;
@@ -9,21 +14,21 @@ use Two\Notifications\Models\NotificationCollection;
 class Notification extends BaseModel
 {
     /**
-     * The table associated with the Model.
+     * La table associée au modèle.
      *
      * @var string
      */
     protected $table = 'notifications';
 
     /**
-     * The primary key of the Model.
+     * La clé primaire du modèle.
      *
      * @var string
      */
     protected $primaryKey = 'id';
 
     /**
-     * The fillable attributes on the Model.
+     * Les attributs remplissables sur le modèle.
      *
      * @var array
      */
@@ -32,7 +37,7 @@ class Notification extends BaseModel
     );
 
     /**
-     * The attributes that should be mutated to dates.
+     * Les attributs qui doivent être mutés en dates.
      *
      * @var array
      */
@@ -40,7 +45,7 @@ class Notification extends BaseModel
 
 
     /**
-     * Get the notifiable entity that the notification belongs to.
+     * Obtenez l'entité notifiable à laquelle appartient la notification.
      */
     public function notifiable()
     {
@@ -48,7 +53,7 @@ class Notification extends BaseModel
     }
 
     /**
-     * Get the data attribute.
+     * Obtenez l'attribut de données.
      */
     public function getDataAttribute($value)
     {
@@ -56,7 +61,7 @@ class Notification extends BaseModel
     }
 
     /**
-     * Set the data attribute.
+     * Définissez l'attribut de données.
      */
     public function setDataAttribute($value)
     {
@@ -64,7 +69,7 @@ class Notification extends BaseModel
     }
 
     /**
-     * Mark the notification as read.
+     * Marquez la notification comme lue.
      *
      * @return void
      */
@@ -80,7 +85,7 @@ class Notification extends BaseModel
     }
 
     /**
-     * Determine if a notification has been read.
+     * Déterminez si une notification a été lue.
      *
      * @return bool
      */
@@ -90,7 +95,7 @@ class Notification extends BaseModel
     }
 
     /**
-     * Determine if a notification has not been read.
+     * Déterminez si une notification n’a pas été lue.
      *
      * @return bool
      */
@@ -100,7 +105,7 @@ class Notification extends BaseModel
     }
 
     /**
-     * Create a new database notification collection instance.
+     * Créez une nouvelle instance de collecte de notifications de base de données.
      *
      * @param  array  $models
      * @return \Two\Models\Notifications\NotificationsCollection

@@ -1,9 +1,13 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Events;
 
 use Two\Queue\Job;
-
 use Two\Container\Container;
 
 
@@ -62,7 +66,7 @@ class CallQueuedHandler
     {
         $traits = class_uses_recursive(get_class($instance));
 
-        if (in_array('Two\Queue\InteractsWithQueueTrait', $traits)) {
+        if (in_array('Two\Queue\Traits\InteractsWithQueueTrait', $traits)) {
             $instance->setJob($job);
         }
 

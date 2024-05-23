@@ -1,45 +1,52 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Query;
 
-use Two\Support\Collection;
-use Two\Database\ConnectionInterface;
-use Two\Database\Query\Expression;
-use Two\Database\Query\Grammar;
-use Two\Database\Query\JoinClause;
-use Two\Database\Query\Processor;
-use Two\Pagination\Paginator;
-use Two\Pagination\SimplePaginator;
-use Two\Support\Str;
-
 use Closure;
+use BadMethodCallException;
+use InvalidArgumentException;
+
+use Two\Support\Str;
+use Two\Collection\Collection;
+use Two\Pagination\Paginator;
+use Two\Database\Query\Grammar;
+use Two\Database\Query\Processor;
+use Two\Database\Query\Expression;
+use Two\Database\Query\JoinClause;
+use Two\Pagination\SimplePaginator;
+use Two\Database\Contracts\ConnectionInterface;
 
 
 class Builder
 {
     /**
-     * The database connection instance.
+     * L'instance de connexion à la base de données.
      *
      * @var \Two\Database\Connection
      */
     protected $connection;
 
     /**
-     * The database query grammar instance.
+     * Instance de grammaire de requête de base de données.
      *
      * @var \Two\Database\Query\Grammar
      */
     protected $grammar;
 
     /**
-     * The database query post processor instance.
+     * Instance de post-processeur de requête de base de données.
      *
      * @var \Two\Database\Query\Processor
      */
     protected $processor;
 
     /**
-     * The current query value bindings.
+     * Liaisons de valeurs de requête actuelles.
      *
      * @var array
      */
@@ -52,154 +59,154 @@ class Builder
     );
 
     /**
-     * An aggregate function and column to be run.
+     * Une fonction d'agrégation et une colonne à exécuter.
      *
      * @var array
      */
     public $aggregate;
 
     /**
-     * The columns that should be returned.
+     * Les colonnes qui doivent être renvoyées.
      *
      * @var array
      */
     public $columns;
 
     /**
-     * Indicates if the query returns distinct results.
+     * Indique si la requête renvoie des résultats distincts.
      *
      * @var bool
      */
     public $distinct = false;
 
     /**
-     * The table which the query is targeting.
+     * La table ciblée par la requête.
      *
      * @var string
      */
     public $from;
 
     /**
-     * The table joins for the query.
+     * La table se joint pour la requête.
      *
      * @var array
      */
     public $joins;
 
     /**
-     * The where constraints for the query.
+     * Les contraintes Where pour la requête.
      *
      * @var array
      */
     public $wheres;
 
     /**
-     * The groupings for the query.
+     * Les regroupements pour la requête.
      *
      * @var array
      */
     public $groups;
 
     /**
-     * The having constraints for the query.
+     * Les contraintes d'avoir pour la requête.
      *
      * @var array
      */
     public $havings;
 
     /**
-     * The orderings for the query.
+     * Les commandes pour la requête.
      *
      * @var array
      */
     public $orders;
 
     /**
-     * The maximum number of records to return.
+     * Le nombre maximum d'enregistrements à renvoyer.
      *
      * @var int
      */
     public $limit;
 
     /**
-     * The number of records to skip.
+     * Le nombre d'enregistrements à ignorer.
      *
      * @var int
      */
     public $offset;
 
     /**
-     * The query union statements.
+     * Les instructions d'union de requête.
      *
      * @var array
      */
     public $unions;
 
     /**
-     * The maximum number of union records to return.
+     * Nombre maximum d'enregistrements d'union à renvoyer.
      *
      * @var int
      */
     public $unionLimit;
 
     /**
-     * The number of union records to skip.
+     * Le nombre d'enregistrements syndicaux à ignorer.
      *
      * @var int
      */
     public $unionOffset;
 
     /**
-     * The orderings for the union query.
+     * Les commandes pour la requête union.
      *
      * @var array
      */
     public $unionOrders;
 
     /**
-     * Indicates whether row locking is being used.
+     * Indique si le verrouillage des lignes est utilisé.
      *
      * @var string|bool
      */
     public $lock;
 
     /**
-     * The backups of fields while doing a pagination count.
+     * Les sauvegardes de champs lors d'un décompte de pagination.
      *
      * @var array
      */
     protected $backups = array();
 
     /**
-     * The key that should be used when caching the query.
+     * Clé à utiliser lors de la mise en cache de la requête.
      *
      * @var string
      */
     protected $cacheKey;
 
     /**
-     * The number of minutes to cache the query.
+     * Le nombre de minutes pour mettre en cache la requête.
      *
      * @var int
      */
     protected $cacheMinutes;
 
     /**
-     * The tags for the query cache.
+     * Les balises pour le cache de requêtes.
      *
      * @var array
      */
     protected $cacheTags;
 
     /**
-     * The cache driver to be used.
+     * Le pilote de cache à utiliser.
      *
      * @var string
      */
     protected $cacheDriver;
 
     /**
-     * All of the available clause operators.
+     * Tous les opérateurs de clause disponibles.
      *
      * @var array
      */
@@ -212,9 +219,9 @@ class Builder
 
 
     /**
-     * Create a new query builder instance.
+     * Créez une nouvelle instance du générateur de requêtes.
      *
-     * @param  \Two\Database\ConnectionInterface  $connection
+     * @param  \Two\Database\Contracts\ConnectionInterface  $connection
      * @param  \Two\Database\Query\Grammar  $grammar
      * @param  \Two\Database\Query\Processor  $processor
      * @return void
@@ -227,7 +234,7 @@ class Builder
     }
 
     /**
-     * Set the columns to be selected.
+     * Définissez les colonnes à sélectionner.
      *
      * @param  array  $columns
      * @return $this
@@ -240,7 +247,7 @@ class Builder
     }
 
     /**
-     * Add a new "raw" select expression to the query.
+     * Ajoutez une nouvelle expression de sélection « brute » à la requête.
      *
      * @param  string  $expression
      * @param  array   $bindings
@@ -258,7 +265,7 @@ class Builder
     }
 
     /**
-     * Add a subselect expression to the query.
+     * Ajoutez une expression de sous-sélection à la requête.
      *
      * @param  \Closure|\Two\Database\Query\Builder|string $query
      * @param  string  $as
@@ -281,14 +288,14 @@ class Builder
         } else if (is_string($query)) {
             $bindings = array();
         } else {
-            throw new \InvalidArgumentException();
+            throw new InvalidArgumentException();
         }
 
         return $this->selectRaw('('. $query .') as '.$this->grammar->wrap($as), $bindings);
     }
 
     /**
-     * Add a new select column to the query.
+     * Ajoutez une nouvelle colonne de sélection à la requête.
      *
      * @param  mixed  $column
      * @return $this
@@ -303,7 +310,7 @@ class Builder
     }
 
     /**
-     * Force the query to only return distinct results.
+     * Force la requête à renvoyer uniquement des résultats distincts.
      *
      * @return $this
      */
@@ -315,7 +322,7 @@ class Builder
     }
 
     /**
-     * Set the table which the query is targeting.
+     * Définissez la table ciblée par la requête.
      *
      * @param  string  $table
      * @return $this
@@ -328,7 +335,7 @@ class Builder
     }
 
     /**
-     * Add a join clause to the query.
+     * Ajoutez une clause de jointure à la requête.
      *
      * @param  string  $table
      * @param  string  $one
@@ -356,7 +363,7 @@ class Builder
     }
 
     /**
-     * Add a "join where" clause to the query.
+     * Ajoutez une clause "joindre où" à la requête.
      *
      * @param  string  $table
      * @param  string  $one
@@ -371,7 +378,7 @@ class Builder
     }
 
     /**
-     * Add a left join to the query.
+     * Ajoutez une jointure gauche à la requête.
      *
      * @param  string  $table
      * @param  string  $first
@@ -385,7 +392,7 @@ class Builder
     }
 
     /**
-     * Add a "join where" clause to the query.
+     * Ajoutez une clause « joinwhere » à la requête.
      *
      * @param  string  $table
      * @param  string  $one
@@ -399,7 +406,7 @@ class Builder
     }
 
     /**
-     * Add a right join to the query.
+     * Ajoutez une jointure à droite à la requête.
      *
      * @param  string  $table
      * @param  string  $first
@@ -413,7 +420,7 @@ class Builder
     }
 
     /**
-     * Add a "right join where" clause to the query.
+     * Ajoutez une clause « right joinwhere » à la requête.
      *
      * @param  string  $table
      * @param  string  $one
@@ -427,7 +434,7 @@ class Builder
     }
 
     /**
-     * Add a basic where clause to the query.
+     * Ajoutez une clause Where de base à la requête.
      *
      * @param  string  $column
      * @param  string  $operator
@@ -451,7 +458,7 @@ class Builder
         if (func_num_args() == 2) {
             list($value, $operator) = array($operator, '=');
         } else if ($this->invalidOperatorAndValue($operator, $value)) {
-            throw new \InvalidArgumentException("Value must be provided.");
+            throw new InvalidArgumentException("Value must be provided.");
         }
 
         if ($column instanceof Closure) {
@@ -483,7 +490,7 @@ class Builder
     }
 
     /**
-     * Add an "or where" clause to the query.
+     * Ajoutez une clause « ou où » à la requête.
      *
      * @param  string  $column
      * @param  string  $operator
@@ -496,7 +503,7 @@ class Builder
     }
 
     /**
-     * Determine if the given operator and value combination is legal.
+     * Déterminez si la combinaison d’opérateur et de valeur donnée est légale.
      *
      * @param  string  $operator
      * @param  mixed  $value
@@ -510,7 +517,7 @@ class Builder
     }
 
     /**
-     * Add a raw where clause to the query.
+     * Ajoutez une clause Where brute à la requête.
      *
      * @param  string  $sql
      * @param  array   $bindings
@@ -529,7 +536,7 @@ class Builder
     }
 
     /**
-     * Add a raw or where clause to the query.
+     * Ajoutez une clause brute ou Where à la requête.
      *
      * @param  string  $sql
      * @param  array   $bindings
@@ -541,7 +548,7 @@ class Builder
     }
 
     /**
-     * Add a where between statement to the query.
+     * Ajoutez une instruction Where Between à la requête.
      *
      * @param  string  $column
      * @param  array   $values
@@ -561,7 +568,7 @@ class Builder
     }
 
     /**
-     * Add an or where between statement to the query.
+     * Ajoutez une instruction ou où entre à la requête.
      *
      * @param  string  $column
      * @param  array   $values
@@ -573,7 +580,7 @@ class Builder
     }
 
     /**
-     * Add a where not between statement to the query.
+     * Ajoutez une instruction Where Not Between à la requête.
      *
      * @param  string  $column
      * @param  array   $values
@@ -586,7 +593,7 @@ class Builder
     }
 
     /**
-     * Add an or where not between statement to the query.
+     * Ajoutez une instruction ou où pas entre à la requête.
      *
      * @param  string  $column
      * @param  array   $values
@@ -598,7 +605,7 @@ class Builder
     }
 
     /**
-     * Add a nested where statement to the query.
+     * Ajoutez une instruction Where imbriquée à la requête.
      *
      * @param  \Closure $callback
      * @param  string   $boolean
@@ -616,7 +623,7 @@ class Builder
     }
 
     /**
-     * Add another query builder as a nested where to the query builder.
+     * Ajoutez un autre générateur de requêtes en tant qu'emplacement imbriqué au générateur de requêtes.
      *
      * @param  \Two\Database\Query\Builder|static $query
      * @param  string  $boolean
@@ -636,7 +643,7 @@ class Builder
     }
 
     /**
-     * Add a full sub-select to the query.
+     * Ajoutez une sous-sélection complète à la requête.
      *
      * @param  string   $column
      * @param  string   $operator
@@ -661,7 +668,7 @@ class Builder
     }
 
     /**
-     * Add an exists clause to the query.
+     * Ajoutez une clause existe à la requête.
      *
      * @param  \Closure $callback
      * @param  string   $boolean
@@ -685,7 +692,7 @@ class Builder
     }
 
     /**
-     * Add an or exists clause to the query.
+     * Ajoutez une clause ou existe à la requête.
      *
      * @param  \Closure $callback
      * @param  bool     $not
@@ -697,7 +704,7 @@ class Builder
     }
 
     /**
-     * Add a where not exists clause to the query.
+     * Ajoutez une clause Where Not Existe à la requête.
      *
      * @param  \Closure $callback
      * @param  string   $boolean
@@ -709,7 +716,7 @@ class Builder
     }
 
     /**
-     * Add a where not exists clause to the query.
+     * Ajoutez une clause Where Not Existe à la requête.
      *
      * @param  \Closure  $callback
      * @return \Two\Database\Query\Builder|static
@@ -720,7 +727,7 @@ class Builder
     }
 
     /**
-     * Add a "where in" clause to the query.
+     * Ajoutez une clause « où dans » à la requête.
      *
      * @param  string  $column
      * @param  mixed   $values
@@ -744,7 +751,7 @@ class Builder
     }
 
     /**
-     * Add an "or where in" clause to the query.
+     * Ajoutez une clause « ou où dans » à la requête.
      *
      * @param  string  $column
      * @param  mixed   $values
@@ -756,7 +763,7 @@ class Builder
     }
 
     /**
-     * Add a "where not in" clause to the query.
+     * Ajoutez une clause "where not in" à la requête.
      *
      * @param  string  $column
      * @param  mixed   $values
@@ -769,7 +776,7 @@ class Builder
     }
 
     /**
-     * Add an "or where not in" clause to the query.
+     * Ajoutez une clause « ou où pas dans » à la requête.
      *
      * @param  string  $column
      * @param  mixed   $values
@@ -781,7 +788,7 @@ class Builder
     }
 
     /**
-     * Add a where in with a sub-select to the query.
+     * Ajoutez un où avec une sous-sélection à la requête.
      *
      * @param  string   $column
      * @param  \Closure $callback
@@ -804,7 +811,7 @@ class Builder
     }
 
     /**
-     * Add a "where null" clause to the query.
+     * Ajoutez une clause "where null" à la requête.
      *
      * @param  string  $column
      * @param  string  $boolean
@@ -821,7 +828,7 @@ class Builder
     }
 
     /**
-     * Add an "or where null" clause to the query.
+     * Ajoutez une clause « ou où null » à la requête.
      *
      * @param  string  $column
      * @return \Two\Database\Query\Builder|static
@@ -832,7 +839,7 @@ class Builder
     }
 
     /**
-     * Add a "where not null" clause to the query.
+     * Ajoutez une clause "where not null" à la requête.
      *
      * @param  string  $column
      * @param  string  $boolean
@@ -844,7 +851,7 @@ class Builder
     }
 
     /**
-     * Add an "or where not null" clause to the query.
+     * Ajoutez une clause « ou où non nul » à la requête.
      *
      * @param  string  $column
      * @return \Two\Database\Query\Builder|static
@@ -855,7 +862,7 @@ class Builder
     }
 
     /**
-     * Add a "where date" statement to the query.
+     * Ajoutez une instruction "where date" à la requête.
      *
      * @param  string  $column
      * @param  string   $operator
@@ -869,7 +876,7 @@ class Builder
     }
 
     /**
-     * Add a "where day" statement to the query.
+     * Ajoutez une instruction "where day" à la requête.
      *
      * @param  string  $column
      * @param  string   $operator
@@ -883,7 +890,7 @@ class Builder
     }
 
     /**
-     * Add a "where month" statement to the query.
+     * Ajoutez une instruction « où mois » à la requête.
      *
      * @param  string  $column
      * @param  string   $operator
@@ -897,7 +904,7 @@ class Builder
     }
 
     /**
-     * Add a "where year" statement to the query.
+     * Ajoutez une instruction « où année » à la requête.
      *
      * @param  string  $column
      * @param  string   $operator
@@ -911,7 +918,7 @@ class Builder
     }
 
     /**
-     * Add a date based (year, month, day) statement to the query.
+     * Ajoutez une instruction basée sur la date (année, mois, jour) à la requête.
      *
      * @param  string  $type
      * @param  string  $column
@@ -930,7 +937,7 @@ class Builder
     }
 
     /**
-     * Handles dynamic "where" clauses to the query.
+     * Gère les clauses dynamiques « où » de la requête.
      *
      * @param  string  $method
      * @param  string  $parameters
@@ -960,7 +967,7 @@ class Builder
     }
 
     /**
-     * Add a single dynamic where clause statement to the query.
+     * Ajoutez une seule instruction de clause Where dynamique à la requête.
      *
      * @param  string  $segment
      * @param  string  $connector
@@ -976,7 +983,7 @@ class Builder
     }
 
     /**
-     * Add a "group by" clause to the query.
+     * Ajoutez une clause "group by" à la requête.
      *
      * @param  array|string  $column,...
      * @return $this
@@ -991,7 +998,7 @@ class Builder
     }
 
     /**
-     * Add a "having" clause to the query.
+     * Ajoutez une clause « avoir » à la requête.
      *
      * @param  string  $column
      * @param  string  $operator
@@ -1011,7 +1018,7 @@ class Builder
     }
 
     /**
-     * Add a "or having" clause to the query.
+     * Ajoutez une clause "ou avoir" à la requête.
      *
      * @param  string  $column
      * @param  string  $operator
@@ -1024,7 +1031,7 @@ class Builder
     }
 
     /**
-     * Add a raw having clause to the query.
+     * Ajoutez une clause have brute à la requête.
      *
      * @param  string  $sql
      * @param  array   $bindings
@@ -1043,7 +1050,7 @@ class Builder
     }
 
     /**
-     * Add a raw or having clause to the query.
+     * Ajoutez une clause raw ou have à la requête.
      *
      * @param  string  $sql
      * @param  array   $bindings
@@ -1055,7 +1062,7 @@ class Builder
     }
 
     /**
-     * Add an "order by" clause to the query.
+     * Ajoutez une clause « order by » à la requête.
      *
      * @param  string  $column
      * @param  string  $direction
@@ -1073,7 +1080,7 @@ class Builder
     }
 
     /**
-     * Add an "order by" clause for a timestamp to the query.
+     * Ajoutez une clause « order by » pour un horodatage à la requête.
      *
      * @param  string  $column
      * @return \Two\Database\Query\Builder|static
@@ -1084,7 +1091,7 @@ class Builder
     }
 
     /**
-     * Add an "order by" clause for a timestamp to the query.
+     * Ajoutez une clause « order by » pour un horodatage à la requête.
      *
      * @param  string  $column
      * @return \Two\Database\Query\Builder|static
@@ -1095,7 +1102,7 @@ class Builder
     }
 
     /**
-     * Add a raw "order by" clause to the query.
+     * Ajoutez une clause brute « order by » à la requête.
      *
      * @param  string  $sql
      * @param  array  $bindings
@@ -1113,7 +1120,7 @@ class Builder
     }
 
     /**
-     * Set the "offset" value of the query.
+     * Définissez la valeur "offset" de la requête.
      *
      * @param  int  $value
      * @return $this
@@ -1128,7 +1135,7 @@ class Builder
     }
 
     /**
-     * Alias to set the "offset" value of the query.
+     * Alias ​​pour définir la valeur "offset" de la requête.
      *
      * @param  int  $value
      * @return \Two\Database\Query\Builder|static
@@ -1139,7 +1146,7 @@ class Builder
     }
 
     /**
-     * Set the "limit" value of the query.
+     * Définissez la valeur "limite" de la requête.
      *
      * @param  int  $value
      * @return $this
@@ -1154,7 +1161,7 @@ class Builder
     }
 
     /**
-     * Alias to set the "limit" value of the query.
+     * Alias ​​pour définir la valeur "limite" de la requête.
      *
      * @param  int  $value
      * @return \Two\Database\Query\Builder|static
@@ -1165,7 +1172,7 @@ class Builder
     }
 
     /**
-     * Set the limit and offset for a given page.
+     * Définissez la limite et le décalage pour une page donnée.
      *
      * @param  int  $page
      * @param  int  $perPage
@@ -1177,7 +1184,7 @@ class Builder
     }
 
     /**
-     * Add a union statement to the query.
+     * Ajoutez une instruction union à la requête.
      *
      * @param  \Two\Database\Query\Builder|\Closure  $query
      * @param  bool  $all
@@ -1195,7 +1202,7 @@ class Builder
     }
 
     /**
-     * Add a union all statement to the query.
+     * Ajoutez une instruction union all à la requête.
      *
      * @param  \Two\Database\Query\Builder|\Closure  $query
      * @return \Two\Database\Query\Builder|static
@@ -1206,7 +1213,7 @@ class Builder
     }
 
     /**
-     * Lock the selected rows in the table.
+     * Verrouillez les lignes sélectionnées dans le tableau.
      *
      * @param  bool  $value
      * @return $this
@@ -1219,7 +1226,7 @@ class Builder
     }
 
     /**
-     * Lock the selected rows in the table for updating.
+     * Verrouillez les lignes sélectionnées dans le tableau pour la mise à jour.
      *
      * @return \Two\Database\Query\Builder
      */
@@ -1229,7 +1236,7 @@ class Builder
     }
 
     /**
-     * Share lock the selected rows in the table.
+     * Partager verrouille les lignes sélectionnées dans le tableau.
      *
      * @return \Two\Database\Query\Builder
      */
@@ -1239,7 +1246,7 @@ class Builder
     }
 
     /**
-     * Get the SQL representation of the query.
+     * Obtenez la représentation SQL de la requête.
      *
      * @return string
      */
@@ -1249,7 +1256,7 @@ class Builder
     }
 
     /**
-     * Indicate that the query results should be cached.
+     * Indiquez que les résultats de la requête doivent être mis en cache.
      *
      * @param  \DateTime|int  $minutes
      * @param  string  $key
@@ -1263,7 +1270,7 @@ class Builder
     }
 
     /**
-     * Indicate that the query results should be cached forever.
+     * Indiquez que les résultats de la requête doivent être mis en cache pour toujours.
      *
      * @param  string  $key
      * @return \Two\Database\Query\Builder|static
@@ -1274,7 +1281,7 @@ class Builder
     }
 
     /**
-     * Indicate that the results, if cached, should use the given cache tags.
+     * Indiquez que les résultats, s'ils sont mis en cache, doivent utiliser les balises de cache données.
      *
      * @param  array|mixed  $cacheTags
      * @return $this
@@ -1287,7 +1294,7 @@ class Builder
     }
 
     /**
-     * Indicate that the results, if cached, should use the given cache driver.
+     * Indiquez que les résultats, s'ils sont mis en cache, doivent utiliser le pilote de cache donné.
      *
      * @param  string  $cacheDriver
      * @return $this
@@ -1300,7 +1307,7 @@ class Builder
     }
 
     /**
-     * Execute a query for a single record by ID.
+     * Exécutez une requête pour un seul enregistrement par ID.
      *
      * @param  int    $id
      * @param  array  $columns
@@ -1312,7 +1319,7 @@ class Builder
     }
 
     /**
-     * Pluck a single column's value from the first result of a query.
+     * Extrayez la valeur d’une seule colonne du premier résultat d’une requête.
      *
      * @param  string  $column
      * @return mixed
@@ -1325,7 +1332,7 @@ class Builder
     }
 
     /**
-     * Execute the query and get the first result.
+     * Exécutez la requête et obtenez le premier résultat.
      *
      * @param  array   $columns
      * @return mixed|static
@@ -1338,7 +1345,7 @@ class Builder
     }
 
     /**
-     * Execute the query as a "select" statement.
+     * Exécutez la requête en tant qu'instruction "select".
      *
      * @param  array  $columns
      * @return array|static[]
@@ -1351,7 +1358,7 @@ class Builder
     }
 
     /**
-     * Execute the query as a fresh "select" statement.
+     * Exécutez la requête sous la forme d'une nouvelle instruction "select".
      *
      * @param  array  $columns
      * @return array|static[]
@@ -1364,7 +1371,7 @@ class Builder
     }
 
     /**
-     * Run the query as a "select" statement against the connection.
+     * Exécutez la requête en tant qu'instruction « select » sur la connexion.
      *
      * @return array
      */
@@ -1374,7 +1381,7 @@ class Builder
     }
 
     /**
-     * Execute the query as a cached "select" statement.
+     * Exécutez la requête en tant qu'instruction « select » mise en cache.
      *
      * @param  array  $columns
      * @return array
@@ -1398,7 +1405,7 @@ class Builder
     }
 
     /**
-     * Get the cache object with tags assigned, if applicable.
+     * Obtenez l'objet de cache avec les balises attribuées, le cas échéant.
      *
      * @return \Two\Cache\CacheManager
      */
@@ -1410,7 +1417,7 @@ class Builder
     }
 
     /**
-     * Get the cache key and cache minutes as an array.
+     * Obtenez la clé de cache et les minutes de cache sous forme de tableau.
      *
      * @return array
      */
@@ -1420,7 +1427,7 @@ class Builder
     }
 
     /**
-     * Get a unique cache key for the complete query.
+     * Obtenez une clé de cache unique pour la requête complète.
      *
      * @return string
      */
@@ -1430,7 +1437,7 @@ class Builder
     }
 
     /**
-     * Generate the unique cache key for the query.
+     * Générez la clé de cache unique pour la requête.
      *
      * @return string
      */
@@ -1442,7 +1449,7 @@ class Builder
     }
 
     /**
-     * Get the Closure callback used when caching queries.
+     * Obtenez le rappel de fermeture utilisé lors de la mise en cache des requêtes.
      *
      * @param  array  $columns
      * @return \Closure
@@ -1453,7 +1460,7 @@ class Builder
     }
 
     /**
-     * Chunk the results of the query.
+     * Découpez les résultats de la requête.
      *
      * @param  int  $count
      * @param  callable  $callback
@@ -1473,7 +1480,7 @@ class Builder
     }
 
     /**
-     * Get an array with the values of a given column.
+     * Obtenez un tableau avec les valeurs d'une colonne donnée.
      *
      * @param  string  $column
      * @param  string  $key
@@ -1498,7 +1505,7 @@ class Builder
     }
 
     /**
-     * Get the columns that should be used in a list array.
+     * Obtenez les colonnes qui doivent être utilisées dans un tableau de liste.
      *
      * @param  string  $column
      * @param  string  $key
@@ -1516,7 +1523,7 @@ class Builder
     }
 
     /**
-     * Concatenate values of a given column as a string.
+     * Concaténer les valeurs d'une colonne donnée sous forme de chaîne.
      *
      * @param  string  $column
      * @param  string  $glue
@@ -1530,7 +1537,7 @@ class Builder
     }
 
     /**
-     * Paginate the given query into a paginator.
+     * Paginez la requête donnée dans un paginateur.
      *
      * @param  int  $perPage
      * @param  array  $columns
@@ -1559,9 +1566,9 @@ class Builder
     }
 
     /**
-     * Paginate the given query into a simple paginator.
+     * Paginez la requête donnée dans un simple paginateur.
      *
-     * This is more efficient on larger data-sets, etc.
+     * Ceci est plus efficace sur des ensembles de données plus volumineux, etc.
      *
      * @param  int  $perPage
      * @param  array  $columns
@@ -1586,7 +1593,7 @@ class Builder
     }
 
     /**
-     * Get the count of the total records for pagination.
+     * Obtenez le nombre total d’enregistrements pour la pagination.
      *
      * @return int
      */
@@ -1602,7 +1609,7 @@ class Builder
     }
 
     /**
-     * Backup certain fields for a pagination count.
+     * Sauvegardez certains champs pour un nombre de pagination.
      *
      * @return void
      */
@@ -1617,7 +1624,7 @@ class Builder
     }
 
     /**
-     * Restore certain fields for a pagination count.
+     * Restaurez certains champs pour un nombre de pagination.
      *
      * @return void
      */
@@ -1631,7 +1638,7 @@ class Builder
     }
 
     /**
-     * Determine if any rows exist for the current query.
+     * Déterminez s’il existe des lignes pour la requête actuelle.
      *
      * @return bool
      */
@@ -1647,7 +1654,7 @@ class Builder
     }
 
     /**
-     * Retrieve the "count" result of the query.
+     * Récupérez le résultat "count" de la requête.
      *
      * @param  string  $columns
      * @return int
@@ -1662,7 +1669,7 @@ class Builder
     }
 
     /**
-     * Retrieve the minimum value of a given column.
+     * Récupère la valeur minimale d'une colonne donnée.
      *
      * @param  string  $column
      * @return mixed
@@ -1673,7 +1680,7 @@ class Builder
     }
 
     /**
-     * Retrieve the maximum value of a given column.
+     * Récupère la valeur maximale d'une colonne donnée.
      *
      * @param  string  $column
      * @return mixed
@@ -1684,7 +1691,7 @@ class Builder
     }
 
     /**
-     * Retrieve the sum of the values of a given column.
+     * Récupère la somme des valeurs d'une colonne donnée.
      *
      * @param  string  $column
      * @return mixed
@@ -1697,7 +1704,7 @@ class Builder
     }
 
     /**
-     * Retrieve the average of the values of a given column.
+     * Récupère la moyenne des valeurs d'une colonne donnée.
      *
      * @param  string  $column
      * @return mixed
@@ -1708,7 +1715,7 @@ class Builder
     }
 
     /**
-     * Execute an aggregate function on the database.
+     * Exécutez une fonction d'agrégation sur la base de données.
      *
      * @param  string  $function
      * @param  array   $columns
@@ -1734,7 +1741,7 @@ class Builder
     }
 
     /**
-     * Insert a new record into the database.
+     * Insérez un nouvel enregistrement dans la base de données.
      *
      * @param  array  $values
      * @return bool
@@ -1765,7 +1772,7 @@ class Builder
     }
 
     /**
-     * Insert a new record and get the value of the primary key.
+     * Insérez un nouvel enregistrement et obtenez la valeur de la clé primaire.
      *
      * @param  array   $values
      * @param  string  $sequence
@@ -1781,7 +1788,7 @@ class Builder
     }
 
     /**
-     * Update a record in the database.
+     * Mettre à jour un enregistrement dans la base de données.
      *
      * @param  array  $values
      * @return int
@@ -1796,7 +1803,7 @@ class Builder
     }
 
     /**
-     * Increment a column's value by a given amount.
+     * Incrémentez la valeur d'une colonne d'un montant donné.
      *
      * @param  string  $column
      * @param  int     $amount
@@ -1813,7 +1820,7 @@ class Builder
     }
 
     /**
-     * Decrement a column's value by a given amount.
+     * Décrémenter la valeur d'une colonne d'un montant donné.
      *
      * @param  string  $column
      * @param  int     $amount
@@ -1830,7 +1837,7 @@ class Builder
     }
 
     /**
-     * Delete a record from the database.
+     * Supprimer un enregistrement de la base de données.
      *
      * @param  mixed  $id
      * @return int
@@ -1845,7 +1852,7 @@ class Builder
     }
 
     /**
-     * Run a truncate statement on the table.
+     * Exécutez une instruction tronquée sur la table.
      *
      * @return void
      */
@@ -1857,7 +1864,7 @@ class Builder
     }
 
     /**
-     * Get a new instance of the query builder.
+     * Obtenez une nouvelle instance du générateur de requêtes.
      *
      * @return \Two\Database\Query\Builder
      */
@@ -1867,7 +1874,7 @@ class Builder
     }
 
     /**
-     * Merge an array of where clauses and bindings.
+     * Fusionnez un tableau de clauses Where et de liaisons.
      *
      * @param  array  $wheres
      * @param  array  $bindings
@@ -1881,7 +1888,7 @@ class Builder
     }
 
     /**
-     * Remove all of the expressions from a list of bindings.
+     * Supprimez toutes les expressions d’une liste de liaisons.
      *
      * @param  array  $bindings
      * @return array
@@ -1895,7 +1902,7 @@ class Builder
     }
 
     /**
-     * Create a raw database expression.
+     * Créez une expression de base de données brute.
      *
      * @param  mixed  $value
      * @return \Two\Database\Query\Expression
@@ -1906,7 +1913,7 @@ class Builder
     }
 
     /**
-     * Get the current query value bindings in a flattened array.
+     * Obtenez les liaisons de valeurs de requête actuelles dans un tableau aplati.
      *
      * @return array
      */
@@ -1916,7 +1923,7 @@ class Builder
     }
 
     /**
-     * Get the raw array of bindings.
+     * Obtenez la gamme brute de liaisons.
      *
      * @return array
      */
@@ -1926,7 +1933,7 @@ class Builder
     }
 
     /**
-     * Set the bindings on the query builder.
+     * Définissez les liaisons sur le générateur de requêtes.
      *
      * @param  array   $bindings
      * @param  string  $type
@@ -1937,7 +1944,7 @@ class Builder
     public function setBindings(array $bindings, $type = 'where')
     {
         if (! array_key_exists($type, $this->bindings)) {
-            throw new \InvalidArgumentException("Invalid binding type: {$type}.");
+            throw new InvalidArgumentException("Invalid binding type: {$type}.");
         }
 
         $this->bindings[$type] = $bindings;
@@ -1946,7 +1953,7 @@ class Builder
     }
 
     /**
-     * Add a binding to the query.
+     * Ajoutez une liaison à la requête.
      *
      * @param  mixed   $value
      * @param  string  $type
@@ -1957,7 +1964,7 @@ class Builder
     public function addBinding($value, $type = 'where')
     {
         if (! array_key_exists($type, $this->bindings)) {
-            throw new \InvalidArgumentException("Invalid binding type: {$type}.");
+            throw new InvalidArgumentException("Invalid binding type: {$type}.");
         }
 
         if (is_array($value)) {
@@ -1970,7 +1977,7 @@ class Builder
     }
 
     /**
-     * Merge an array of bindings into our bindings.
+     * Fusionnez un tableau de liaisons dans nos liaisons.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return $this
@@ -1983,9 +1990,9 @@ class Builder
     }
 
     /**
-     * Get the database connection instance.
+     * Obtenez l'instance de connexion à la base de données.
      *
-     * @return \Two\Database\ConnectionInterface
+     * @return \Two\Database\Contracts\ConnectionInterface
      */
     public function getConnection()
     {
@@ -1993,7 +2000,7 @@ class Builder
     }
 
     /**
-     * Get the database query processor instance.
+     * Obtenez l’instance du processeur de requêtes de base de données.
      *
      * @return \Two\Database\Query\Processors\Processor
      */
@@ -2003,7 +2010,7 @@ class Builder
     }
 
     /**
-     * Get the query grammar instance.
+     * Obtenez l’instance de grammaire de requête.
      *
      * @return \Two\Database\Grammar
      */
@@ -2013,7 +2020,7 @@ class Builder
     }
 
     /**
-     * Handle dynamic method calls into the method.
+     * Gérez les appels de méthode dynamique dans la méthode.
      *
      * @param  string  $method
      * @param  array   $parameters
@@ -2029,7 +2036,7 @@ class Builder
 
         $className = get_class($this);
 
-        throw new \BadMethodCallException("Call to undefined method {$className}::{$method}()");
+        throw new BadMethodCallException("Call to undefined method {$className}::{$method}()");
     }
 
 }

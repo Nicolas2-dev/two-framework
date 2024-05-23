@@ -1,12 +1,17 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Broadcasting;
 
 
 class Channel
 {
     /**
-     * The channel's name.
+     * Le nom de la chaîne.
      *
      * @var string
      */
@@ -14,7 +19,7 @@ class Channel
 
 
     /**
-     * Gets the channel name.
+     * Obtient le nom de la chaîne.
      *
      * @return string
      */
@@ -24,7 +29,7 @@ class Channel
     }
 
     /**
-     * Convert the channel instance to a string.
+     * Convertissez l'instance de canal en chaîne.
      *
      * @return string
      */

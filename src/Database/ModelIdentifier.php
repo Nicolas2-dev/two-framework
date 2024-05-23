@@ -1,26 +1,31 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database;
 
 
 class ModelIdentifier
 {
     /**
-     * The class name of the Model.
+     * Le nom de classe du modèle.
      *
      * @var string
      */
     public $class;
 
     /**
-     * The unique identifier of the model.
+     * L'identifiant unique du modèle.
      *
      * @var mixed
      */
     public $id;
 
     /**
-     * Create a new Model identifier.
+     * Créez un nouvel identifiant de modèle.
      *
      * @param  string  $class
      * @param  mixed  $id

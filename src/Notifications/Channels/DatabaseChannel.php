@@ -1,16 +1,21 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications\Channels;
 
-use Two\Notifications\Notification;
-
 use RuntimeException;
+
+use Two\Notifications\Notification;
 
 
 class DatabaseChannel
 {
     /**
-     * Send the given notification.
+     * Envoyez la notification donnée.
      *
      * @param  mixed  $notifiable
      * @param  \Two\Notifications\Notification  $notification
@@ -27,7 +32,7 @@ class DatabaseChannel
     }
 
     /**
-     * Get the data for the notification.
+     * Obtenez les données pour la notification.
      *
      * @param  mixed  $notifiable
      * @param  \Two\Notifications\Notification  $notification

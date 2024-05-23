@@ -1,36 +1,41 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database;
 
-use Two\Console\Command;
 use Two\Container\Container;
+use Two\Console\Commands\Command;
 
 
 class Seeder
 {
     /**
-     * The container instance.
+     * L'instance de conteneur.
      *
      * @var \Two\Container\Container
      */
     protected $container;
 
     /**
-     * The console command instance.
+     * L'instance de commande de console.
      *
      * @var \Two\Console\Command
      */
     protected $command;
 
     /**
-     * Run the database seeds.
+     * Exécutez les graines de la base de données.
      *
      * @return void
      */
     public function run() {}
 
     /**
-     * Seed the given connection from the given path.
+     * Amorce la connexion donnée à partir du chemin donné.
      *
      * @param  string  $class
      * @return void
@@ -45,7 +50,7 @@ class Seeder
     }
 
     /**
-     * Resolve an instance of the given seeder class.
+     * Résolvez une instance de la classe seeder donnée.
      *
      * @param  string  $class
      * @return \Two\Database\Seeder
@@ -68,7 +73,7 @@ class Seeder
     }
 
     /**
-     * Set the IoC container instance.
+     * Définissez l'instance de conteneur IoC.
      *
      * @param  \Two\Container\Container  $container
      * @return $this
@@ -81,9 +86,9 @@ class Seeder
     }
 
     /**
-     * Set the console command instance.
+     * Définissez l’instance de commande de console.
      *
-     * @param  \Two\Console\Command  $command
+     * @param  \Two\Console\Commands\Command  $command
      * @return $this
      */
     public function setCommand(Command $command)

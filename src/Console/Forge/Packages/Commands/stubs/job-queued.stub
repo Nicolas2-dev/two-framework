@@ -1,0 +1,36 @@
+<?php
+
+namespace {{namespace}};
+
+use Two\Bus\Traits\QueueableTrait;
+use Two\\Bus\Traits\DispatchableTrait;
+use Two\Queue\Contracts\ShouldQueueInterface;
+use Two\Queue\Traits\SerializesModelsTrait;
+use Two\Queue\Traits\InteractsWithQueueTrait;
+
+
+class {{className}} implements ShouldQueueInterface
+{
+    use DispatchableTrait, InteractsWithQueueTrait, QueueableTrait, SerializesModelsTrait;
+
+
+    /**
+     * Créez une nouvelle instance de travail.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Exécutez le travail.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        //
+    }
+}

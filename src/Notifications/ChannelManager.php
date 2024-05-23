@@ -1,31 +1,36 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications;
 
-use Two\Bus\Dispatcher as BusDispatcher;
-use Two\Events\Dispatcher as EventDispatcher;
-use Two\Foundation\Application;
-use Two\Support\Manager;
-use Two\Notifications\Channels\BroadcastChannel;
-use Two\Notifications\Channels\DatabaseChannel;
-use Two\Notifications\Channels\MailChannel;
-use Two\Notifications\DispatcherInterface;
-use Two\Notifications\NotificationSender;
-
 use InvalidArgumentException;
+
+use Two\Application\Manager;
+use Two\Application\Two;
+use Two\Bus\Dispatcher as BusDispatcher;
+use Two\Notifications\NotificationSender;
+use Two\Notifications\Channels\MailChannel;
+use Two\Events\Dispatcher as EventDispatcher;
+use Two\Notifications\Channels\DatabaseChannel;
+use Two\Notifications\Channels\BroadcastChannel;
+use Two\Notifications\contracts\DispatcherInterface;
 
 
 class ChannelManager extends Manager implements DispatcherInterface
 {
     /**
-     * The notifications sender instance.
+     * Instance de l’expéditeur des notifications.
      *
      * @var \Two\Notifications\NotificationSender
      */
     protected $sender;
 
     /**
-     * The default channels used to deliver messages.
+     * Les canaux par défaut utilisés pour transmettre les messages.
      *
      * @var array
      */
@@ -33,14 +38,14 @@ class ChannelManager extends Manager implements DispatcherInterface
 
 
     /**
-     * Create a new manager instance.
+     * Créez une nouvelle instance de gestionnaire.
      *
-     * @param  \Two\Foundation\Application  $app
+     * @param  \Two\Application\Two  $app
      * @param  \Two\Events\Dispatcher  $events
      * @param  \Two\Bus\Dispatcher  $bus
      * @return void
      */
-    public function __construct(Application $app, EventDispatcher $events, BusDispatcher $bus)
+    public function __construct(Two $app, EventDispatcher $events, BusDispatcher $bus)
     {
         $this->app = $app;
 
@@ -49,7 +54,7 @@ class ChannelManager extends Manager implements DispatcherInterface
     }
 
     /**
-     * Send the given notification to the given notifiable entities.
+     * Envoyez la notification donnée aux entités notifiables indiquées.
      *
      * @param  \Two\Support\Collection|array|mixed  $notifiables
      * @param  mixed  $notification
@@ -61,7 +66,7 @@ class ChannelManager extends Manager implements DispatcherInterface
     }
 
     /**
-     * Send the given notification to the given notifiable entities.
+     * Envoyez la notification donnée aux entités notifiables indiquées.
      *
      * @param  \Two\Support\Collection|array|mixed  $notifiables
      * @param  mixed  $notification
@@ -74,7 +79,7 @@ class ChannelManager extends Manager implements DispatcherInterface
     }
 
     /**
-     * Get a channel instance.
+     * Obtenez une instance de canal.
      *
      * @param  string|null  $name
      * @return mixed
@@ -85,7 +90,7 @@ class ChannelManager extends Manager implements DispatcherInterface
     }
 
     /**
-     * Create an instance of the database driver.
+     * Créez une instance du pilote de base de données.
      *
      * @return \Two\Notifications\Channels\DatabaseChannel
      */
@@ -95,7 +100,7 @@ class ChannelManager extends Manager implements DispatcherInterface
     }
 
     /**
-     * Create an instance of the broadcast driver.
+     * Créez une instance du pilote de diffusion.
      *
      * @return \Two\Notifications\Channels\BroadcastChannel
      */
@@ -105,7 +110,7 @@ class ChannelManager extends Manager implements DispatcherInterface
     }
 
     /**
-     * Create an instance of the mail driver.
+     * Créez une instance du pilote de messagerie.
      *
      * @return \Two\Notifications\Channels\MailChannel
      */
@@ -115,7 +120,7 @@ class ChannelManager extends Manager implements DispatcherInterface
     }
 
     /**
-     * Create a new driver instance.
+     * Créez une nouvelle instance de pilote.
      *
      * @param  string  $driver
      * @return mixed
@@ -137,7 +142,7 @@ class ChannelManager extends Manager implements DispatcherInterface
     }
 
     /**
-     * Get the default channel driver name.
+     * Obtenez le nom du pilote de canal par défaut.
      *
      * @return string
      */
@@ -147,7 +152,7 @@ class ChannelManager extends Manager implements DispatcherInterface
     }
 
     /**
-     * Get the default channel driver name.
+     * Obtenez le nom du pilote de canal par défaut.
      *
      * @return string
      */
@@ -157,7 +162,7 @@ class ChannelManager extends Manager implements DispatcherInterface
     }
 
     /**
-     * Set the default channel driver name.
+     * Définissez le nom du pilote de canal par défaut.
      *
      * @param  string  $channel
      * @return void

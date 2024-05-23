@@ -1,6 +1,13 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Session;
+
+use SessionHandlerInterface;
 
 use Two\Filesystem\Filesystem;
 
@@ -9,31 +16,31 @@ use Symfony\Component\Finder\Finder;
 use Carbon\Carbon;
 
 
-class FileSessionHandler implements \SessionHandlerInterface
+class FileSessionHandler implements SessionHandlerInterface
 {
     /**
-     * The filesystem instance.
+     * L'instance du système de fichiers.
      *
      * @var \Two\Filesystem\Filesystem
      */
     protected $files;
 
     /**
-     * The path where sessions should be stored.
+     * Le chemin où les sessions doivent être stockées.
      *
      * @var string
      */
     protected $path;
 
     /**
-     * The number of minutes the session should be valid.
+     * Le nombre de minutes pendant lesquelles la session doit être valide.
      *
      * @var int
      */
     protected $minutes;
 
     /**
-     * Create a new file driven handler instance.
+     * Créez une nouvelle instance de gestionnaire piloté par fichier.
      *
      * @param  \Two\Filesystem\Filesystem  $files
      * @param  string  $path

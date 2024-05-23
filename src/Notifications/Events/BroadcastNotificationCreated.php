@@ -1,10 +1,15 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications\Events;
 
-use Two\Bus\QueueableTrait;
-use Two\Queue\SerializesModelsTrait;
-use Two\Broadcasting\ShouldBroadcastInterface;
+use Two\Bus\Traits\QueueableTrait;
+use Two\Queue\Traits\SerializesModelsTrait;
+use Two\Broadcasting\Contracts\ShouldBroadcastInterface;
 
 
 class BroadcastNotificationCreated implements ShouldBroadcastInterface
@@ -12,28 +17,28 @@ class BroadcastNotificationCreated implements ShouldBroadcastInterface
     use QueueableTrait, SerializesModelsTrait;
 
     /**
-     * The notifiable entity who received the notification.
+     * L'entité notifiable qui a reçu la notification.
      *
      * @var mixed
      */
     public $notifiable;
 
     /**
-     * The notification instance.
+     * L'instance de notification.
      *
      * @var \Two\Notifications\Notification
      */
     public $notification;
 
     /**
-     * The notification data.
+     * Les données de notification.
      *
      * @var array
      */
     public $data = array();
 
     /**
-     * Create a new event instance.
+     * Créez une nouvelle instance d'événement.
      *
      * @param  mixed  $notifiable
      * @param  \Two\Notifications\Notification  $notification
@@ -48,7 +53,7 @@ class BroadcastNotificationCreated implements ShouldBroadcastInterface
     }
 
     /**
-     * Get the channels the event should broadcast on.
+     * Obtenez les chaînes sur lesquelles l'événement doit être diffusé.
      *
      * @return array
      */
@@ -66,7 +71,7 @@ class BroadcastNotificationCreated implements ShouldBroadcastInterface
     }
 
     /**
-     * Get the data that should be sent with the broadcasted event.
+     * Obtenez les données qui doivent être envoyées avec l'événement diffusé.
      *
      * @return array
      */
@@ -79,7 +84,7 @@ class BroadcastNotificationCreated implements ShouldBroadcastInterface
     }
 
     /**
-     * Get the broadcast channel name for the event.
+     * Obtenez le nom de la chaîne de diffusion de l'événement.
      *
      * @return string
      */

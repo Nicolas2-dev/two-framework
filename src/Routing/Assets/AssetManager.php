@@ -1,31 +1,36 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Routing\Assets;
+
+use InvalidArgumentException;
 
 use Two\Support\Arr;
 use Two\View\Factory as ViewFactory;
-
-use InvalidArgumentException;
 
 
 class AssetManager
 {
     /**
-     * The View Factory instance.
+     * L’instance de View Factory.
      *
      * @var \Two\View\Factory
      */
      protected $views;
 
     /**
-     * The Assets Types
+     * Les types d'actifs
      *
      * @var array
      */
     protected $types = array('css', 'js');
 
     /**
-     * The Assets Positions
+     * Les positions d’actifs
      *
      * @var array
      */
@@ -35,7 +40,7 @@ class AssetManager
     );
 
     /**
-     *  The Asset Templates
+     * Les modèles d'actifs 
      *
      * @var array
      */
@@ -52,7 +57,7 @@ class AssetManager
 
 
     /**
-     * Create a new Assets Manager instance.
+     * Créez une nouvelle instance Assets Manager.
      *
      * @return void
      */
@@ -62,7 +67,7 @@ class AssetManager
     }
 
     /**
-     * Register new Assets.
+     * Enregistrez de nouveaux actifs.
      *
      * @param  string|array $assets
      * @param  string $type
@@ -81,9 +86,9 @@ class AssetManager
             throw new InvalidArgumentException("Invalid assets mode [{$mode}]");
         }
 
-        // The assets type and mode are valid.
+        // Le type et le mode des actifs sont valides.
         else if (! empty($items = $this->parseAssets($assets, $order, $mode))) {
-            // We will merge the items for the specified type and position.
+            // Nous fusionnerons les éléments pour le type et la position spécifiés.
 
             Arr::set($this->positions, $key = "{$type}.{$position}", array_merge(
                 Arr::get($this->positions, $key, array()), $items
@@ -92,7 +97,7 @@ class AssetManager
     }
 
     /**
-     * Render the Assets for specified position(s)
+     * Restituer les actifs pour les positions spécifiées
      *
      * @param  string|array $position
      * @param  string $type
@@ -123,7 +128,7 @@ class AssetManager
     }
 
     /**
-     * Render the CSS or JS scripts.
+     * Rendu les scripts CSS ou JS.
      *
      * @param string       $type
      * @param string|array $assets
@@ -137,14 +142,14 @@ class AssetManager
             throw new InvalidArgumentException("Invalid assets type [{$type}]");
         }
 
-        // The assets type is valid.
+        // Le type d'actif est valide.
         else if (! empty($items = $this->parseAssets($assets))) {
             return implode("\n", $this->renderItems($items, $type, false));
         }
     }
 
     /**
-     * Render the given position items to an array of assets.
+     * Rendre les éléments de position donnés sur un tableau d'actifs.
      *
      * @param  array $items
      * @param string $type
@@ -169,7 +174,7 @@ class AssetManager
                 $asset = sprintf("\n%s\n", trim($asset));
             }
 
-            // The 'view' mode is a specialized 'inline'
+            // Le mode « affichage » est un mode « en ligne » spécialisé
             else if ($mode === 'view') {
                 $mode = 'inline';
 
@@ -184,7 +189,7 @@ class AssetManager
     }
 
     /**
-     * Sort the given items by their order.
+     * Triez les éléments donnés par ordre.
      *
      * @param  array $items
      *
@@ -203,7 +208,7 @@ class AssetManager
     }
 
     /**
-     * Parses and returns the given assets.
+     * Analyse et renvoie les actifs donnés.
      *
      * @param  string|array $assets
      * @param  int $order

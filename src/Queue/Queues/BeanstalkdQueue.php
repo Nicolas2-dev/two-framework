@@ -1,10 +1,15 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Queues;
 
 use Two\Queue\Jobs\BeanstalkdJob;
 use Two\Queue\Queue;
-use Two\Queue\QueueInterface;
+use Two\Queue\Contracts\QueueInterface;
 
 use Pheanstalk_Job;
 use Pheanstalk_Pheanstalk as Pheanstalk;
@@ -14,21 +19,21 @@ class BeanstalkdQueue extends Queue implements QueueInterface
 {
 
     /**
-     * The Pheanstalk instance.
+     * L'instance Pheanstalk.
      *
      * @var \Pheanstalk_Pheanstalk
      */
     protected $pheanstalk;
 
     /**
-     * The name of the default tube.
+     * Le nom du tube par défaut.
      *
      * @var string
      */
     protected $default;
 
     /**
-     * The "time to run" for all pushed jobs.
+     * Le « temps d'exécution » pour toutes les tâches poussées.
      *
      * @var int
      */
@@ -36,7 +41,7 @@ class BeanstalkdQueue extends Queue implements QueueInterface
 
 
     /**
-     * Create a new Beanstalkd queue instance.
+     * Créez une nouvelle instance de file d'attente Beanstalkd.
      *
      * @param  \Pheanstalk_Pheanstalk  $pheanstalk
      * @param  string  $default
@@ -51,7 +56,7 @@ class BeanstalkdQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a new job onto the queue.
+     * Placez un nouveau travail dans la file d'attente.
      *
      * @param  string  $job
      * @param  mixed   $data
@@ -64,7 +69,7 @@ class BeanstalkdQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a raw payload onto the queue.
+     * Insérez une charge utile brute dans la file d'attente.
      *
      * @param  string  $payload
      * @param  string  $queue
@@ -79,7 +84,7 @@ class BeanstalkdQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a new job onto the queue after a delay.
+     * Placez une nouvelle tâche dans la file d'attente après un certain délai.
      *
      * @param  \DateTime|int  $delay
      * @param  string  $job
@@ -97,7 +102,7 @@ class BeanstalkdQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Pop the next job off of the queue.
+     * Retirez le travail suivant de la file d'attente.
      *
      * @param  string  $queue
      * @return \Two\Queue\Jobs\Job|null
@@ -114,7 +119,7 @@ class BeanstalkdQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Delete a message from the Beanstalk queue.
+     * Supprimez un message de la file d'attente Beanstalk.
      *
      * @param  string  $queue
      * @param  string  $id
@@ -126,7 +131,7 @@ class BeanstalkdQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the queue or return the default.
+     * Obtenez la file d'attente ou renvoyez la valeur par défaut.
      *
      * @param  string|null  $queue
      * @return string
@@ -137,7 +142,7 @@ class BeanstalkdQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the underlying Pheanstalk instance.
+     * Obtenez l'instance Pheanstalk sous-jacente.
      *
      * @return \Pheanstalk_Pheanstalk
      */

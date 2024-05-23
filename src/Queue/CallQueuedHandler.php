@@ -1,25 +1,30 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue;
 
 use Two\Queue\Job;
-use Two\Bus\DispatcherInterface;
+use Two\Bus\Contracts\DispatcherInterface;
 
 
 class CallQueuedHandler
 {
     /**
-     * The bus dispatcher implementation.
+     * La mise en œuvre du répartiteur de bus.
      *
-     * @var \Two\Bus\DispatcherInterface
+     * @var \Two\Bus\Contracts\DispatcherInterface
      */
     protected $dispatcher;
 
 
     /**
-     * Create a new handler instance.
+     * Créez une nouvelle instance de gestionnaire.
      *
-     * @param  \Two\Bus\DispatcherInterface  $dispatcher
+     * @param  \Two\Bus\Contracts\DispatcherInterface  $dispatcher
      * @return void
      */
     public function __construct(DispatcherInterface $dispatcher)
@@ -28,7 +33,7 @@ class CallQueuedHandler
     }
 
     /**
-     * Handle the queued job.
+     * Gérez le travail en file d'attente.
      *
      * @param  \Two\Queue\Job  $job
      * @param  array  $data
@@ -50,7 +55,7 @@ class CallQueuedHandler
     }
 
     /**
-     * Resolve the handler for the given command.
+     * Résolvez le gestionnaire pour la commande donnée.
      *
      * @param  \Two\Queue\Job  $job
      * @param  mixed  $command
@@ -68,7 +73,7 @@ class CallQueuedHandler
     }
 
     /**
-     * Set the job instance of the given class if necessary.
+     * Définissez l'instance de travail de la classe donnée si nécessaire.
      *
      * @param  \Two\Queue\Job  $job
      * @param  mixed  $instance
@@ -76,7 +81,7 @@ class CallQueuedHandler
      */
     protected function setJobInstanceIfNecessary(Job $job, $instance)
     {
-        if (in_array('Two\Queue\InteractsWithQueueTrait', class_uses_recursive(get_class($instance)))) {
+        if (in_array('Two\Queue\Traits\InteractsWithQueueTrait', class_uses_recursive(get_class($instance)))) {
             $instance->setJob($job);
         }
 
@@ -84,7 +89,7 @@ class CallQueuedHandler
     }
 
     /**
-     * Call the failed method on the job instance.
+     * Appelez la méthode ayant échoué sur l’instance de travail.
      *
      * @param  array  $data
      * @return void

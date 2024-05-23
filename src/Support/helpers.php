@@ -1,10 +1,18 @@
 <?php
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 
 use Two\Support\Arr;
 use Two\Support\Str;
-use Two\Support\Debug\Dumper;
-use Two\Support\Collection;
+use Two\Bus\Dispatcher;
 use Two\View\Expression;
+use Two\Collection\Collection;
+use Two\Support\Debug\Dumper;
+use Two\Broadcasting\BroadcastManager;
 
 
 //--------------------------------------------------------------------------
@@ -89,6 +97,23 @@ if (! function_exists('vendor_url'))
     function vendor_url($path, $vendor)
     {
         $path = sprintf('vendor/%s/%s', $vendor, $path);
+
+        return url($path);
+    }
+}
+
+if (! function_exists('shared_url'))
+{
+    /**
+     * Assistant d'URL de fournisseur
+     *
+     * @param string $path
+     * @param string $vendor
+     * @return string
+     */
+    function shared_url($path, $vendor)
+    {
+        $path = sprintf('shared/%s/%s', $vendor, $path);
 
         return url($path);
     }
@@ -1141,7 +1166,7 @@ if (! function_exists('broadcast'))
      */
     function broadcast($event = null)
     {
-        return app(BroadcastFactory::class)->event($event);
+        return app(BroadcastManager::class)->event($event);
     }
 }
 
@@ -1159,7 +1184,7 @@ if (! function_exists('dispatch'))
      */
     function dispatch($job)
     {
-        return app(BusDispatcher::class)->dispatch($job);
+        return app(Dispatcher::class)->dispatch($job);
     }
 }
 
@@ -1215,7 +1240,7 @@ if (! function_exists('collect'))
      * Créez une collection à partir de la valeur donnée.
      *
      * @param  mixed  $value
-     * @return \Two\Support\Collection
+     * @return \Two\Collection\Collection
      */
     function collect($value = null)
     {

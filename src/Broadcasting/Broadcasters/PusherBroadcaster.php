@@ -1,16 +1,18 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Broadcasting\Broadcasters;
-
-use Two\Broadcasting\Broadcaster;
-use Two\Broadcasting\BroadcastException;
-
-use Two\Container\Container;
-
-use Two\Http\Request;
 
 use Two\Support\Arr;
 use Two\Support\Str;
+use Two\Http\Request;
+use Two\Container\Container;
+use Two\Broadcasting\Broadcaster;
+use Two\Broadcasting\Exception\BroadcastException;
 
 use Pusher\Pusher;
 
@@ -18,7 +20,7 @@ use Pusher\Pusher;
 class PusherBroadcaster extends Broadcaster
 {
     /**
-     * The Pusher SDK instance.
+     * L'instance du SDK Pusher.
      *
      * @var \Pusher
      */
@@ -26,7 +28,7 @@ class PusherBroadcaster extends Broadcaster
 
 
     /**
-     * Create a new broadcaster instance.
+     * Créez une nouvelle instance de diffuseur.
      *
      * @param  \Two\Container\Container  $container
      * @param  \Pusher  $pusher
@@ -41,7 +43,7 @@ class PusherBroadcaster extends Broadcaster
     }
 
     /**
-     * Return the valid authentication response.
+     * Renvoie la réponse d'authentification valide.
      *
      * @param  \Two\Http\Request  $request
      * @param  mixed  $result
@@ -87,7 +89,7 @@ class PusherBroadcaster extends Broadcaster
     }
 
     /**
-     * Get the Pusher SDK instance.
+     * Obtenez l’instance du SDK Pusher.
      *
      * @return \Pusher
      */

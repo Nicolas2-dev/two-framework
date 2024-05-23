@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support\Facades;
 
 use Two\Support\Facades\Facade;
@@ -12,7 +17,7 @@ use Two\Support\Facades\Facade;
 class Session extends Facade
 {
     /**
-     * Return the Application instance.
+     * Renvoie l’instance d’application.
      *
      * @return \Two\Pagination\Factory
      */
@@ -24,7 +29,7 @@ class Session extends Facade
     }
 
     /**
-     * Get the registered name of the component.
+     * Obtenez le nom enregistré du composant.
      *
      * @return string
      */

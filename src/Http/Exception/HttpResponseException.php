@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Http\Exception;
 
 use RuntimeException;
@@ -10,14 +15,14 @@ use Symfony\Component\HttpFoundation\Response;
 class HttpResponseException extends RuntimeException
 {
     /**
-     * The underlying response instance.
+     * L’instance de réponse sous-jacente.
      *
      * @var \Symfony\Component\HttpFoundation\Response
      */
     protected $response;
 
     /**
-     * Create a new HTTP response exception instance.
+     * Créez une nouvelle instance d'exception de réponse HTTP.
      *
      * @param  \Symfony\Component\HttpFoundation\Response  $response
      * @return void
@@ -28,7 +33,7 @@ class HttpResponseException extends RuntimeException
     }
 
     /**
-     * Get the underlying response instance.
+     * Obtenez l’instance de réponse sous-jacente.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

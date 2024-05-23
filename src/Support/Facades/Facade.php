@@ -1,6 +1,13 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support\Facades;
+
+use RuntimeException;
 
 
 abstract class Facade
@@ -9,7 +16,7 @@ abstract class Facade
     /**
      * L'instance d'application étant en façade.
      *
-     * @var \Two\Foundation\Application
+     * @var \Two\Application\Two
      */
     protected static $app;
 
@@ -29,7 +36,7 @@ abstract class Facade
      */
     protected static function getFacadeAccessor()
     {
-        throw new \RuntimeException('Facade does not implement getFacadeAccessor method.');
+        throw new RuntimeException('Facade does not implement getFacadeAccessor method.');
     }
 
     /**
@@ -52,7 +59,7 @@ abstract class Facade
     /**
      * Définissez l'instance de l'application.
      *
-     * @param  \Two\Foundation\Application  $app
+     * @param  \Two\Application\Two  $app
      * @return void
      */
     public static function setFacadeApplication($app)
@@ -63,7 +70,7 @@ abstract class Facade
     /**
      * Obtenez l'instance de l'application.
      *
-     * @return  \Two\Foundation\Application  $app
+     * @return  \Two\Application\Two  $app
      */
     public static function getFacadeApplication()
     {

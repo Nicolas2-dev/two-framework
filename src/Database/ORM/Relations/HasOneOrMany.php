@@ -1,29 +1,35 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM\Relations;
 
 use Two\Database\ORM\Model;
 use Two\Database\ORM\Builder;
 use Two\Database\ORM\Collection;
 
+
 abstract class HasOneOrMany extends Relation
 {
     /**
-     * The foreign key of the parent model.
+     * La clé étrangère du modèle parent.
      *
      * @var string
      */
     protected $foreignKey;
 
     /**
-     * The local key of the parent model.
+     * La clé locale du modèle parent.
      *
      * @var string
      */
     protected $localKey;
 
     /**
-     * Create a new has many relationship instance.
+     * Créez une nouvelle instance de relation comportant plusieurs.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Model  $parent
@@ -40,7 +46,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Set the base constraints on the relation query.
+     * Définissez les contraintes de base sur la requête relationnelle.
      *
      * @return void
      */
@@ -52,7 +58,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Set the constraints for an eager load of the relation.
+     * Définissez les contraintes pour un chargement hâtif de la relation.
      *
      * @param  array  $models
      * @return void
@@ -63,7 +69,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Match the eagerly loaded results to their single parents.
+     * Faites correspondre les résultats chargés avec impatience à leurs parents célibataires.
      *
      * @param  array   $models
      * @param  \Two\Database\ORM\Collection  $results
@@ -76,7 +82,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Match the eagerly loaded results to their many parents.
+     * Faites correspondre les résultats chargés avec impatience à leurs nombreux parents.
      *
      * @param  array   $models
      * @param  \Two\Database\ORM\Collection  $results
@@ -89,7 +95,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Match the eagerly loaded results to their many parents.
+     * Faites correspondre les résultats chargés avec impatience à leurs nombreux parents.
      *
      * @param  array   $models
      * @param  \Two\Database\ORM\Collection  $results
@@ -115,7 +121,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Get the value of a relationship by one or many type.
+     * Obtenez la valeur d’une relation par un ou plusieurs types.
      *
      * @param  array   $dictionary
      * @param  string  $key
@@ -130,7 +136,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Build model dictionary keyed by the relation's foreign key.
+     * Construisez un dictionnaire de modèle saisi par la clé étrangère de la relation.
      *
      * @param  \Two\Database\ORM\Collection  $results
      * @return array
@@ -149,7 +155,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Attach a model instance to the parent model.
+     * Attachez une instance de modèle au modèle parent.
      *
      * @param  \Two\Database\ORM\Model  $model
      * @return \Two\Database\ORM\Model
@@ -162,7 +168,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Attach an array of models to the parent instance.
+     * Attachez un tableau de modèles à l'instance parent.
      *
      * @param  array  $models
      * @return array
@@ -175,7 +181,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Create a new instance of the related model.
+     * Créez une nouvelle instance du modèle associé.
      *
      * @param  array  $attributes
      * @return \Two\Database\ORM\Model
@@ -192,7 +198,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Create an array of new instances of the related model.
+     * Créez un tableau de nouvelles instances du modèle associé.
      *
      * @param  array  $records
      * @return array
@@ -209,7 +215,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Perform an update on all the related models.
+     * Effectuez une mise à jour sur tous les modèles associés.
      *
      * @param  array  $attributes
      * @return int
@@ -224,7 +230,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Get the key for comparing against the parent key in "has" query.
+     * Obtenez la clé à comparer avec la clé parent dans la requête "has".
      *
      * @return string
      */
@@ -234,7 +240,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Get the foreign key for the relationship.
+     * Obtenez la clé étrangère de la relation.
      *
      * @return string
      */
@@ -244,7 +250,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Get the plain foreign key.
+     * Obtenez la clé étrangère simple.
      *
      * @return string
      */
@@ -256,7 +262,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Get the key value of the parent's local key.
+     * Obtenez la valeur clé de la clé locale du parent.
      *
      * @return mixed
      */
@@ -266,7 +272,7 @@ abstract class HasOneOrMany extends Relation
     }
 
     /**
-     * Get the fully qualified parent key name.
+     * Obtenez le nom complet de la clé parent.
      *
      * @return string
      */

@@ -1,17 +1,23 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\View\Engines;
 
-use Two\View\Engines\EngineInterface;
-
 use Exception;
+use Throwable;
+
+use Two\View\Contracts\Engines\EngineInterface;
 
 
 class PhpEngine implements EngineInterface
 {
 
     /**
-     * Get the evaluated contents of the View.
+     * Obtenez le contenu évalué de la vue.
      *
      * @param  string  $path
      * @param  array   $data
@@ -23,7 +29,7 @@ class PhpEngine implements EngineInterface
     }
 
     /**
-     * Get the evaluated contents of the View at the given path.
+     * Obtenez le contenu évalué de la vue au chemin donné.
      *
      * @param  string  $__path
      * @param  array   $__data
@@ -36,7 +42,7 @@ class PhpEngine implements EngineInterface
         //
         ob_start();
 
-        // Extract the rendering variables.
+        // Extrayez les variables de rendu.
         foreach ($__data as $__variable => $__value) {
             if (in_array($__variable, array('__path', '__data'))) {
                 continue;
@@ -45,19 +51,19 @@ class PhpEngine implements EngineInterface
             ${$__variable} = $__value;
         }
 
-        // Housekeeping...
+        // Entretien ménager...
         unset($__data, $__variable, $__value);
 
-        // We'll evaluate the contents of the view inside a try/catch block so we can
-        // flush out any stray output that might get out before an error occurs or
-        // an exception is thrown. This prevents any partial views from leaking.
+        // Nous évaluerons le contenu de la vue à l'intérieur d'un bloc try/catch afin de pouvoir
+        // élimine toute sortie parasite qui pourrait sortir avant qu'une erreur ne se produise ou
+        // une exception est levée. Cela empêche toute fuite de vues partielles.
         try {
             include $__path;
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             $this->handleViewException($e, $obLevel);
         }
-        catch (\Throwable $e) {
+        catch (Throwable $e) {
             $this->handleViewException($e, $obLevel);
         }
 
@@ -65,7 +71,7 @@ class PhpEngine implements EngineInterface
     }
 
     /**
-     * Handle a View Exception.
+     * Gérer une exception de vue.
      *
      * @param  \Exception  $e
      * @param  int  $obLevel

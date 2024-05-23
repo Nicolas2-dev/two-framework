@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support\Facades;
 
 use Two\Support\Facades\Facade;
@@ -10,10 +15,14 @@ use Two\Support\Facades\Facade;
  */
 class Cookie extends Facade
 {
+    /**
+     * 
+     *
+     */
     const FIVEYEARS = 2628000;
 
     /**
-     * Determine if a cookie exists on the request.
+     * Déterminez si un cookie existe sur la demande.
      *
      * @param  string  $key
      * @return bool
@@ -24,7 +33,7 @@ class Cookie extends Facade
     }
 
     /**
-     * Retrieve a cookie from the request.
+     * Récupérer un cookie de la requête.
      *
      * @param  string  $key
      * @param  mixed   $default
@@ -36,7 +45,7 @@ class Cookie extends Facade
     }
 
     /**
-     * Get the registered name of the component.
+     * Obtenez le nom enregistré du composant.
      *
      * @return string
      */

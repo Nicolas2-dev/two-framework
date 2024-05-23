@@ -1,8 +1,13 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications;
 
-use Two\Queue\SerializesModelsTrait;
+use Two\Queue\Traits\SerializesModelsTrait;
 
 
 class Notification
@@ -10,7 +15,7 @@ class Notification
     use SerializesModelsTrait;
 
     /**
-     * The unique identifier for the notification.
+     * L'identifiant unique de la notification.
      *
      * @var string
      */
@@ -18,7 +23,7 @@ class Notification
 
 
     /**
-     * Get the channels the event should broadcast on.
+     * Obtenez les chaînes sur lesquelles l'événement doit être diffusé.
      *
      * @return array
      */

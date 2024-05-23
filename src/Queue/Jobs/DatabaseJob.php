@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Jobs;
 
 use Two\Container\Container;
@@ -10,14 +15,14 @@ use Two\Queue\Job;
 class DatabaseJob extends Job
 {
     /**
-     * The database queue instance.
+     * Instance de file d’attente de base de données.
      *
      * @var \Two\Queue\DatabaseQueue
      */
     protected $database;
 
     /**
-     * The database job payload.
+     * Charge utile du travail de base de données.
      *
      * @var \StdClass
      */
@@ -25,7 +30,7 @@ class DatabaseJob extends Job
 
 
     /**
-     * Create a new job instance.
+     * Créez une nouvelle instance de travail.
      *
      * @param  \Two\Container\Container  $container
      * @param  \Two\Queue\DatabaseQueue  $database
@@ -44,7 +49,7 @@ class DatabaseJob extends Job
     }
 
     /**
-     * Fire the job.
+     * Licenciez le travail.
      *
      * @return void
      */
@@ -56,7 +61,7 @@ class DatabaseJob extends Job
     }
 
     /**
-     * Get the raw body string for the job.
+     * Obtenez la corde de corps brute pour le travail.
      *
      * @return string
      */
@@ -66,7 +71,7 @@ class DatabaseJob extends Job
     }
 
     /**
-     * Delete the job from the queue.
+     * Supprimez le travail de la file d'attente.
      *
      * @return void
      */
@@ -78,7 +83,7 @@ class DatabaseJob extends Job
     }
 
     /**
-     * Release the job back into the queue.
+     * Remettez le travail dans la file d'attente.
      *
      * @param  int  $delay
      * @return void
@@ -91,7 +96,7 @@ class DatabaseJob extends Job
     }
 
     /**
-     * Get the number of times the job has been attempted.
+     * Obtenez le nombre de tentatives de travail.
      *
      * @return int
      */
@@ -101,7 +106,7 @@ class DatabaseJob extends Job
     }
 
     /**
-     * Get the job identifier.
+     * Obtenez l'identifiant du travail.
      *
      * @return string
      */
@@ -111,7 +116,7 @@ class DatabaseJob extends Job
     }
 
     /**
-     * Get the IoC container instance.
+     * Obtenez l'instance de conteneur IoC.
      *
      * @return \Two\Container\Container
      */
@@ -121,7 +126,7 @@ class DatabaseJob extends Job
     }
 
     /**
-     * Get the underlying queue driver instance.
+     * Obtenez l'instance de pilote de file d'attente sous-jacente.
      *
      * @return \Two\Queue\DatabaseQueue
      */
@@ -131,7 +136,7 @@ class DatabaseJob extends Job
     }
 
     /**
-     * Get the underlying database job.
+     * Obtenez le travail de base de données sous-jacent.
      *
      * @return \StdClass
      */

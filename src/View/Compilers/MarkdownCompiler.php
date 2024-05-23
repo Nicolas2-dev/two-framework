@@ -1,9 +1,14 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\View\Compilers;
 
 use Two\View\Compilers\Compiler;
-use Two\View\Compilers\CompilerInterface;
+use Two\View\Contracts\Compilers\CompilerInterface;
 
 use Parsedown;
 
@@ -11,7 +16,7 @@ use Parsedown;
 class MarkdownCompiler extends Compiler implements CompilerInterface
 {
     /**
-     * The file currently being compiled.
+     * Le fichier est en cours de compilation.
      *
      * @var string
      */
@@ -19,7 +24,7 @@ class MarkdownCompiler extends Compiler implements CompilerInterface
 
 
     /**
-     * Compile the view at the given path.
+     * Compilez la vue sur le chemin donné.
      *
      * @param  string  $path
      * @return void
@@ -38,7 +43,7 @@ class MarkdownCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Get the path currently being compiled.
+     * Obtenez le chemin en cours de compilation.
      *
      * @return string
      */
@@ -48,7 +53,7 @@ class MarkdownCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Set the path currently being compiled.
+     * Définissez le chemin en cours de compilation.
      *
      * @param  string  $path
      * @return void
@@ -59,7 +64,7 @@ class MarkdownCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the given Markdown file contents.
+     * Compilez le contenu du fichier Markdown donné.
      *
      * @param  string  $value
      * @return string

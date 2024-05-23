@@ -1,17 +1,22 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support\Facades;
 
-use Two\Broadcasting\FactoryInterface as BroadcastingFactory;
+use Two\Broadcasting\Contracts\FactoryInterface as BroadcastingFactory;
 
 
 /**
- * @see \Two\Broadcasting\FactoryInterface
+ * @see \Two\Broadcasting\Contracts\FactoryInterface
  */
 class Broadcast extends Facade
 {
     /**
-     * Get the registered name of the component.
+     * Obtenez le nom enregistré du composant.
      *
      * @return string
      */

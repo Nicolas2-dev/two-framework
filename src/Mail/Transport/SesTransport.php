@@ -1,25 +1,31 @@
 <?php 
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Mail\Transport;
 
 use Swift_Transport;
-use Aws\Ses\SesClient;
 use Swift_Mime_Message;
 use Swift_Events_EventListener;
+
+use Aws\Ses\SesClient;
 
 
 class SesTransport implements Swift_Transport
 {
 
     /**
-     * The Amazon SES instance.
+     * L'instance Amazon SES.
      *
      * @var \Aws\Ses\SesClient
      */
     protected $ses;
 
     /**
-     * Create a new SES transport instance.
+     * Créez une nouvelle instance de transport SES.
      *
      * @param  \Aws\Ses\SesClient  $ses
      * @return void
@@ -76,7 +82,7 @@ class SesTransport implements Swift_Transport
     }
 
     /**
-     * Get the "to" payload field for the API request.
+     * Obtenez le champ de charge utile « à » pour la requête API.
      *
      * @param  \Swift_Mime_Message  $message
      * @return array

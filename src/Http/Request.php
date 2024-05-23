@@ -1,17 +1,22 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Http;
+
+use ArrayAccess;
+use Closure;
+use RuntimeException;
+use SplFileInfo;
 
 use Two\Support\Str;
 use Two\Support\Arr;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
-
-use ArrayAccess;
-use Closure;
-use RuntimeException;
-use SplFileInfo;
 
 
 class Request extends SymfonyRequest implements ArrayAccess

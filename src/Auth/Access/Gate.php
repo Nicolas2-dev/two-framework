@@ -1,16 +1,21 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Auth\Access;
 
-use Two\Auth\Access\GateInterface;
-use Two\Auth\Access\HandlesAuthorizationTrait;
-use Two\Auth\Access\Response;
-use Two\Auth\Access\AuthorizationException;
-use Two\Auth\UserInterface as User;
-use Two\Container\Container;
-use Two\Support\Str;
-
 use InvalidArgumentException;
+
+use Two\Support\Str;
+use Two\Container\Container;
+use Two\Auth\Access\Response;
+use Two\Auth\Contracts\UserInterface as User;
+use Two\Auth\Contracts\GateInterface;
+use Two\Auth\Exception\AuthorizationException;
+use Two\Auth\Traits\HandlesAuthorizationTrait;
 
 
 class Gate implements GateInterface
@@ -285,7 +290,7 @@ class Gate implements GateInterface
     /**
      * Resolve and call the appropriate authorization callback.
      *
-     * @param  \Two\Auth\UserInterface  $user
+     * @param  \Two\Auth\Contracts\UserInterface  $user
      * @param  string  $ability
      * @param  array  $arguments
      * @return bool
@@ -300,7 +305,7 @@ class Gate implements GateInterface
     /**
      * Call all of the before callbacks and return if a result is given.
      *
-     * @param  \Two\Auth\UserInterface  $user
+     * @param  \Two\Auth\Contracts\UserInterface  $user
      * @param  string  $ability
      * @param  array  $arguments
      * @return bool|null
@@ -319,7 +324,7 @@ class Gate implements GateInterface
     /**
      * Call all of the after callbacks with check result.
      *
-     * @param  \Two\Auth\UserInterface  $user
+     * @param  \Two\Auth\Contracts\UserInterface  $user
      * @param  string  $ability
      * @param  array  $arguments
      * @param  bool  $result
@@ -337,7 +342,7 @@ class Gate implements GateInterface
     /**
      * Resolve the callable for the given ability and arguments.
      *
-     * @param  \Two\Auth\UserInterface  $user
+     * @param  \Two\Auth\Contracts\UserInterface  $user
      * @param  string  $ability
      * @param  array  $arguments
      * @return callable
@@ -385,7 +390,7 @@ class Gate implements GateInterface
     /**
      * Resolve the callback for a policy check.
      *
-     * @param  \Two\Auth\UserInterface  $user
+     * @param  \Two\Auth\Contracts\UserInterface  $user
      * @param  string  $ability
      * @param  array  $arguments
      * @return callable
@@ -447,7 +452,7 @@ class Gate implements GateInterface
     /**
      * Get a guard instance for the given user.
      *
-     * @param  \Two\Auth\UserInterface|mixed  $user
+     * @param  \Two\Auth\Contracts\UserInterface|mixed  $user
      * @return static
      */
     public function forUser($user)

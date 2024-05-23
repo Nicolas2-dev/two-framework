@@ -1,51 +1,56 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue;
 
-use Symfony\Component\Process\Process;
-
 use Closure;
+
+use Symfony\Component\Process\Process;
 
 
 class Listener
 {
     /**
-     * The command working path.
+     * Le chemin de travail de la commande.
      *
      * @var string
      */
     protected $commandPath;
 
     /**
-     * The environment the workers should run under.
+     * L’environnement dans lequel les travailleurs devraient travailler.
      *
      * @var string
      */
     protected $environment;
 
     /**
-     * The amount of seconds to wait before polling the queue.
+     * Nombre de secondes à attendre avant d'interroger la file d'attente.
      *
      * @var int
      */
     protected $sleep = 3;
 
     /**
-     * The amount of times to try a job before logging it failed.
+     * Nombre de tentatives d'exécution d'une tâche avant son échec de journalisation.
      *
      * @var int
      */
     protected $maxTries = 0;
 
     /**
-     * The queue worker command line.
+     * La ligne de commande du gestionnaire de file d'attente.
      *
      * @var string
      */
     protected $workerCommand;
 
     /**
-     * The output handler callback.
+     * Le rappel du gestionnaire de sortie.
      *
      * @var \Closure|null
      */
@@ -53,7 +58,7 @@ class Listener
 
 
     /**
-     * Create a new queue listener.
+     * Créez un nouvel écouteur de file d'attente.
      *
      * @param  string  $commandPath
      * @return void
@@ -66,7 +71,7 @@ class Listener
     }
 
     /**
-     * Listen to the given queue connection.
+     * Écoutez la connexion à la file d'attente donnée.
      *
      * @param  string  $connection
      * @param  string  $queue
@@ -85,7 +90,7 @@ class Listener
     }
 
     /**
-     * Run the given process.
+     * Exécutez le processus donné.
      *
      * @param  \Symfony\Component\Process\Process  $process
      * @param  int  $memory
@@ -98,9 +103,9 @@ class Listener
             $this->handleWorkerOutput($type, $line);
         });
 
-        // Once we have run the job we'll go check if the memory limit has been
-        // exceeded for the script. If it has, we will kill this script so a
-        // process managers will restart this with a clean slate of memory.
+        // Une fois que nous aurons exécuté le travail, nous irons vérifier si la limite de mémoire a été
+        // dépassé pour le script. Si c'est le cas, nous tuerons ce script afin de
+        // les gestionnaires de processus redémarreront cela avec une table rase de mémoire.
 
         if ($this->memoryExceeded($memory)) {
             $this->stop();
@@ -110,7 +115,7 @@ class Listener
     }
 
     /**
-     * Create a new Symfony process for the worker.
+     * Créez un nouveau processus Symfony pour le travailleur.
      *
      * @param  string  $connection
      * @param  string  $queue
@@ -123,17 +128,16 @@ class Listener
     {
         $string = $this->workerCommand;
 
-        // If the environment is set, we will append it to the command string so the
-        // workers will run under the specified environment. Otherwise, they will
-        // just run under the production environment which is not always right.
-
+        // Si l'environnement est défini, nous l'ajouterons à la chaîne de commande afin que le
+        // Les travailleurs s'exécuteront dans l'environnement spécifié. Sinon, ils le feront
+        // s'exécute simplement dans l'environnement de production, ce qui n'est pas toujours correct.
         if (isset($this->environment)) {
             $string .= ' --env=' .$this->environment;
         }
 
-        // Next, we will just format out the worker commands with all of the various
-        // options available for the command. This will produce the final command
-        // line that we will pass into a Symfony process object for processing.
+        // Ensuite, nous formaterons simplement les commandes de travail avec tous les différents
+        // options disponibles pour la commande. Cela produira la commande finale
+        // ligne que nous passerons dans un objet processus Symfony pour traitement.
         $command = sprintf(
             $string, $connection, $queue, $delay,
             $memory, $this->sleep, $this->maxTries
@@ -143,7 +147,7 @@ class Listener
     }
 
     /**
-     * Handle output from the worker process.
+     * Gérer la sortie du processus de travail.
      *
      * @param  int  $type
      * @param  string  $line
@@ -157,7 +161,7 @@ class Listener
     }
 
     /**
-     * Determine if the memory limit has been exceeded.
+     * Déterminez si la limite de mémoire a été dépassée.
      *
      * @param  int   $memoryLimit
      * @return bool
@@ -168,7 +172,7 @@ class Listener
     }
 
     /**
-     * Stop listening and bail out of the script.
+     * Arrêtez d'écouter et sortez du script.
      *
      * @return void
      */
@@ -178,7 +182,7 @@ class Listener
     }
 
     /**
-     * Set the output handler callback.
+     * Définissez le rappel du gestionnaire de sortie.
      *
      * @param  \Closure  $outputHandler
      * @return void
@@ -189,7 +193,7 @@ class Listener
     }
 
     /**
-     * Get the current listener environment.
+     * Obtenez l'environnement d'écoute actuel.
      *
      * @return string
      */
@@ -199,7 +203,7 @@ class Listener
     }
 
     /**
-     * Set the current environment.
+     * Définissez l'environnement actuel.
      *
      * @param  string  $environment
      * @return void
@@ -210,7 +214,7 @@ class Listener
     }
 
     /**
-     * Get the amount of seconds to wait before polling the queue.
+     * Obtenez le nombre de secondes à attendre avant d'interroger la file d'attente.
      *
      * @return int
      */
@@ -220,7 +224,7 @@ class Listener
     }
 
     /**
-     * Set the amount of seconds to wait before polling the queue.
+     * Définissez le nombre de secondes à attendre avant d'interroger la file d'attente.
      *
      * @param  int  $sleep
      * @return void
@@ -231,7 +235,7 @@ class Listener
     }
 
     /**
-     * Set the amount of times to try a job before logging it failed.
+     * Définissez le nombre de tentatives d'une tâche avant de la consigner en cas d'échec.
      *
      * @param  int  $tries
      * @return void

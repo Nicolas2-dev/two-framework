@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM\Relations;
 
 use Two\Database\ORM\Builder;
@@ -8,25 +13,25 @@ use Two\Database\ORM\Builder;
 class MorphPivot extends Pivot
 {
     /**
-     * The type of the polymorphic relation.
+     * Le type de relation polymorphe.
      *
-     * Explicitly define this so it's not included in saved attributes.
+     * Définissez-le explicitement afin qu'il ne soit pas inclus dans les attributs enregistrés.
      *
      * @var string
      */
     protected $morphType;
 
     /**
-     * The value of the polymorphic relation.
+     * La valeur de la relation polymorphe.
      *
-     * Explicitly define this so it's not included in saved attributes.
+     * Définissez-le explicitement afin qu'il ne soit pas inclus dans les attributs enregistrés.
      *
      * @var string
      */
     protected $morphClass;
 
     /**
-     * Set the keys for a save update query.
+     * Définissez les clés pour une requête de mise à jour de sauvegarde.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @return \Two\Database\ORM\Builder
@@ -39,7 +44,7 @@ class MorphPivot extends Pivot
     }
 
     /**
-     * Delete the pivot model record from the database.
+     * Supprimez l'enregistrement du modèle pivot de la base de données.
      *
      * @return int
      */
@@ -53,7 +58,7 @@ class MorphPivot extends Pivot
     }
 
     /**
-     * Set the morph type for the pivot.
+     * Définissez le type de morphing pour le pivot.
      *
      * @param  string  $morphType
      * @return $this
@@ -66,7 +71,7 @@ class MorphPivot extends Pivot
     }
 
     /**
-     * Set the morph class for the pivot.
+     * Définissez la classe de morphing pour le pivot.
      *
      * @param  string  $morphClass
      * @return \Two\Database\ORM\Relations\MorphPivot

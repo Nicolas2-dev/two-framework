@@ -1,26 +1,31 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications\Channels;
+
+use RuntimeException;
 
 use Two\Events\Dispatcher;
 use Two\Notifications\Messages\BroadcastMessage;
 use Two\Notifications\Events\BroadcastNotificationCreated;
 use Two\Notifications\Notification;
 
-use RuntimeException;
-
 
 class BroadcastChannel
 {
     /**
-     * The event dispatcher.
+     * Le répartiteur d'événements.
      *
      * @var \Two\Events\Dispatcher
      */
     protected $events;
 
     /**
-     * Create a new database channel.
+     * Créez un nouveau canal de base de données.
      *
      * @param  \Two\Events\Dispatcher  $events
      * @return void
@@ -31,7 +36,7 @@ class BroadcastChannel
     }
 
     /**
-     * Send the given notification.
+     * Envoyez la notification donnée.
      *
      * @param  mixed  $notifiable
      * @param  \Two\Notifications\Notification  $notification
@@ -54,7 +59,7 @@ class BroadcastChannel
     }
 
     /**
-     * Get the data for the notification.
+     * Obtenez les données pour la notification.
      *
      * @param  mixed  $notifiable
      * @param  \Two\Notifications\Notification  $notification

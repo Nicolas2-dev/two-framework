@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support\Facades;
 
 use Two\Support\Facades\Facade;
@@ -11,42 +16,42 @@ use Two\Support\Facades\Facade;
 class Password extends Facade
 {
     /**
-     * Constant representing a successfully sent reminder.
+     * Constante représentant un rappel envoyé avec succès.
      *
      * @var int
      */
     const REMINDER_SENT = 'reminders.sent';
 
     /**
-     * Constant representing a successfully reset password.
+     * Constante représentant un mot de passe réinitialisé avec succès.
      *
      * @var int
      */
     const PASSWORD_RESET = 'reminders.reset';
 
     /**
-     * Constant representing the user not found response.
+     * Constante représentant la réponse de l'utilisateur introuvable.
      *
      * @var int
      */
     const INVALID_USER = 'reminders.user';
 
     /**
-     * Constant representing an invalid password.
+     * Constante représentant un mot de passe invalide.
      *
      * @var int
      */
     const INVALID_PASSWORD = 'reminders.password';
 
     /**
-     * Constant representing an invalid token.
+     * Constante représentant un jeton non valide.
      *
      * @var int
      */
     const INVALID_TOKEN = 'reminders.token';
 
     /**
-     * Get the registered name of the component.
+     * Obtenez le nom enregistré du composant.
      *
      * @return string
      */

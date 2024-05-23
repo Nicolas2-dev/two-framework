@@ -1,6 +1,15 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Routing;
+
+use Countable;
+use ArrayIterator;
+use IteratorAggregate;
 
 use Two\Http\Request;
 use Two\Http\Response;
@@ -9,15 +18,11 @@ use Two\Support\Arr;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
-use Countable;
-use ArrayIterator;
-use IteratorAggregate;
-
 
 class RouteCollection implements Countable, IteratorAggregate
 {
     /**
-     * An array of the routes keyed by method.
+     * Un tableau des itinéraires saisis par méthode.
      *
      * @var array
      */
@@ -32,28 +37,28 @@ class RouteCollection implements Countable, IteratorAggregate
     );
 
     /**
-     * An flattened array of all of the routes.
+     * Un tableau aplati de tous les itinéraires.
      *
      * @var array
      */
     protected $allRoutes = array();
 
     /**
-     * A look-up table of routes by their names.
+     * Une table de recherche des itinéraires par leurs noms.
      *
      * @var array
      */
     protected $nameList = array();
 
     /**
-     * A look-up table of routes by controller action.
+     * Une table de recherche des itinéraires par action du contrôleur.
      *
      * @var array
      */
     protected $actionList = array();
 
     /**
-     * Add a Route instance to the collection.
+     * Ajoutez une instance de Route à la collection.
      *
      * @param  \Two\Routing\Route  $route
      * @return \Two\Routing\Route
@@ -68,7 +73,7 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Add the given route to the arrays of routes.
+     * Ajoutez l'itinéraire donné aux tableaux d'itinéraires.
      *
      * @param  \Two\Routing\Route  $route
      * @return void
@@ -87,16 +92,16 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Add the route to any look-up tables if necessary.
+     * Ajoutez l'itinéraire à toutes les tables de recherche si nécessaire.
      *
      * @param  \Two\Routing\Route  $route
      * @return void
      */
     protected function addLookups($route)
     {
-        // If the route has a name, we will add it to the name look-up table so that we
-        // will quickly be able to find any route associate with a name and not have
-        // to iterate through every route every time we need to perform a look-up.
+        // Si l'itinéraire a un nom, nous l'ajouterons à la table de recherche de nom afin que nous puissions
+        // pourra rapidement trouver n'importe quelle route associée à un nom et ne pas avoir
+        // pour parcourir chaque itinéraire à chaque fois que nous devons effectuer une recherche.
         $action = $route->getAction();
 
         if (isset($action['as'])) {
@@ -105,16 +110,16 @@ class RouteCollection implements Countable, IteratorAggregate
             $this->nameList[$name] = $route;
         }
 
-        // When the route is routing to a controller we will also store the action that
-        // is used by the route. This will let us reverse route to controllers while
-        // processing a request and easily generate URLs to the given controllers.
+        // Lorsque la route est acheminée vers un contrôleur, nous stockerons également l'action qui
+        // est utilisé par la route. Cela nous permettra d'inverser la route vers les contrôleurs pendant que
+        // traite une requête et génère facilement des URL vers les contrôleurs donnés.
         if (isset($action['controller'])) {
             $this->addToActionList($action, $route);
         }
     }
 
     /**
-     * Add a route to the controller action dictionary.
+     * Ajoutez une route au dictionnaire d'actions du contrôleur.
      *
      * @param  array  $action
      * @param  \Two\Routing\Route  $route
@@ -130,7 +135,7 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Find the first route matching a given request.
+     * Trouver le premier itinéraire correspondant à une requête donnée.
      *
      * @param  \Two\Http\Request  $request
      * @return \Two\Routing\Route
@@ -141,17 +146,17 @@ class RouteCollection implements Countable, IteratorAggregate
     {
         $routes = $this->get($request->getMethod());
 
-        // First, we will see if we can find a matching route for this current request
-        // method. If we can, great, we can just return it so that it can be called
-        // by the consumer. Otherwise we will check for routes with another verb.
+        // Tout d’abord, nous verrons si nous pouvons trouver un itinéraire correspondant à cette demande actuelle.
+        // méthode. Si nous le pouvons, super, nous pouvons simplement le retourner pour qu'il puisse être appelé
+        // par le consommateur. Sinon, nous vérifierons les itinéraires avec un autre verbe.
 
-         if (! is_null($route = $this->findRoute($routes, $request))) {
+        if (! is_null($route = $this->findRoute($routes, $request))) {
             return $route->bind($request);
         }
 
-        // If no route was found, we will check if a matching route is specified on
-        // another HTTP verb. If it is we will need to throw a MethodNotAllowed and
-        // inform the user agent of which HTTP verb it should use for this route.
+        // Si aucun itinéraire n'a été trouvé, nous vérifierons si un itinéraire correspondant est spécifié sur
+        // un autre verbe HTTP. Si c'est le cas, nous devrons lancer un MethodNotAllowed et
+        // informe l'agent utilisateur du verbe HTTP qu'il doit utiliser pour cette route.
 
         if (! empty($others = $this->checkForAlternateVerbs($request))) {
             return $this->getOtherMethodsRoute($request, $others);
@@ -161,7 +166,7 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Find the first route matching a given request.
+     * Trouver le premier itinéraire correspondant à une requête donnée.
      *
      * @param  array  $routes
      * @param  \Two\Http\Request  $request
@@ -191,7 +196,7 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Determine if any routes match on another HTTP verb.
+     * Déterminez si des routes correspondent à un autre verbe HTTP.
      *
      * @param  \Two\Http\Request  $request
      * @return array
@@ -202,9 +207,9 @@ class RouteCollection implements Countable, IteratorAggregate
             Router::$verbs, (array) $request->getMethod()
         );
 
-        // Here we will spin through all verbs except for the current request verb and
-        // check to see if any routes respond to them. If they do, we will return a
-        // proper error response with the correct headers on the response string.
+        // Ici, nous allons parcourir tous les verbes à l'exception du verbe de requête actuel et
+        // vérifie si des routes y répondent. S'ils le font, nous leur retournerons un
+        // réponse d'erreur appropriée avec les en-têtes corrects sur la chaîne de réponse.
 
         return array_filter($methods, function ($method) use ($request)
         {
@@ -215,7 +220,7 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Get a route (if necessary) that responds when other available methods are present.
+     * Obtenez un itinéraire (si nécessaire) qui répond lorsque d'autres méthodes disponibles sont présentes.
      *
      * @param  \Two\Http\Request  $request
      * @param  array  $others
@@ -238,7 +243,7 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Determine if a route in the array matches the request.
+     * Déterminez si une route du tableau correspond à la requête.
      *
      * @param  array  $routes
      * @param  \Two\http\Request  $request
@@ -254,7 +259,7 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Determine if a route in the array fully matches the request - the fast way.
+     * Déterminez si une route dans le tableau correspond entièrement à la demande – de la manière la plus rapide.
      *
      * @param  array  $routes
      * @param  \Two\http\Request  $request
@@ -278,7 +283,7 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Get all of the routes in the collection.
+     * Obtenez tous les itinéraires de la collection.
      *
      * @param  string|null  $method
      * @return array
@@ -293,7 +298,7 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Determine if the route collection contains a given named route.
+     * Déterminez si la collection de routes contient une route nommée donnée.
      *
      * @param  string  $name
      * @return bool
@@ -304,7 +309,7 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Get a route instance by its name.
+     * Obtenez une instance de route par son nom.
      *
      * @param  string  $name
      * @return \Two\Routing\Route|null
@@ -317,7 +322,7 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Get a route instance by its controller action.
+     * Obtenez une instance de route par son action de contrôleur.
      *
      * @param  string  $action
      * @return \Two\Routing\Route|null
@@ -330,7 +335,7 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Get all of the routes in the collection.
+     * Obtenez tous les itinéraires de la collection.
      *
      * @return array
      */
@@ -340,7 +345,7 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Get an iterator for the items.
+     * Obtenez un itérateur pour les éléments.
      *
      * @return \ArrayIterator
      */
@@ -350,7 +355,7 @@ class RouteCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Count the number of items in the collection.
+     * Comptez le nombre d'éléments dans la collection.
      *
      * @return int
      */

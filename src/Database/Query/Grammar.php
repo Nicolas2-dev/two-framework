@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Query;
 
 use Two\Database\Query\Builder;
@@ -9,7 +14,7 @@ use Two\Database\Grammar as BaseGrammar;
 class Grammar extends BaseGrammar
 {
     /**
-     * The components that make up a select clause.
+     * Les composants qui composent une clause select.
      *
      * @var array
      */
@@ -29,7 +34,7 @@ class Grammar extends BaseGrammar
     );
 
     /**
-     * Compile a select query into SQL.
+     * Compilez une requête de sélection en SQL.
      *
      * @param  \Two\Database\Query\Builder
      * @return string
@@ -42,7 +47,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile the components necessary for a select clause.
+     * Compilez les composants nécessaires à une clause select.
      *
      * @param  \Two\Database\Query\Builder
      * @return array
@@ -63,7 +68,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile an aggregated select clause.
+     * Compilez une clause de sélection agrégée.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $aggregate
@@ -81,7 +86,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile the "select *" portion of the query.
+     * Compilez la partie "select *" de la requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $columns
@@ -97,7 +102,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile the "from" portion of the query.
+     * Compilez la partie « de » de la requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  string  $table
@@ -109,7 +114,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile the "join" portions of the query.
+     * Compilez les parties « rejoindre » de la requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $joins
@@ -148,7 +153,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Create a join clause constraint segment.
+     * Créez un segment de contrainte de clause de jointure.
      *
      * @param  array   $clause
      * @return string
@@ -163,7 +168,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile the "where" portions of the query.
+     * Compilez les parties « où » de la requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return string
@@ -190,7 +195,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a nested where clause.
+     * Compilez une clause Where imbriquée.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -204,7 +209,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a where condition with a sub-select.
+     * Compilez une condition Where avec une sous-sélection.
      *
      * @param  \Two\Database\Query\Builder $query
      * @param  array   $where
@@ -218,7 +223,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a basic where clause.
+     * Compilez une clause Where de base.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -232,7 +237,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a "between" where clause.
+     * Compilez une clause Where « entre ».
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -246,7 +251,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a where exists clause.
+     * Compilez une clause où existe.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -258,7 +263,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a where exists clause.
+     * Compilez une clause où existe.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -270,7 +275,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a "where in" clause.
+     * Compilez une clause « où dans ».
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -286,7 +291,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a "where not in" clause.
+     * Compilez une clause « où pas dans ».
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -302,7 +307,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a where in sub-select clause.
+     * Compilez une clause de sous-sélection Where In.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -316,7 +321,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a where not in sub-select clause.
+     * Compilez une clause où pas dans la sous-sélection.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -330,7 +335,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a "where null" clause.
+     * Compilez une clause "where null".
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -342,7 +347,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a "where not null" clause.
+     * Compilez une clause "where not null".
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -354,7 +359,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a "where date" clause.
+     * Compilez une clause « où date ».
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -366,7 +371,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a "where day" clause.
+     * Compilez une clause « où jour ».
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -378,7 +383,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a "where month" clause.
+     * Compilez une clause "où mois".
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -390,7 +395,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a "where year" clause.
+     * Compilez une clause « où année ».
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -402,7 +407,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a date based where clause.
+     * Compilez une date basée sur la clause Where.
      *
      * @param  string  $type
      * @param  \Two\Database\Query\Builder  $query
@@ -417,7 +422,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a raw where clause.
+     * Compilez une clause Where brute.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -429,7 +434,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile the "group by" portions of the query.
+     * Compilez les parties « regrouper par » de la requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $groups
@@ -441,7 +446,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile the "having" portions of the query.
+     * Compilez les parties « avoir » de la requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $havings
@@ -455,7 +460,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a single having clause.
+     * Compilez une seule clause have.
      *
      * @param  array   $having
      * @return string
@@ -470,7 +475,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a basic having clause.
+     * Compilez une clause have de base.
      *
      * @param  array   $having
      * @return string
@@ -485,7 +490,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile the "order by" portions of the query.
+     * Compilez les parties « trier par » de la requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $orders
@@ -503,7 +508,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile the "limit" portions of the query.
+     * Compilez les parties « limite » de la requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  int  $limit
@@ -515,7 +520,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile the "offset" portions of the query.
+     * Compilez les parties « décalage » de la requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  int  $offset
@@ -527,7 +532,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile the "union" queries attached to the main query.
+     * Compilez les requêtes "union" attachées à la requête principale.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return string
@@ -556,7 +561,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a single union statement.
+     * Compilez une seule déclaration syndicale.
      *
      * @param  array  $union
      * @return string
@@ -569,7 +574,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile an insert statement into SQL.
+     * Compilez une instruction d'insertion dans SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $values
@@ -595,7 +600,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile an insert and get ID statement into SQL.
+     * Compilez une instruction insert et get ID dans SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array   $values
@@ -608,7 +613,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile an update statement into SQL.
+     * Compilez une instruction de mise à jour en SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $values
@@ -638,7 +643,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a delete statement into SQL.
+     * Compilez une instruction de suppression en SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return string
@@ -653,7 +658,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a truncate table statement into SQL.
+     * Compilez une instruction de table tronquée en SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return array
@@ -664,7 +669,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile the lock into SQL.
+     * Compilez le verrou en SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  bool|string  $value
@@ -676,7 +681,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Concatenate an array of segments, removing empties.
+     * Concaténez un tableau de segments, en supprimant les vides.
      *
      * @param  array   $segments
      * @return string
@@ -690,7 +695,7 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Remove the leading boolean from a statement.
+     * Supprimez le premier booléen d’une instruction.
      *
      * @param  string  $value
      * @return string

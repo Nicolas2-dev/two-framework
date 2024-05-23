@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support\Facades;
 
 use Two\Support\Facades\Facade;
@@ -11,9 +16,9 @@ use Two\Support\Facades\Facade;
 class Input extends Facade
 {
     /**
-     * Get an item from the input data.
+     * Obtenez un élément à partir des données d'entrée.
      *
-     * This method is used for all request verbs (GET, POST, PUT, and DELETE)
+     * Cette méthode est utilisée pour tous les verbes de requête (GET, POST, PUT et DELETE)
      *
      * @param  string $key
      * @param  mixed  $default
@@ -25,7 +30,7 @@ class Input extends Facade
     }
 
     /**
-     * Get the registered name of the component.
+     * Obtenez le nom enregistré du composant.
      *
      * @return string
      */

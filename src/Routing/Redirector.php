@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Routing;
 
 use Two\Http\RedirectResponse;
@@ -9,21 +14,21 @@ use Two\Session\Store as SessionStore;
 class Redirector
 {
     /**
-     * The URL generator instance.
+     * L'instance du générateur d'URL.
      *
      * @var \Two\Routing\UrlGenerator
      */
     protected $generator;
 
     /**
-     * The session store instance.
+     * Instance de magasin de sessions.
      *
      * @var \Two\Session\Store
      */
     protected $session;
 
     /**
-     * Create a new Redirector instance.
+     * Créez une nouvelle instance de redirecteur.
      *
      * @param  \Two\Routing\UrlGenerator  $generator
      * @return void
@@ -34,7 +39,7 @@ class Redirector
     }
 
     /**
-     * Create a new redirect response to the "home" route.
+     * Créez une nouvelle réponse de redirection vers la route « home ».
      *
      * @param  int  $status
      * @return \Two\Http\RedirectResponse
@@ -45,7 +50,7 @@ class Redirector
     }
 
     /**
-     * Create a new redirect response to the previous location.
+     * Créez une nouvelle réponse de redirection vers l'emplacement précédent.
      *
      * @param  int    $status
      * @param  array  $headers
@@ -57,7 +62,7 @@ class Redirector
     }
 
     /**
-     * Create a new redirect response to the current URI.
+     * Créez une nouvelle réponse de redirection vers l'URI actuel.
      *
      * @param  int    $status
      * @param  array  $headers
@@ -65,11 +70,12 @@ class Redirector
      */
     public function refresh($status = 302, $headers = array())
     {
+        // Collection path
         return $this->to($this->generator->getRequest()->path(), $status, $headers);
     }
 
     /**
-     * Create a new redirect response, while putting the current URL in the session.
+     * Créez une nouvelle réponse de redirection, tout en mettant l'URL actuelle dans la session.
      *
      * @param  string  $path
      * @param  int     $status
@@ -85,7 +91,7 @@ class Redirector
     }
 
     /**
-     * Create a new redirect response to the previously intended location.
+     * Créez une nouvelle réponse de redirection vers l'emplacement précédemment prévu.
      *
      * @param  string  $default
      * @param  int     $status
@@ -101,7 +107,7 @@ class Redirector
     }
 
     /**
-     * Create a new redirect response from the given path and arguments.
+     * Créez une nouvelle réponse de redirection à partir du chemin et des arguments donnés.
      *
      * @return \Two\Http\RedirectResponse
      */
@@ -125,7 +131,7 @@ class Redirector
     }
 
     /**
-     * Create a new redirect response to the given path.
+     * Créez une nouvelle réponse de redirection vers le chemin donné.
      *
      * @param  string  $path
      * @param  int     $status
@@ -141,7 +147,7 @@ class Redirector
     }
 
     /**
-     * Create a new redirect response to an external URL (no validation).
+     * Créez une nouvelle réponse de redirection vers une URL externe (pas de validation).
      *
      * @param  string  $path
      * @param  int     $status
@@ -154,7 +160,7 @@ class Redirector
     }
 
     /**
-     * Create a new redirect response to the given HTTPS path.
+     * Créez une nouvelle réponse de redirection vers le chemin HTTPS donné.
      *
      * @param  string  $path
      * @param  int     $status
@@ -167,7 +173,7 @@ class Redirector
     }
 
     /**
-     * Create a new redirect response to a named route.
+     * Créez une nouvelle réponse de redirection vers une route nommée.
      *
      * @param  string  $route
      * @param  array   $parameters
@@ -183,7 +189,7 @@ class Redirector
     }
 
     /**
-     * Create a new redirect response to a controller action.
+     * Créez une nouvelle réponse de redirection à une action du contrôleur.
      *
      * @param  string  $action
      * @param  array   $parameters
@@ -199,7 +205,7 @@ class Redirector
     }
 
     /**
-     * Create a new redirect response.
+     * Créez une nouvelle réponse de redirection.
      *
      * @param  string  $path
      * @param  int     $status
@@ -221,7 +227,7 @@ class Redirector
     }
 
     /**
-     * Get the URL generator instance.
+     * Obtenez l'instance du générateur d'URL.
      *
      * @return  \Two\Routing\UrlGenerator
      */
@@ -231,7 +237,7 @@ class Redirector
     }
 
     /**
-     * Set the active session store.
+     * Définissez le magasin de sessions actif.
      *
      * @param  \Two\Session\Store  $session
      * @return void

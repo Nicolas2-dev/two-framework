@@ -1,9 +1,13 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Connections;
 
 use Two\Database\Connection;
-
 use Two\Database\Query\Grammars\SQLiteGrammar as QueryGrammar;
 use Two\Database\Query\Processors\SQLiteProcessor as QueryProcessor;
 use Two\Database\Schema\Grammars\SQLiteGrammar as SchemaGrammar;
@@ -15,7 +19,7 @@ class SQLiteConnection extends Connection
 {
 
     /**
-     * Get the default query grammar instance.
+     * Obtenez l'instance de grammaire de requête par défaut.
      *
      * @return \Two\Database\Query\Grammars\SQLiteGrammar
      */
@@ -25,7 +29,7 @@ class SQLiteConnection extends Connection
     }
 
     /**
-     * Get the default schema grammar instance.
+     * Obtenez l'instance de grammaire de schéma par défaut.
      *
      * @return \Two\Database\Schema\Grammars\SQLiteGrammar
      */
@@ -35,7 +39,7 @@ class SQLiteConnection extends Connection
     }
 
     /**
-     * Get the default post processor instance.
+     * Obtenez l'instance de post-processeur par défaut.
      *
      * @return \Two\Database\Query\Processors\Processor
      */
@@ -45,7 +49,7 @@ class SQLiteConnection extends Connection
     }
 
     /**
-     * Get the Doctrine DBAL driver.
+     * Obtenez le pilote Doctrine DBAL.
      *
      * @return \Doctrine\DBAL\Driver\PDOSqlite\Driver
      */

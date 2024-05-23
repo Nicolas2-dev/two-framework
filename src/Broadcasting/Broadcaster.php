@@ -1,27 +1,27 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Broadcasting;
 
-use Two\Broadcasting\Auth\Guest as GuestUser;
-use Two\Broadcasting\BroadcasterInterface;
-use Two\Broadcasting\Channel;
-
-use Two\Container\Container;
-
-use Two\Database\ORM\Model;
-use Two\Database\ORM\ModelNotFoundException;
-
-use Two\Http\Request;
+use ReflectionMethod;
+use ReflectionFunction;
+use ReflectionParameter;
+use ReflectionFunctionAbstract;
 
 use Two\Support\Arr;
 use Two\Support\Str;
+use Two\Http\Request;
+use Two\Database\ORM\Model;
+use Two\Container\Container;
+use Two\Broadcasting\Channel;
+use Two\Broadcasting\Auth\Guest as GuestUser;
+use Two\Broadcasting\Contracts\BroadcasterInterface;
 
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-
-use ReflectionFunction;
-use ReflectionFunctionAbstract;
-use ReflectionMethod;
-use ReflectionParameter;
 
 
 abstract class Broadcaster implements BroadcasterInterface
@@ -32,14 +32,14 @@ abstract class Broadcaster implements BroadcasterInterface
     protected $container;
 
     /**
-     * The registered channel authenticators.
+     * Les authentificateurs de chaîne enregistrés.
      *
      * @var array
      */
     protected $channels = array();
 
     /**
-     * The cached Guest instance, if any.
+     * L'instance d'invité mise en cache, le cas échéant.
      *
      * @var \Two\Broadcasting\Auth\Guest|null
      */
@@ -47,7 +47,7 @@ abstract class Broadcaster implements BroadcasterInterface
 
 
     /**
-     * Create a new broadcaster instance.
+     * Créez une nouvelle instance de diffuseur.
      *
      * @param  \Two\Container\Container $container
      * @return void
@@ -58,7 +58,7 @@ abstract class Broadcaster implements BroadcasterInterface
     }
 
     /**
-     * Register a channel authenticator.
+     * Enregistrez un authentificateur de chaîne.
      *
      * @param  string  $channel
      * @param  callable  $callback
@@ -72,7 +72,7 @@ abstract class Broadcaster implements BroadcasterInterface
     }
 
     /**
-     * Authenticate the incoming request for a given channel.
+     * Authentifiez la demande entrante pour un canal donné.
      *
      * @param  \Two\Http\Request  $request
      * @return mixed
@@ -84,10 +84,10 @@ abstract class Broadcaster implements BroadcasterInterface
         $channel = preg_replace('/^(private|presence)\-/', '', $channelName, 1, $count);
 
         if (($count == 1) && is_null($user = $request->user())) {
-            // For the private and presence channels, the Broadcasting needs a valid User instance,
-            // but it is not available for the non authenticated users (guests) within Auth System.
-            // For the guests, we will use a cached GuestUser instance, with a random string as ID.
-
+            
+            // Pour les canaux privés et de présence, la Diffusion a besoin d'une instance Utilisateur valide,
+            // mais il n'est pas disponible pour les utilisateurs non authentifiés (invités) dans Auth System.
+            // Pour les invités, nous utiliserons une instance GuestUser en cache, avec une chaîne aléatoire comme ID.
             $request->setUserResolver(function ()
             {
                 return $this->resolveGuestUser();
@@ -98,7 +98,7 @@ abstract class Broadcaster implements BroadcasterInterface
     }
 
     /**
-     * Resolve the Guest User instance with local caching.
+     * Résolvez l’instance d’utilisateur invité avec la mise en cache locale.
      *
      * @return \Two\Broadcasting\Auth\Guest
      */
@@ -120,7 +120,7 @@ abstract class Broadcaster implements BroadcasterInterface
     }
 
     /**
-     * Authenticate the incoming request for a given channel.
+     * Authentifiez la demande entrante pour un canal donné.
      *
      * @param  \Two\Http\Request  $request
      * @param  string  $channel
@@ -141,7 +141,7 @@ abstract class Broadcaster implements BroadcasterInterface
 
             }, ARRAY_FILTER_USE_BOTH);
 
-            // The first parameter is always the authenticated User instance.
+            // Le premier paramètre est toujours l’instance d’utilisateur authentifié.
             array_unshift($parameters, $request->user());
 
             if ($result = $this->callChannelCallback($callback, $parameters)) {
@@ -153,7 +153,7 @@ abstract class Broadcaster implements BroadcasterInterface
     }
 
     /**
-     * Call a channel callback with the dependencies.
+     * Appelez un rappel de canal avec les dépendances.
      *
      * @param  mixed  $callback
      * @param  array  $parameters
@@ -179,7 +179,7 @@ abstract class Broadcaster implements BroadcasterInterface
     }
 
     /**
-     * Resolve the given method's type-hinted dependencies.
+     * Résolvez les dépendances de type de la méthode donnée.
      *
      * @param  array  $parameters
      * @param  \ReflectionFunctionAbstract  $reflector
@@ -189,7 +189,7 @@ abstract class Broadcaster implements BroadcasterInterface
     {
         foreach ($reflector->getParameters() as $key => $parameter) {
             if ($key === 0) {
-                // The first parameter is always the authenticated User instance.
+                // Le premier paramètre est toujours l’instance d’utilisateur authentifié.
                 continue;
             }
 
@@ -204,7 +204,7 @@ abstract class Broadcaster implements BroadcasterInterface
     }
 
     /**
-     * Attempt to transform the given parameter into a class instance.
+     * Tentative de transformer le paramètre donné en instance de classe.
      *
      * @param  \ReflectionParameter  $parameter
      * @param  string  $name
@@ -217,7 +217,7 @@ abstract class Broadcaster implements BroadcasterInterface
             return;
         }
 
-        // The parameter references a class.
+        // Le paramètre fait référence à une classe.
         else if (! $class->isSubclassOf(Model::class)) {
             return $this->container->make($class->getName());
         }
@@ -235,7 +235,7 @@ abstract class Broadcaster implements BroadcasterInterface
     }
 
     /**
-     * Format the channel array into an array of strings.
+     * Formatez le tableau de canaux en un tableau de chaînes.
      *
      * @param  array  $channels
      * @return array

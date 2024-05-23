@@ -1,28 +1,35 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Session;
+
+use SessionHandlerInterface;
 
 use Two\Cache\Repository;
 
 
-class CacheBasedSessionHandler implements \SessionHandlerInterface
+class CacheBasedSessionHandler implements SessionHandlerInterface
 {
     /**
-     * The cache repository instance.
+     * L'instance du référentiel de cache.
      *
      * @var \Two\Cache\Repository
      */
     protected $cache;
 
     /**
-     * The number of minutes to store the data in the cache.
+     * Le nombre de minutes pendant lesquelles stocker les données dans le cache.
      *
      * @var int
      */
     protected $minutes;
 
     /**
-     * Create a new cache driven handler instance.
+     * Créez une nouvelle instance de gestionnaire piloté par le cache.
      *
      * @param  \Two\Cache\Repository  $cache
      * @param  int  $minutes
@@ -85,7 +92,7 @@ class CacheBasedSessionHandler implements \SessionHandlerInterface
     }
 
     /**
-     * Get the underlying cache repository.
+     * Obtenez le référentiel de cache sous-jacent.
      *
      * @return \Two\Cache\Repository
      */

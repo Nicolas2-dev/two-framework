@@ -1,36 +1,42 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue;
 
 use Closure;
+use InvalidArgumentException;
 
 
 class QueueManager
 {
     /**
-     * The application instance.
+     * L'instance d'application.
      *
-     * @var \Two\Foundation\Application
+     * @var \Two\Application\Two
      */
     protected $app;
 
     /**
-     * The array of resolved queue connections.
+     * 
      *
      * @var array
      */
     protected $connections = array();
 
     /**
-     * 
+     * Tableau des connexions de file d’attente résolues.
      */
     protected $connectors = array();
 
 
     /**
-     * Create a new queue manager instance.
+     * Créez une nouvelle instance de gestionnaire de files d'attente.
      *
-     * @param  \Two\Foundation\Application  $app
+     * @param  \Two\Application\Two  $app
      * @return void
      */
     public function __construct($app)
@@ -38,9 +44,8 @@ class QueueManager
         $this->app = $app;
     }
 
-
     /**
-     * Register an event listener for the daemon queue loop.
+     * Enregistrez un écouteur d'événements pour la boucle de file d'attente du démon.
      *
      * @param  mixed  $callback
      * @return void
@@ -51,7 +56,7 @@ class QueueManager
     }
 
     /**
-     * Register an event listener for the processing job event.
+     * Enregistrez un écouteur d'événement pour l'événement de tâche de traitement.
      *
      * @param  mixed  $callback
      * @return void
@@ -62,7 +67,7 @@ class QueueManager
     }
 
     /**
-     * Register an event listener for the processed job event.
+     * Enregistrez un écouteur d'événement pour l'événement de tâche traité.
      *
      * @param  mixed  $callback
      * @return void
@@ -73,7 +78,7 @@ class QueueManager
     }
 
     /**
-     * Register an event listener for the failed job event.
+     * Enregistrez un écouteur d'événement pour l'événement de tâche ayant échoué.
      *
      * @param  mixed  $callback
      * @return void
@@ -84,7 +89,7 @@ class QueueManager
     }
 
     /**
-     * Register an event listener for the daemon queue stopping.
+     * Enregistrez un écouteur d'événements pour l'arrêt de la file d'attente du démon.
      *
      * @param  mixed  $callback
      * @return void
@@ -95,7 +100,7 @@ class QueueManager
     }
 
     /**
-     * Determine if the driver is connected.
+     * Déterminez si le pilote est connecté.
      *
      * @param  string  $name
      * @return bool
@@ -106,18 +111,18 @@ class QueueManager
     }
 
     /**
-     * Resolve a queue connection instance.
+     * Résolvez une instance de connexion de file d’attente.
      *
      * @param  string  $name
-     * @return \Two\Queue\QueueInterface
+     * @return \Two\Queue\Contracts\QueueInterface
      */
     public function connection($name = null)
     {
         $name = $name ?: $this->getDefaultDriver();
 
-        // If the connection has not been resolved yet we will resolve it now as all
-        // of the connections are resolved when they are actually needed so we do
-        // not make any unnecessary connection to the various queue end-points.
+        // Si la connexion n'a pas encore été résolue, nous la résoudrons maintenant comme tout
+        // des connexions sont résolues lorsqu'elles sont réellement nécessaires, nous le faisons donc
+        // n'établit aucune connexion inutile aux différents points de terminaison de la file d'attente.
         if ( ! isset($this->connections[$name])) {
             $this->connections[$name] = $this->resolve($name);
 
@@ -130,10 +135,10 @@ class QueueManager
     }
 
     /**
-     * Resolve a queue connection.
+     * Résolvez une connexion de file d’attente.
      *
      * @param  string  $name
-     * @return \Two\Queue\QueueInterface
+     * @return \Two\Queue\Contracts\QueueInterface
      */
     protected function resolve($name)
     {
@@ -143,10 +148,10 @@ class QueueManager
     }
 
     /**
-     * Get the connector for a given driver.
+     * Obtenez le connecteur pour un pilote donné.
      *
      * @param  string  $driver
-     * @return \Two\Queue\ConnectorInterface
+     * @return \Two\Queue\Contracts\ConnectorInterface
      *
      * @throws \InvalidArgumentException
      */
@@ -157,11 +162,11 @@ class QueueManager
             return call_user_func($this->connectors[$driver]);
         }
 
-        throw new \InvalidArgumentException("No connector for [$driver]");
+        throw new InvalidArgumentException("No connector for [$driver]");
     }
 
     /**
-     * Add a queue connection resolver.
+     * Ajoutez un résolveur de connexion de file d'attente.
      *
      * @param  string    $driver
      * @param  \Closure  $resolver
@@ -173,7 +178,7 @@ class QueueManager
     }
 
     /**
-     * Add a queue connection resolver.
+     * Ajoutez un résolveur de connexion de file d'attente.
      *
      * @param  string    $driver
      * @param  \Closure  $resolver
@@ -185,7 +190,7 @@ class QueueManager
     }
 
     /**
-     * Get the queue connection configuration.
+     * Obtenez la configuration de la connexion à la file d'attente.
      *
      * @param  string  $name
      * @return array
@@ -196,7 +201,7 @@ class QueueManager
     }
 
     /**
-     * Get the name of the default queue connection.
+     * Obtenez le nom de la connexion à la file d'attente par défaut.
      *
      * @return string
      */
@@ -206,7 +211,7 @@ class QueueManager
     }
 
     /**
-     * Set the name of the default queue connection.
+     * Définissez le nom de la connexion à la file d'attente par défaut.
      *
      * @param  string  $name
      * @return void
@@ -217,7 +222,7 @@ class QueueManager
     }
 
     /**
-     * Get the full name for the given connection.
+     * Obtenez le nom complet de la connexion donnée.
      *
      * @param  string  $connection
      * @return string
@@ -228,17 +233,17 @@ class QueueManager
     }
 
     /**
-    * Determine if the application is in maintenance mode.
-    *
-    * @return bool
-    */
+     * Déterminez si l’application est en mode maintenance.
+     *
+     * @return bool
+     */
     public function isDownForMaintenance()
     {
         return $this->app->isDownForMaintenance();
     }
 
     /**
-     * Dynamically pass calls to the default connection.
+     * Transmettez dynamiquement les appels vers la connexion par défaut.
      *
      * @param  string  $method
      * @param  array   $parameters

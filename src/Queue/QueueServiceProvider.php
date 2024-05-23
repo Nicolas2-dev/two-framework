@@ -1,30 +1,35 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue;
 
-use Two\Queue\Console\WorkCommand;
-use Two\Queue\Console\ListenCommand;
-use Two\Queue\Console\RestartCommand;
-use Two\Queue\Connectors\SqsConnector;
-use Two\Queue\Console\SubscribeCommand;
-use Two\Queue\Connectors\DatabaseConnector;
-use Two\Queue\Connectors\NullConnector;
-use Two\Queue\Connectors\SyncConnector;
-use Two\Queue\Connectors\IronConnector;
-use Two\Queue\Connectors\RedisConnector;
-use Two\Queue\Connectors\BeanstalkdConnector;
-use Two\Queue\Failed\DatabaseFailedJobProvider;
-use Two\Queue\Failed\NullFailedJobProvider;
 use Two\Queue\CallQueuedClosure;
 
-use Two\Support\ServiceProvider;
+use Two\Queue\Connectors\SqsConnector;
+use Two\Queue\Connectors\IronConnector;
+use Two\Queue\Connectors\NullConnector;
+use Two\Queue\Connectors\SyncConnector;
+use Two\Queue\Connectors\RedisConnector;
+use Two\Queue\Connectors\DatabaseConnector;
+use Two\Queue\Failed\NullFailedJobProvider;
+use Two\Queue\Connectors\BeanstalkdConnector;
+use Two\Queue\Failed\DatabaseFailedJobProvider;
+use Two\Application\Providers\ServiceProvider;
+use Two\Console\Forge\Queue\Commands\WorkCommand;
+use Two\Console\Forge\Queue\Commands\ListenCommand;
+use Two\Console\Forge\Queue\Commands\RestartCommand;
+use Two\Console\Forge\Queue\Commands\SubscribeCommand;
 
 
 class QueueServiceProvider extends ServiceProvider
 {
 
     /**
-     * Indicates if loading of the provider is deferred.
+     * Indique si le chargement du fournisseur est différé.
      *
      * @var bool
      */
@@ -32,7 +37,7 @@ class QueueServiceProvider extends ServiceProvider
 
 
     /**
-     * Register the service provider.
+     * Enregistrez le fournisseur de services.
      *
      * @return void
      */
@@ -52,7 +57,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the queue manager.
+     * Enregistrez le gestionnaire de files d'attente.
      *
      * @return void
      */
@@ -60,9 +65,10 @@ class QueueServiceProvider extends ServiceProvider
     {
         $this->app->bindShared('queue', function($app)
         {
-            // Once we have an instance of the queue manager, we will register the various
-            // resolvers for the queue connectors. These connectors are responsible for
-            // creating the classes that accept queue configs and instantiate queues.
+
+            // Une fois que nous aurons une instance du gestionnaire de files d'attente, nous enregistrerons les différents
+            // résolveurs pour les connecteurs de file d'attente. Ces connecteurs sont responsables de
+            // création des classes qui acceptent les configurations de file d'attente et instancient les files d'attente.
             $manager = new QueueManager($app);
 
             $this->registerConnectors($manager);
@@ -76,7 +82,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the queue worker.
+     * Enregistrez le gestionnaire de file d'attente.
      *
      * @return void
      */
@@ -93,7 +99,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the queue worker console command.
+     * Enregistrez la commande de la console de travail de file d'attente.
      *
      * @return void
      */
@@ -108,7 +114,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the queue listener.
+     * Enregistrez l'écouteur de file d'attente.
      *
      * @return void
      */
@@ -123,7 +129,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the queue listener console command.
+     * Enregistrez la commande de console d'écouteur de file d'attente.
      *
      * @return void
      */
@@ -138,7 +144,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the queue restart console command.
+     * Enregistrez la commande de console de redémarrage de file d'attente.
      *
      * @return void
      */
@@ -153,7 +159,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the push queue subscribe command.
+     * Enregistrez la commande Push Queue Subscribe.
      *
      * @return void
      */
@@ -168,7 +174,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the connectors on the queue manager.
+     * Enregistrez les connecteurs sur le gestionnaire de files d'attente.
      *
      * @param  \Two\Queue\QueueManager  $manager
      * @return void
@@ -183,7 +189,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Null queue connector.
+     * Enregistrez le connecteur de file d'attente Null.
      *
      * @param  \Two\Queue\QueueManager  $manager
      * @return void
@@ -196,7 +202,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Sync queue connector.
+     * Enregistrez le connecteur de file d’attente de synchronisation.
      *
      * @param  \Two\Queue\QueueManager  $manager
      * @return void
@@ -210,7 +216,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the database queue connector.
+     * Enregistrez le connecteur de file d'attente de base de données.
      *
      * @param  \Two\Queue\QueueManager  $manager
      * @return void
@@ -223,7 +229,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Beanstalkd queue connector.
+     * Enregistrez le connecteur de file d'attente Beanstalkd.
      *
      * @param  \Two\Queue\QueueManager  $manager
      * @return void
@@ -237,7 +243,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Redis queue connector.
+     * Enregistrez le connecteur de file d'attente Redis.
      *
      * @param  \Two\Queue\QueueManager  $manager
      * @return void
@@ -253,7 +259,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Amazon SQS queue connector.
+     * Enregistrez le connecteur de file d'attente Amazon SQS.
      *
      * @param  \Two\Queue\QueueManager  $manager
      * @return void
@@ -267,7 +273,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the IronMQ queue connector.
+     * Enregistrez le connecteur de file d'attente IronMQ.
      *
      * @param  \Two\Queue\QueueManager  $manager
      * @return void
@@ -285,7 +291,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the request rebinding event for the Iron queue.
+     * Enregistrez l’événement de reliure de demande pour la file d’attente Iron.
      *
      * @return void
      */
@@ -300,7 +306,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the failed job services.
+     * Enregistrez les services de travail ayant échoué.
      *
      * @return void
      */
@@ -319,7 +325,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Two queued closure job.
+     * Enregistrez le travail de fermeture à deux files d'attente.
      *
      * @return void
      */
@@ -332,7 +338,7 @@ class QueueServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get the services provided by the provider.
+     * Obtenez les services fournis par le fournisseur.
      *
      * @return array
      */

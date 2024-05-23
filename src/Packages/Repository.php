@@ -1,14 +1,20 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Packages;
+
+use InvalidArgumentException;
 
 use Two\Support\Arr;
 use Two\Support\Str;
-use Two\Support\Collection;
-use InvalidArgumentException;
+use Two\Collection\Collection;
 use Two\Filesystem\Filesystem;
 use Two\Config\Repository as Config;
-use Two\Filesystem\FileNotFoundException;
+use Two\Filesystem\Exception\FileNotFoundException;
 
 
 class Repository
@@ -24,15 +30,15 @@ class Repository
     protected $files;
 
     /**
-     * @var \Two\Support\Collection|null
+     * @var \Two\Collection\Collection|null
      */
     protected static $packages;
 
 
     /**
-     * Create a new Package Manager instance.
+     * Créez une nouvelle instance du gestionnaire de packages.
      *
-     * @param Application $app
+     * @param \Two\Application\Two $app
      */
     public function __construct(Config $config, Filesystem $files)
     {
@@ -42,7 +48,7 @@ class Repository
     }
 
     /**
-     * Get all module slugs.
+     * Obtenez tous les slugs du module.
      *
      * @return Collection
      */
@@ -64,7 +70,7 @@ class Repository
     }
 
     /**
-     * Get Packages based on where clause.
+     * Obtenez des packages en fonction de la clause Where.
      *
      * @param string $key
      * @param mixed  $value
@@ -77,7 +83,7 @@ class Repository
     }
 
     /**
-     * Sort modules by given key in ascending order.
+     * Trier les modules par clé donnée dans l'ordre croissant.
      *
      * @param string $key
      *
@@ -89,7 +95,7 @@ class Repository
     }
 
     /**
-     * Sort modules by given key in ascending order.
+     * Trier les modules par clé donnée dans l'ordre croissant.
      *
      * @param string $key
      *
@@ -101,7 +107,7 @@ class Repository
     }
 
     /**
-     * Determines if the given module exists.
+     * Détermine si le module donné existe.
      *
      * @param string $slug
      *
@@ -117,7 +123,7 @@ class Repository
     }
 
     /**
-     * Returns count of all modules.
+     * Renvoie le nombre de tous les modules.
      *
      * @return int
      */
@@ -127,7 +133,7 @@ class Repository
     }
 
     /**
-     * Get all enabled modules.
+     * Obtenez tous les modules activés.
      *
      * @return Collection
      */
@@ -137,7 +143,7 @@ class Repository
     }
 
     /**
-     * Get all disabled modules.
+     * Obtenez tous les modules désactivés.
      *
      * @return Collection
      */
@@ -147,7 +153,7 @@ class Repository
     }
 
     /**
-     * Check if specified module is enabled.
+     * Vérifiez si le module spécifié est activé.
      *
      * @param string $slug
      *
@@ -161,7 +167,7 @@ class Repository
     }
 
     /**
-     * Check if specified module is disabled.
+     * Vérifiez si le module spécifié est désactivé.
      *
      * @param string $slug
      *
@@ -175,7 +181,7 @@ class Repository
     }
 
     /**
-     * Get local path for the specified Package.
+     * Obtenez le chemin local du package spécifié.
      *
      * @param string $slug
      *
@@ -189,7 +195,7 @@ class Repository
     }
 
     /**
-     * Get (local) Packages path.
+     * Obtenez le chemin (local) des packages.
      *
      * @return string
      */
@@ -199,7 +205,7 @@ class Repository
     }
 
     /**
-     * Get Packages namespace.
+     * Obtenez l’espace de noms des packages.
      *
      * @return string
      */
@@ -209,7 +215,7 @@ class Repository
     }
 
     /**
-     * Get path for the specified Module.
+     * Obtenez le chemin du module spécifié.
      *
      * @param string $slug
      *
@@ -223,7 +229,7 @@ class Repository
     }
 
     /**
-     * Get modules path.
+     * Obtenez le chemin des modules.
      *
      * @return string
      */
@@ -233,7 +239,7 @@ class Repository
     }
 
     /**
-     * Get modules namespace.
+     * Obtenez l'espace de noms des modules.
      *
      * @return string
      */
@@ -245,7 +251,7 @@ class Repository
     }
 
     /**
-     * Get path for the specified Theme.
+     * Obtenez le chemin du thème spécifié.
      *
      * @param string $slug
      *
@@ -259,7 +265,7 @@ class Repository
     }
 
     /**
-     * Get modules path.
+     * Obtenez le chemin des modules.
      *
      * @return string
      */
@@ -269,7 +275,7 @@ class Repository
     }
 
     /**
-     * Get modules namespace.
+     * Obtenez l'espace de noms des modules.
      *
      * @return string
      */
@@ -281,7 +287,7 @@ class Repository
     }
 
     /**
-     * Update cached repository of packages information.
+     * Mettre à jour le référentiel mis en cache des informations sur les packages.
      *
      * @return bool
      */
@@ -305,7 +311,7 @@ class Repository
 
         $items = Arr::get($data, 'packages', array());
 
-        // Process the Packages data.
+        // Traitez les données des packages.
         $path = $this->getPackagesPath();
 
         $packages = collect();
@@ -322,8 +328,7 @@ class Repository
             ));
         }
 
-        //
-        // Process for the local Modules.
+        // Processus pour les modules locaux.
 
         $path = $this->getModulesPath();
 
@@ -355,8 +360,7 @@ class Repository
             });
         }
 
-        //
-        // Process for the local Themes.
+        // Processus pour les thèmes locaux.
 
         $path = $this->getThemesPath();
 
@@ -388,8 +392,7 @@ class Repository
             });
         }
 
-        //
-        // Process the retrieved information to generate their records.
+        // Traitez les informations récupérées pour générer leurs enregistrements.
 
         $items = $packages->map(function ($properties, $name)
         {
@@ -405,7 +408,7 @@ class Repository
 
             $properties['basename'] = $basename;
 
-            // Get the Package options from configuration.
+            // Obtenez les options du package à partir de la configuration.
             $options = $this->config->get('packages.options.' .$slug, array());
 
             $properties['enabled'] = Arr::get($options, 'enabled', true);
@@ -419,10 +422,10 @@ class Repository
     }
 
     /**
-     * Get the contents of the cache file.
+     * Obtenez le contenu du fichier cache.
      *
-     * The cache file lists all Packages slugs and their enabled or disabled status.
-     * This can be used to filter out Packages depending on their status.
+     * Le fichier cache répertorie tous les slugs de packages et leur statut activé ou désactivé.
+     * Cela peut être utilisé pour filtrer les packages en fonction de leur statut.
      *
      * @return Collection
      */
@@ -451,10 +454,10 @@ class Repository
     }
 
     /**
-     * Write the service cache file to disk.
+     * Écrivez le fichier de cache de service sur le disque.
      *
      * @param  string $path
-     * @param  array  $packages
+     * @param  array|Collection  $packages
      * @return void
      */
     protected function writeCache($path, $packages)
@@ -464,7 +467,7 @@ class Repository
         foreach ($packages->all() as $key => $package) {
             $properties = ($package instanceof Collection) ? $package->all() : $package;
 
-            // Normalize to *nix paths.
+            // Normaliser sur les chemins * nix.
             $properties['path'] = str_replace('\\', '/', $properties['path']);
 
             //
@@ -487,7 +490,7 @@ PHP;
     }
 
     /**
-    * Determine if the cache file is expired.
+    * Déterminez si le fichier cache a expiré.
     *
     * @param  string  $cachePath
     * @param  string  $path
@@ -509,7 +512,7 @@ PHP;
     }
 
     /**
-     * Get packages cache path.
+     * Obtenez le chemin du cache des packages.
      *
      * @return string
      */
@@ -519,7 +522,7 @@ PHP;
     }
 
     /**
-     * Get the name for a Package.
+     * Obtenez le nom d’un package.
      *
      * @param  string  $package
      * @param  string  $namespace

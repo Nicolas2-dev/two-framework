@@ -1,19 +1,24 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Query;
 
 
 class Expression
 {
     /**
-     * The value of the expression.
+     * La valeur de l'expression.
      *
      * @var mixed
      */
     protected $value;
 
     /**
-     * Create a new raw query expression.
+     * Créez une nouvelle expression de requête brute.
      *
      * @param  mixed  $value
      * @return void
@@ -24,7 +29,7 @@ class Expression
     }
 
     /**
-     * Get the value of the expression.
+     * Obtenez la valeur de l'expression.
      *
      * @return mixed
      */
@@ -34,7 +39,7 @@ class Expression
     }
 
     /**
-     * Get the value of the expression.
+     * Obtenez la valeur de l'expression.
      *
      * @return string
      */

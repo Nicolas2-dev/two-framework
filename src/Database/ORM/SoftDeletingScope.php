@@ -1,12 +1,19 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM;
+
+use Two\Database\Contracts\ScopeInterface;
 
 
 class SoftDeletingScope implements ScopeInterface
 {
     /**
-     * All of the extensions to be added to the builder.
+     * Toutes les extensions à ajouter au constructeur.
      *
      * @var array
      */
@@ -14,7 +21,7 @@ class SoftDeletingScope implements ScopeInterface
 
 
     /**
-     * Apply the scope to a given ORM query builder.
+     * Appliquez la portée à un générateur de requêtes ORM donné.
      *
      * @param  \Two\Database\ORM\Builder  $builder
      * @return void
@@ -29,7 +36,7 @@ class SoftDeletingScope implements ScopeInterface
     }
 
     /**
-     * Remove the scope from the given ORM query builder.
+     * Supprimez la portée du générateur de requêtes ORM donné.
      *
      * @param  \Two\Database\ORM\Builder  $builder
      * @return void
@@ -50,7 +57,7 @@ class SoftDeletingScope implements ScopeInterface
     }
 
     /**
-     * Extend the query builder with the needed functions.
+     * Étendez le générateur de requêtes avec les fonctions nécessaires.
      *
      * @param  \Two\Database\ORM\Builder  $builder
      * @return void
@@ -72,7 +79,7 @@ class SoftDeletingScope implements ScopeInterface
     }
 
     /**
-     * Get the "deleted at" column for the builder.
+     * Obtenez la colonne "supprimé à" pour le constructeur.
      *
      * @param  \Two\Database\ORM\Builder  $builder
      * @return string
@@ -87,7 +94,7 @@ class SoftDeletingScope implements ScopeInterface
     }
 
     /**
-     * Add the force delete extension to the builder.
+     * Ajoutez l’extension de suppression forcée au générateur.
      *
      * @param  \Two\Database\ORM\Builder  $builder
      * @return void
@@ -101,7 +108,7 @@ class SoftDeletingScope implements ScopeInterface
     }
 
     /**
-     * Add the restore extension to the builder.
+     * Ajoutez l'extension de restauration au générateur.
      *
      * @param  \Two\Database\ORM\Builder  $builder
      * @return void
@@ -117,7 +124,7 @@ class SoftDeletingScope implements ScopeInterface
     }
 
     /**
-     * Add the with-trashed extension to the builder.
+     * Ajoutez l'extension with-trashed au constructeur.
      *
      * @param  \Two\Database\ORM\Builder  $builder
      * @return void
@@ -133,7 +140,7 @@ class SoftDeletingScope implements ScopeInterface
     }
 
     /**
-     * Add the only-trashed extension to the builder.
+     * Ajoutez l'extension uniquement mise à la corbeille au générateur.
      *
      * @param  \Two\Database\ORM\Builder  $builder
      * @return void
@@ -151,7 +158,7 @@ class SoftDeletingScope implements ScopeInterface
     }
 
     /**
-     * Determine if the given where clause is a soft delete constraint.
+     * Déterminez si la clause Where donnée est une contrainte de suppression logicielle.
      *
      * @param  array   $where
      * @param  string  $column

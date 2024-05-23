@@ -1,10 +1,17 @@
-<?php namespace Two\Mail;
+<?php 
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
+namespace Two\Mail;
 
 use Two\Mail\Transport\LogTransport;
 use Two\Mail\Transport\MailgunTransport;
 use Two\Mail\Transport\MandrillTransport;
 use Two\Mail\Transport\SesTransport;
-use Two\Support\Manager;
+use Two\Application\Manager;
 
 use Aws\Ses\SesClient;
 
@@ -17,7 +24,7 @@ class TransportManager extends Manager
 {
 
     /**
-     * Create an instance of the SMTP Swift Transport driver.
+     * Créez une instance du pilote SMTP Swift Transport.
      *
      * @return \Swift_SmtpTransport
      */
@@ -25,9 +32,9 @@ class TransportManager extends Manager
     {
         $config = $this->app['config']['mail'];
 
-        // The Swift SMTP transport instance will allow us to use any SMTP backend
-        // for delivering mail such as Sendgrid, Amazon SES, or a custom server
-        // a developer has available. We will just pass this configured host.
+        // L'instance de transport Swift SMTP nous permettra d'utiliser n'importe quel backend SMTP
+        // pour distribuer du courrier tel que Sendgrid, Amazon SES ou un serveur personnalisé
+        // un développeur dispose de. Nous allons simplement transmettre cet hôte configuré.
         $transport = SmtpTransport::newInstance(
             $config['host'], $config['port']
         );
@@ -36,9 +43,9 @@ class TransportManager extends Manager
             $transport->setEncryption($config['encryption']);
         }
 
-        // Once we have the transport we will check for the presence of a username
-        // and password. If we have it we will set the credentials on the Swift
-        // transporter instance so that we'll properly authenticate delivery.
+        // Une fois que nous aurons le transport, nous vérifierons la présence d'un nom d'utilisateur
+        // et mot de passe. Si nous l'avons, nous définirons les informations d'identification sur le Swift
+        // instance de transporteur afin que nous authentifiions correctement la livraison.
         if (isset($config['username'])) {
             $transport->setUsername($config['username']);
 
@@ -49,7 +56,7 @@ class TransportManager extends Manager
     }
 
     /**
-     * Create an instance of the Sendmail Swift Transport driver.
+     * Créez une instance du pilote Sendmail Swift Transport.
      *
      * @return \Swift_SendmailTransport
      */
@@ -61,7 +68,7 @@ class TransportManager extends Manager
     }
 
     /**
-     * Create an instance of the Amazon SES Swift Transport driver.
+     * Créez une instance du pilote Amazon SES Swift Transport.
      *
      * @return \Swift_SendmailTransport
      */
@@ -73,7 +80,7 @@ class TransportManager extends Manager
     }
 
     /**
-     * Create an instance of the Mail Swift Transport driver.
+     * Créez une instance du pilote Mail Swift Transport.
      *
      * @return \Swift_MailTransport
      */
@@ -83,7 +90,7 @@ class TransportManager extends Manager
     }
 
     /**
-     * Create an instance of the Mailgun Swift Transport driver.
+     * Créez une instance du pilote Mailgun Swift Transport.
      *
      * @return \Two\Mail\Transport\MailgunTransport
      */
@@ -95,7 +102,7 @@ class TransportManager extends Manager
     }
 
     /**
-     * Create an instance of the Mandrill Swift Transport driver.
+     * Créez une instance du pilote Mandrill Swift Transport.
      *
      * @return \Two\Mail\Transport\MandrillTransport
      */
@@ -107,7 +114,7 @@ class TransportManager extends Manager
     }
 
     /**
-     * Create an instance of the Log Swift Transport driver.
+     * Créez une instance du pilote Log Swift Transport.
      *
      * @return \Two\Mail\Transport\LogTransport
      */
@@ -117,7 +124,7 @@ class TransportManager extends Manager
     }
 
     /**
-     * Get the default cache driver name.
+     * Obtenez le nom du pilote de cache par défaut.
      *
      * @return string
      */
@@ -127,7 +134,7 @@ class TransportManager extends Manager
     }
 
     /**
-     * Set the default cache driver name.
+     * Définissez le nom du pilote de cache par défaut.
      *
      * @param  string  $name
      * @return void

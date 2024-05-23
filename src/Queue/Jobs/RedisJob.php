@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Jobs;
 
 use Two\Container\Container;
@@ -11,21 +16,21 @@ class RedisJob extends Job
 {
 
     /**
-     * The Redis queue instance.
+     * L'instance de file d'attente Redis.
      *
      * @var \Two\Queue\RedisQueue
      */
     protected $redis;
 
     /**
-     * The Redis job payload.
+     * La charge utile de la tâche Redis.
      *
      * @var string
      */
     protected $job;
 
     /**
-     * Create a new job instance.
+     * Créez une nouvelle instance de travail.
      *
      * @param  \Two\Container\Container  $container
      * @param  \Two\Queue\RedisQueue  $redis
@@ -42,7 +47,7 @@ class RedisJob extends Job
     }
 
     /**
-     * Fire the job.
+     * Licenciez le travail.
      *
      * @return void
      */
@@ -54,7 +59,7 @@ class RedisJob extends Job
     }
 
     /**
-     * Get the raw body string for the job.
+     * Obtenez la corde de corps brute pour le travail.
      *
      * @return string
      */
@@ -64,7 +69,7 @@ class RedisJob extends Job
     }
 
     /**
-     * Delete the job from the queue.
+     * Supprimez le travail de la file d'attente.
      *
      * @return void
      */
@@ -76,7 +81,7 @@ class RedisJob extends Job
     }
 
     /**
-     * Release the job back into the queue.
+     * Remettez le travail dans la file d'attente.
      *
      * @param  int   $delay
      * @return void
@@ -89,7 +94,7 @@ class RedisJob extends Job
     }
 
     /**
-     * Get the number of times the job has been attempted.
+     * Obtenez le nombre de tentatives de travail.
      *
      * @return int
      */
@@ -99,7 +104,7 @@ class RedisJob extends Job
     }
 
     /**
-     * Get the job identifier.
+     * Obtenez l'identifiant du travail.
      *
      * @return string
      */
@@ -109,7 +114,7 @@ class RedisJob extends Job
     }
 
     /**
-     * Get the IoC container instance.
+     * Obtenez l'instance de conteneur IoC.
      *
      * @return \Two\Container\Container
      */
@@ -119,7 +124,7 @@ class RedisJob extends Job
     }
 
     /**
-     * Get the underlying queue driver instance.
+     * Obtenez l'instance de pilote de file d'attente sous-jacente.
      *
      * @return \Two\Redis\Database
      */
@@ -129,7 +134,7 @@ class RedisJob extends Job
     }
 
     /**
-     * Get the underlying Redis job.
+     * Obtenez le travail Redis sous-jacent.
      *
      * @return string
      */

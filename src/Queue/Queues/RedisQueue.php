@@ -1,10 +1,15 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Queues;
 
 use Two\Queue\Jobs\RedisJob;
 use Two\Queue\Queue;
-use Two\Queue\QueueInterface;
+use Two\Queue\Contracts\QueueInterface;
 
 use Two\Redis\Database;
 
@@ -12,28 +17,28 @@ use Two\Redis\Database;
 class RedisQueue extends Queue implements QueueInterface
 {
     /**
-    * The Redis database instance.
-    *
+     * L'instance de base de données Redis.
+     *
      * @var \Two\Redis\Database
      */
     protected $redis;
 
     /**
-     * The connection name.
+     * Le nom de la connexion.
      *
      * @var string
      */
     protected $connection;
 
     /**
-     * The name of the default queue.
+     * Le nom de la file d'attente par défaut.
      *
      * @var string
      */
     protected $default;
 
     /**
-     * The expiration time of a job.
+     * Le délai d'expiration d'un travail.
      *
      * @var int|null
      */
@@ -41,7 +46,7 @@ class RedisQueue extends Queue implements QueueInterface
 
 
     /**
-     * Create a new Redis queue instance.
+     * Créez une nouvelle instance de file d'attente Redis.
      *
      * @param  \Two\Redis\Database  $redis
      * @param  string  $default
@@ -56,7 +61,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a new job onto the queue.
+     * Placez un nouveau travail dans la file d'attente.
      *
      * @param  string  $job
      * @param  mixed   $data
@@ -69,7 +74,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a raw payload onto the queue.
+     * Insérez une charge utile brute dans la file d'attente.
      *
      * @param  string  $payload
      * @param  string  $queue
@@ -84,7 +89,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a new job onto the queue after a delay.
+     * Placez une nouvelle tâche dans la file d'attente après un certain délai.
      *
      * @param  \DateTime|int  $delay
      * @param  string  $job
@@ -104,7 +109,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Release a reserved job back onto the queue.
+     * Remettez une tâche réservée dans la file d'attente.
      *
      * @param  string  $queue
      * @param  string  $payload
@@ -120,7 +125,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Pop the next job off of the queue.
+     * Retirez le travail suivant de la file d'attente.
      *
      * @param  string  $queue
      * @return \Two\Queue\Jobs\Job|null
@@ -145,7 +150,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Delete a reserved job from the queue.
+     * Supprimez une tâche réservée de la file d'attente.
      *
      * @param  string  $queue
      * @param  string  $job
@@ -157,7 +162,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Migrate all of the waiting jobs in the queue.
+     * Migrez toutes les tâches en attente dans la file d'attente.
      *
      * @param  string  $queue
      * @return void
@@ -170,7 +175,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Migrate the delayed jobs that are ready to the regular queue.
+     * Migrez les tâches retardées qui sont prêtes vers la file d'attente normale.
      *
      * @param  string  $from
      * @param  string  $to
@@ -182,16 +187,16 @@ class RedisQueue extends Queue implements QueueInterface
 
         $this->getConnection()->transaction($options, function ($transaction) use ($from, $to)
         {
-            // First we need to get all of jobs that have expired based on the current time
-            // so that we can push them onto the main queue. After we get them we simply
-            // remove them from this "delay" queues. All of this within a transaction.
+            // Nous devons d’abord récupérer tous les emplois qui ont expiré en fonction de l’heure actuelle.
+            // afin que nous puissions les placer dans la file d'attente principale. Après les avoir obtenus, nous
+            // les supprime de ces files d'attente "délai". Tout cela dans une transaction.
             $jobs = $this->getExpiredJobs(
                 $transaction, $from, $time = $this->getTime()
             );
 
-            // If we actually found any jobs, we will remove them from the old queue and we
-            // will insert them onto the new (ready) "queue". This means they will stand
-            // ready to be processed by the queue worker whenever their turn comes up.
+            // Si nous trouvons réellement des emplois, nous les supprimerons de l'ancienne file d'attente et nous
+            // les insérera dans la nouvelle "file d'attente" (prête). Cela signifie qu'ils resteront debout
+            // prêt à être traité par le gestionnaire de file d'attente à chaque fois que son tour arrive.
             if (count($jobs) > 0) {
                 $this->removeExpiredJobs($transaction, $from, $time);
 
@@ -201,7 +206,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the expired jobs from a given queue.
+     * Récupérez les travaux expirés d’une file d’attente donnée.
      *
      * @param  \Predis\Transaction\MultiExec  $transaction
      * @param  string  $from
@@ -214,7 +219,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Remove the expired jobs from a given queue.
+     * Supprimez les tâches expirées d'une file d'attente donnée.
      *
      * @param  \Predis\Transaction\MultiExec  $transaction
      * @param  string  $from
@@ -229,7 +234,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push all of the given jobs onto another queue.
+     * Poussez toutes les tâches données vers une autre file d’attente.
      *
      * @param  \Predis\Transaction\MultiExec  $transaction
      * @param  string  $to
@@ -242,7 +247,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Create a payload string from the given job and data.
+     * Créez une chaîne de charge utile à partir de la tâche et des données données.
      *
      * @param  string  $job
      * @param  mixed   $data
@@ -259,7 +264,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get a random ID string.
+     * Obtenez une chaîne d'identification aléatoire.
      *
      * @return string
      */
@@ -269,7 +274,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the queue or return the default.
+     * Obtenez la file d'attente ou renvoyez la valeur par défaut.
      *
      * @param  string|null  $queue
      * @return string
@@ -280,7 +285,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the connection for the queue.
+     * Obtenez la connexion pour la file d'attente.
      *
      * @return \Predis\ClientInterface
      */
@@ -290,7 +295,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the underlying Redis instance.
+     * Obtenez l'instance Redis sous-jacente.
      *
      * @return \Two\Redis\Database
      */
@@ -300,7 +305,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the expiration time in seconds.
+     * Obtenez le délai d'expiration en secondes.
      *
      * @return int|null
      */
@@ -310,7 +315,7 @@ class RedisQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Set the expiration time in seconds.
+     * Définissez le délai d'expiration en secondes.
      *
      * @param  int|null  $seconds
      * @return void

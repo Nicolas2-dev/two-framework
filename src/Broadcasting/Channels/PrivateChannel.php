@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Broadcasting\Channels;
 
 use Two\Broadcasting\Channel as BaseChannel;
@@ -8,7 +13,7 @@ use Two\Broadcasting\Channel as BaseChannel;
 class PrivateChannel extends BaseChannel
 {
     /**
-     * Create a new channel instance.
+     * Créez une nouvelle instance de canal.
      *
      * @param  string  $name
      * @return void

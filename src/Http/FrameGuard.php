@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Http;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -9,14 +14,14 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 class FrameGuard implements HttpKernelInterface
 {
     /**
-     * The wrapped kernel implementation.
+     * L'implémentation du noyau encapsulé.
      *
      * @var \Symfony\Component\HttpKernel\HttpKernelInterface
      */
     protected $app;
 
     /**
-     * Create a new FrameGuard instance.
+     * Créez une nouvelle instance FrameGuard.
      *
      * @param  \Symfony\Component\HttpKernel\HttpKernelInterface  $app
      * @return void
@@ -27,7 +32,7 @@ class FrameGuard implements HttpKernelInterface
     }
 
     /**
-     * Handle the given request and get the response.
+     * Traitez la demande donnée et obtenez la réponse.
      *
      * @implements HttpKernelInterface::handle
      *

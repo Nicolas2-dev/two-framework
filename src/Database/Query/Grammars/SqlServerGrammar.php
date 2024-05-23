@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Query\Grammars;
 
 use Two\Database\Query\Builder;
@@ -9,7 +14,7 @@ use Two\Database\Query\Grammar;
 class SqlServerGrammar extends Grammar
 {
     /**
-     * All of the available clause operators.
+     * Tous les opérateurs de clause disponibles.
      *
      * @var array
      */
@@ -20,7 +25,7 @@ class SqlServerGrammar extends Grammar
     );
 
     /**
-     * Compile a select query into SQL.
+     * Compilez une requête de sélection en SQL.
      *
      * @param  \Two\Database\Query\Builder
      * @return string
@@ -37,7 +42,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile the "select *" portion of the query.
+     * Compilez la partie "select *" de la requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $columns
@@ -57,7 +62,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile the "from" portion of the query.
+     * Compilez la partie « de » de la requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  string  $table
@@ -77,7 +82,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create a full ANSI offset clause for the query.
+     * Créez une clause de décalage ANSI complète pour la requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $components
@@ -103,7 +108,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile the over statement for a table expression.
+     * Compilez l'instruction over pour une expression de table.
      *
      * @param  string  $orderings
      * @return string
@@ -114,7 +119,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile the limit / offset row constraint for a query.
+     * Compilez la contrainte de ligne limite/décalage pour une requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return string
@@ -134,7 +139,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile a common table expression for a query.
+     * Compilez une expression de table commune pour une requête.
      *
      * @param  string  $sql
      * @param  string  $constraint
@@ -146,7 +151,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile the "limit" portions of the query.
+     * Compilez les parties « limite » de la requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  int  $limit
@@ -158,7 +163,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile the "offset" portions of the query.
+     * Compilez les parties « décalage » de la requête.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  int  $offset
@@ -170,7 +175,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile a truncate table statement into SQL.
+     * Compilez une instruction de table tronquée en SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return array
@@ -181,7 +186,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Get the format for database stored dates.
+     * Obtenez le format des dates stockées dans la base de données.
      *
      * @return string
      */
@@ -191,7 +196,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Wrap a single string in keyword identifiers.
+     * Enveloppez une seule chaîne dans des identifiants de mots clés.
      *
      * @param  string  $value
      * @return string

@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Http;
 
 use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
@@ -8,7 +13,7 @@ use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 trait ResponseTrait
 {
     /**
-     * Set a header on the Response.
+     * Définissez un en-tête sur la réponse.
      *
      * @param  string  $key
      * @param  string  $value
@@ -23,7 +28,7 @@ trait ResponseTrait
     }
 
     /**
-     * Add a cookie to the response.
+     * Ajoutez un cookie à la réponse.
      *
      * @param  \Symfony\Component\HttpFoundation\Cookie  $cookie
      * @return $this

@@ -1,15 +1,19 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Query\Processors;
 
-use Two\Database\Query\Builder;
 use Two\Database\Query\Processor;
 
 
 class SqlServerProcessor extends Processor
 {
     /**
-     * Process the results of a column listing query.
+     * Traitez les résultats d’une requête de liste de colonnes.
      *
      * @param  array  $results
      * @return array

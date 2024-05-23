@@ -1,53 +1,58 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue;
+
+use DateTime;
 
 use Two\Support\Arr;
 use Two\Support\Str;
-
-use DateTime;
 
 
 abstract class Job
 {
     /**
-     * The job handler instance.
+     * Instance du gestionnaire de tâches.
      *
      * @var mixed
      */
     protected $instance;
 
     /**
-     * The IoC container instance.
+     * L'instance de conteneur IoC.
      *
      * @var \Two\Container\Container
      */
     protected $container;
 
     /**
-     * The name of the queue the job belongs to.
+     * Nom de la file d'attente à laquelle appartient le travail.
      *
      * @var string
      */
     protected $queue;
 
     /**
-     * Indicates if the job has been deleted.
+     * Indique si le travail a été supprimé.
      *
      * @var bool
      */
     protected $deleted = false;
 
-
     /**
-     * Fire the job.
+     * Licenciez le travail.
      *
      * @return void
      */
     abstract public function handle();
 
+
     /**
-     * Delete the job from the queue.
+     * Supprimez le travail de la file d'attente.
      *
      * @return void
      */
@@ -57,7 +62,7 @@ abstract class Job
     }
 
     /**
-     * Determine if the job has been deleted.
+     * Déterminez si le travail a été supprimé.
      *
      * @return bool
      */
@@ -67,7 +72,7 @@ abstract class Job
     }
 
     /**
-     * Release the job back into the queue.
+     * Remettez le travail dans la file d'attente.
      *
      * @param  int   $delay
      * @return void
@@ -75,21 +80,21 @@ abstract class Job
     abstract public function release($delay = 0);
 
     /**
-     * Get the number of times the job has been attempted.
+     * Obtenez le nombre de tentatives de travail.
      *
      * @return int
      */
     abstract public function attempts();
 
     /**
-     * Get the raw body string for the job.
+     * Obtenez la corde de corps brute pour le travail.
      *
      * @return string
      */
     abstract public function getRawBody();
 
     /**
-     * Resolve and fire the job handler method.
+     * Résolvez et lancez la méthode du gestionnaire de tâches.
      *
      * @param  array  $payload
      * @return void
@@ -104,7 +109,7 @@ abstract class Job
     }
 
     /**
-     * Resolve the given job handler.
+     * Résolvez le gestionnaire de travaux donné.
      *
      * @param  string  $class
      * @return mixed
@@ -115,7 +120,7 @@ abstract class Job
     }
 
     /**
-     * Determine if job should be auto-deleted.
+     * Déterminez si le travail doit être supprimé automatiquement.
      *
      * @return bool
      */
@@ -125,7 +130,7 @@ abstract class Job
     }
 
     /**
-     * Calculate the number of seconds with the given delay.
+     * Calculez le nombre de secondes avec le délai donné.
      *
      * @param  \DateTime|int  $delay
      * @return int
@@ -140,7 +145,7 @@ abstract class Job
     }
 
     /**
-     * Get the current system time.
+     * Obtenez l'heure actuelle du système.
      *
      * @return int
      */
@@ -150,7 +155,7 @@ abstract class Job
     }
 
     /**
-     * Get the name of the queued job class.
+     * Obtenez le nom de la classe de travaux en file d'attente.
      *
      * @return string
      */
@@ -162,7 +167,7 @@ abstract class Job
     }
 
     /**
-     * Get the resolved name of the queued job class.
+     * Obtenez le nom résolu de la classe de travaux en file d’attente.
      *
      * @return string
      */
@@ -173,17 +178,17 @@ abstract class Job
         //
         $name = $payload['job'];
 
-        // When the job is a Closure.
+        // Lorsque le travail est une fermeture.
         if ($name == 'Two\Queue\CallQueuedClosure@call') {
             return 'Closure';
         }
 
-        // When the job is a Handler.
+        // Lorsque le poste est celui de Handler.
         else if ($name == 'Two\Queue\CallQueuedHandler@call') {
             return Arr::get($payload, 'data.commandName', $name);
         }
 
-        // When the job is an Event.
+        // Lorsque le travail est un événement.
         else if ($name == 'Two\Events\CallQueuedHandler@call') {
             $className = Arr::get($payload, 'data.class');
 
@@ -196,7 +201,7 @@ abstract class Job
     }
 
     /**
-     * Get the name of the queue the job belongs to.
+     * Obtenez le nom de la file d'attente à laquelle appartient le travail.
      *
      * @return string
      */

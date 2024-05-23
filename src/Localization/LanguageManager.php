@@ -1,50 +1,55 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Localization;
 
-use Two\Foundation\Application;
-use Two\Localization\Language;
 use Two\Support\Arr;
 use Two\Support\Str;
+use Two\Localization\Language;
+use Two\Application\Two;
 
 use Carbon\Carbon;
-use Carbon\CarbonImmutable;
-use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
+use Carbon\CarbonInterval;
+use Carbon\CarbonImmutable;
 
 
 class LanguageManager
 {
     /**
-     * The Application instance.
+     * L'instance d'application.
      *
-     * @var \Two\Foundation\Application
+     * @var \Two\Application\Two
      */
     protected $app;
 
     /**
-     * The default locale being used by the translator.
+     * Paramètres régionaux par défaut utilisés par le traducteur.
      *
      * @var string
      */
     protected $locale;
 
     /**
-     * The know Languages.
+     * Les langues connues.
      *
      * @var array
      */
     protected $languages = array();
 
     /**
-     * The active Language instances.
+     * Les instances de langue actives.
      *
      * @var array
      */
     protected $instances = array();
 
     /**
-     * All of the named path hints.
+     * Tous les indices de chemin nommés.
      *
      * @var array
      */
@@ -52,54 +57,54 @@ class LanguageManager
 
 
     /**
-     * Create new Language Manager instance.
+     * Créez une nouvelle instance de Language Manager.
      *
-     * @param  \Two\Application\Application  $app
+     * @param  \Two\Application\Two  $app
      * @return void
      */
-    function __construct(Application $app, $locale)
+    function __construct(Two $app, $locale)
     {
         $this->app = $app;
 
         $this->locale = $locale;
 
-        // Setup the know Languages.
+        // Configurez les langues connues.
         $this->languages = $app['config']['languages'];
 
-        // Setup the default path hints.
+        // Configurez les indications de chemin par défaut.
         $this->hints = array(
-            // Namespace for the Framework path.
+            // Espace de noms pour le chemin du Framework.
             'Two' => dirname(__DIR__) .DS .'Language',
 
-            // Namespace for the Application path.
+            // Espace de noms pour le chemin de l’application.
             'app' => APPPATH .'Language',
 
-            // Namespace for the Shared path.
+            // Espace de noms pour le chemin partagé.
             'shared' => BASEPATH .'shared' .DS .'Language',
         );
     }
 
     /**
-     * Get instance of Language with domain and code (optional).
-     * @param string $domain Optional custom domain
-     * @param string $code Optional custom language code.
+     * Obtenez une instance de Language avec le domaine et le code (facultatif).
+     * @param string $domain Domaine personnalisé facultatif
+     * @param string $code Code de langue personnalisé en option.
      * @return Language
      */
     public function instance($domain = 'app', $locale = null)
     {
         $locale = $locale ?: $this->locale;
 
-        // The ID code is something like: 'en/system', 'en/app' or 'en/file_manager'
+        // Le code d'identification ressemble à : 'en/system', 'en/app' ou 'en/file_manager'
         $id = $locale .'/' .$domain;
 
-        // Returns the Language domain instance, if it already exists.
+        // Renvoie l'instance du domaine Language, si elle existe déjà.
         if (isset($this->instances[$id])) return $this->instances[$id];
 
         return $this->instances[$id] = new Language($this, $domain, $locale);
     }
 
     /**
-     * Register a Package for cascading configuration.
+     * Enregistrez un package pour une configuration en cascade.
      *
      * @param  string  $package
      * @param  string  $hint
@@ -114,7 +119,7 @@ class LanguageManager
     }
 
     /**
-     * Get the configuration namespace for a Package.
+     * Obtenez l’espace de noms de configuration pour un package.
      *
      * @param  string  $package
      * @param  string  $namespace
@@ -132,7 +137,7 @@ class LanguageManager
     }
 
     /**
-     * Add a new namespace to the loader.
+     * Ajoutez un nouvel espace de noms au chargeur.
      *
      * @param  string  $namespace
      * @param  string  $hint
@@ -144,8 +149,7 @@ class LanguageManager
     }
 
     /**
-     * Returns all registered namespaces with the config
-     * loader.
+     * Renvoie tous les espaces de noms enregistrés avec le chargeur de configuration.
      *
      * @return array
      */
@@ -155,7 +159,7 @@ class LanguageManager
     }
 
     /**
-     * Get the know Languages.
+     * Apprenez à connaître les langues.
      *
      * @return string
      */
@@ -165,7 +169,7 @@ class LanguageManager
     }
 
     /**
-     * Get the default locale being used.
+     * Obtenez les paramètres régionaux par défaut utilisés.
      *
      * @return string
      */
@@ -175,7 +179,7 @@ class LanguageManager
     }
 
     /**
-     * Get the default locale being used.
+     * Obtenez les paramètres régionaux par défaut utilisés.
      *
      * @return string
      */
@@ -185,34 +189,34 @@ class LanguageManager
     }
 
     /**
-     * Set the default locale.
+     * Définissez les paramètres régionaux par défaut.
      *
      * @param  string  $locale
      * @return void
      */
     public function setLocale($locale)
     {
-        // Setup the Framework locale.
+        // Configurez les paramètres régionaux du Framework.
         $this->locale = $locale;
 
-        // Setup the Carbon locale.
+        // Configurez les paramètres régionaux Carbon.
         Carbon::setLocale($locale);
 
         CarbonImmutable::setLocale($locale);
         CarbonPeriod::setLocale($locale);
         CarbonInterval::setLocale($locale);
 
-        // Retrieve the full qualified locale from languages list.
+        // Récupérez les paramètres régionaux qualifiés complets dans la liste des langues.
         $locale = Str::finish(
             Arr::get($this->languages, "{$locale}.locale", 'en_US'), '.utf8'
         );
 
-        // Setup the PHP's Time locale.
+        // Configurez les paramètres régionaux d'heure de PHP.
         setlocale(LC_TIME, $locale);
     }
 
     /**
-     * Dynamically pass methods to the default instance.
+     * Transmettez dynamiquement les méthodes à l’instance par défaut.
      *
      * @param  string  $method
      * @param  array   $parameters

@@ -1,0 +1,13 @@
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| {{type}} Configuration
+|--------------------------------------------------------------------------
+|
+| C'est ici que vous pouvez enregistrer toute la configuration pour le {{type}}.
+*/
+
+return array(
+    //
+);

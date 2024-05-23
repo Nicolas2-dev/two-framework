@@ -1,14 +1,22 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Cache;
 
-use Two\Support\ServiceProvider;
+
+use Two\Cache\Memcached\MemcachedConnector;
+
+use Two\Application\Providers\ServiceProvider;
 
 
 class CacheServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
+     * Indique si le chargement du fournisseur est différé.
      *
      * @var bool
      */
@@ -16,7 +24,7 @@ class CacheServiceProvider extends ServiceProvider
 
 
     /**
-     * Register the service provider.
+     * Enregistrez le fournisseur de services.
      *
      * @return void
      */
@@ -39,7 +47,7 @@ class CacheServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get the services provided by the provider.
+     * Obtenez les services fournis par le fournisseur.
      *
      * @return array
      */

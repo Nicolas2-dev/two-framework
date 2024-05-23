@@ -1,33 +1,38 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications\Events;
 
 
 class NotificationSending
 {
     /**
-     * The notifiable entity who received the notification.
+     * L'entité notifiable qui a reçu la notification.
      *
      * @var mixed
      */
     public $notifiable;
 
     /**
-     * The notification instance.
+     * L'instance de notification.
      *
      * @var \Two\Notifications\Notification
      */
     public $notification;
 
     /**
-     * The channel name.
+     * Le nom de la chaîne.
      *
      * @var string
      */
     public $channel;
 
     /**
-     * Create a new event instance.
+     * Créez une nouvelle instance d'événement.
      *
      * @param  mixed  $notifiable
      * @param  \Two\Notifications\Notification  $notification

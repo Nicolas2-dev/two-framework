@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database;
 
 use PDOException;
@@ -8,14 +13,14 @@ use PDOException;
 class QueryException extends PDOException
 {
     /**
-     * The SQL for the query.
+     * Le SQL pour la requête.
      *
      * @var string
      */
     protected $sql;
 
     /**
-     * The bindings for the query.
+     * Les liaisons pour la requête.
      *
      * @var array
      */
@@ -27,7 +32,7 @@ class QueryException extends PDOException
     protected $previous;
 
     /**
-     * Create a new query exception instance.
+     * Créez une nouvelle instance d'exception de requête.
      *
      * @param  string  $sql
      * @param  array  $bindings
@@ -48,7 +53,7 @@ class QueryException extends PDOException
     }
 
     /**
-     * Format the SQL error message.
+     * Formatez le message d'erreur SQL.
      *
      * @param  string  $sql
      * @param  array  $bindings
@@ -61,7 +66,7 @@ class QueryException extends PDOException
     }
 
     /**
-     * Get the SQL for the query.
+     * Obtenez le SQL pour la requête.
      *
      * @return string
      */
@@ -71,7 +76,7 @@ class QueryException extends PDOException
     }
 
     /**
-     * Get the bindings for the query.
+     * Obtenez les liaisons pour la requête.
      *
      * @return array
      */

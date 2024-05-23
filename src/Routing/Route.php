@@ -1,21 +1,28 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Routing;
 
-use Two\Container\Container;
+use Closure;
+use LogicException;
+use ReflectionFunction;
+
+use Two\Support\Arr;
+use Two\Support\Str;
 use Two\Http\Request;
-use Two\Http\Exception\HttpResponseException;
+use Two\Container\Container;
+use Two\Routing\RouteCompiler;
+use Two\Routing\Matching\UriValidator;
 use Two\Routing\Matching\HostValidator;
 use Two\Routing\Matching\MethodValidator;
 use Two\Routing\Matching\SchemeValidator;
-use Two\Routing\Matching\UriValidator;
-use Two\Routing\RouteCompiler;
-use Two\Routing\RouteDependencyResolverTrait;
-use Two\Support\Arr;
-use Two\Support\Str;
-
-use Closure;
-use ReflectionFunction;
+use Two\Http\Exception\HttpResponseException;
+use Two\Routing\Controller\ControllerDispatcher;
+use Two\Routing\Traits\RouteDependencyResolverTrait;
 
 
 class Route
@@ -23,107 +30,112 @@ class Route
     use RouteDependencyResolverTrait;
 
     /**
-     * The container instance used by the route.
+     * Instance de conteneur utilisée par la route.
      *
      * @var \Two\Container\Container
      */
     protected $container;
 
     /**
-     * The URI pattern the route responds to.
+     * Le modèle d'URI auquel la route répond.
      *
      * @var string
      */
     protected $uri;
 
     /**
-     * The HTTP methods the route responds to.
+     * Méthodes HTTP auxquelles la route répond.
      *
      * @var array
      */
     protected $methods;
 
     /**
-     * The route action array.
+     * Le tableau d’actions d’itinéraire.
      *
      * @var array
      */
     protected $action;
 
     /**
-     * Indicates whether the route is a fallback route.
+     * Indique si la route est une route de secours.
      *
      * @var bool
      */
     protected $fallback = false;
 
     /**
-     * The default values for the route.
+     * Les valeurs par défaut pour l'itinéraire.
      *
      * @var array
      */
     protected $defaults = array();
 
     /**
-     * The regular expression requirements.
+     * Les exigences des expressions régulières.
      *
      * @var array
      */
     protected $wheres = array();
 
     /**
-     * The array of matched parameters.
+     * Le tableau des paramètres correspondants.
      *
      * @var array
      */
     protected $parameters;
 
     /**
-     * The parameter names for the route.
+     * Les noms des paramètres pour l'itinéraire.
      *
      * @var array|null
      */
     protected $parameterNames;
 
     /**
-     * The compiled version of the route.
+     * La version compilée de l'itinéraire.
      *
      * @var \Symfony\Component\Routing\CompiledRoute
      */
     protected $compiled;
 
     /**
-     * The computed gathered middleware.
+     * Le middleware collecté calculé.
      *
      * @var array|null
      */
     protected $computedMiddleware;
 
     /**
-     * The Controller instance.
+     * L'instance du contrôleur.
      *
      * @var mixed
      */
     protected $controllerInstance;
 
     /**
-     * The Controller method.
+     * La méthode Contrôleur.
      *
      * @var mixed
      */
     protected $controllerMethod;
 
     /**
-     * The validators used by the routes.
+     * Les validateurs utilisés par les routes.
      *
      * @var array
      */
     protected static $validators;
 
+    /**
+     * 
+     *
+     * @var 
+     */
     protected $router;
     
     /**
-     * Create a new Route instance.
+     * Créez une nouvelle instance de route.
      *
      * @param  array   $methods
      * @param  string  $uri
@@ -152,7 +164,7 @@ class Route
     }
 
     /**
-     * Run the route action and return the response.
+     * Exécutez l’action d’itinéraire et renvoyez la réponse.
      *
      * @return mixed
      */
@@ -171,7 +183,7 @@ class Route
     }
 
     /**
-     * Runs the route action and returns the response.
+     * Exécute l'action d'itinéraire et renvoie la réponse.
      *
      * @return mixed
      */
@@ -191,7 +203,7 @@ class Route
     }
 
     /**
-     * Runs the route action and returns the response.
+     * Exécute l'action d'itinéraire et renvoie la réponse.
      *
      * @return mixed
      */
@@ -205,7 +217,7 @@ class Route
     }
 
     /**
-     * Checks whether the route's action is a controller.
+     * Vérifie si l'action de la route est un contrôleur.
      *
      * @return bool
      */
@@ -215,7 +227,7 @@ class Route
     }
 
     /**
-     * Get the controller instance for the route.
+     * Obtenez l'instance de contrôleur pour l'itinéraire.
      *
      * @return mixed
      */
@@ -233,7 +245,7 @@ class Route
     }
 
     /**
-     * Get the controller method used for the route.
+     * Obtenez la méthode du contrôleur utilisée pour l’itinéraire.
      *
      * @return string
      */
@@ -249,7 +261,7 @@ class Route
     }
 
     /**
-     * Determine if the route matches given request.
+     * Déterminez si l’itinéraire correspond à la demande donnée.
      *
      * @param  \Two\Http\Request  $request
      * @param  bool  $includingMethod
@@ -274,7 +286,7 @@ class Route
     }
 
     /**
-     * Compile the route into a Symfony CompiledRoute instance.
+     * Compilez la route dans une instance Symfony CompiledRoute.
      *
      * @return void
      */
@@ -288,7 +300,7 @@ class Route
     }
 
     /**
-     * Get all middleware, including the ones from the controller.
+     * Obtenez tous les middlewares, y compris ceux du contrôleur.
      *
      * @return array
      */
@@ -307,7 +319,7 @@ class Route
     }
 
     /**
-     * Get or set the middlewares attached to the route.
+     * Obtenez ou définissez les middlewares attachés à la route.
      *
      * @param  array|string|null $middleware
      * @return $this|array
@@ -330,7 +342,7 @@ class Route
     }
 
     /**
-     * Get the middlewares attached to the route.
+     * Obtenez les middlewares attachés à la route.
      *
      * @return array
      */
@@ -340,7 +352,7 @@ class Route
     }
 
     /**
-     * Get the middleware for the route's controller.
+     * Obtenez le middleware pour le contrôleur de la route.
      *
      * @return array
      */
@@ -356,7 +368,7 @@ class Route
     }
 
     /**
-     * Get a given parameter from the route.
+     * Obtenez un paramètre donné de la route.
      *
      * @param  string  $name
      * @param  mixed   $default
@@ -368,7 +380,7 @@ class Route
     }
 
     /**
-     * Get a given parameter from the route.
+     * Obtenez un paramètre donné de la route.
      *
      * @param  string  $name
      * @param  mixed   $default
@@ -380,7 +392,7 @@ class Route
     }
 
     /**
-     * Set a parameter to the given value.
+     * Définissez un paramètre sur la valeur donnée.
      *
      * @param  string  $name
      * @param  mixed   $value
@@ -394,7 +406,7 @@ class Route
     }
 
     /**
-     * Unset a parameter on the route if it is set.
+     * Annulez la définition d'un paramètre sur l'itinéraire s'il est défini.
      *
      * @param  string  $name
      * @return void
@@ -407,7 +419,7 @@ class Route
     }
 
     /**
-     * Get the key / value list of parameters for the route.
+     * Obtenez la liste clé/valeur des paramètres de l’itinéraire.
      *
      * @return array
      *
@@ -416,7 +428,7 @@ class Route
     public function parameters()
     {
         if (! isset($this->parameters)) {
-            throw new \LogicException("The Route is not bound.");
+            throw new LogicException("The Route is not bound.");
         }
 
         return array_map(function ($value)
@@ -427,7 +439,7 @@ class Route
     }
 
     /**
-     * Get the key / value list of parameters without null values.
+     * Obtenez la liste clé/valeur des paramètres sans valeurs nulles.
      *
      * @return array
      */
@@ -440,7 +452,7 @@ class Route
     }
 
     /**
-     * Get all of the parameter names for the route.
+     * Obtenez tous les noms de paramètres de l’itinéraire.
      *
      * @return array
      */
@@ -454,7 +466,7 @@ class Route
     }
 
     /**
-     * Get the parameter names for the route.
+     * Obtenez les noms des paramètres de l’itinéraire.
      *
      * @return array
      */
@@ -470,7 +482,7 @@ class Route
     }
 
     /**
-     * Bind the route to a given request for execution.
+     * Liez la route à une demande d’exécution donnée.
      *
      * @param  \Two\Http\Request  $request
      * @return $this
@@ -485,21 +497,21 @@ class Route
     }
 
     /**
-     * Extract the parameter list from the request.
+     * Extrayez la liste des paramètres de la requête.
      *
      * @param  \Two\Http\Request  $request
      * @return array
      */
     public function bindParameters(Request $request)
     {
-        // If the route has a regular expression for the host part of the URI, we will
-        // compile that and get the parameter matches for this domain. We will then
-        // merge them into this parameters array so that this array is completed.
+        // Si la route a une expression régulière pour la partie hôte de l'URI, nous le ferons
+        // compilez cela et obtenez les correspondances de paramètres pour ce domaine. Nous allons alors
+        // les fusionne dans ce tableau de paramètres afin que ce tableau soit complété.
         $parameters = $this->bindPathParameters($request);
 
-        // If the route has a regular expression for the host part of the URI, we will
-        // compile that and get the parameter matches for this domain. We will then
-        // merge them into this parameters array so that this array is completed.
+        // Si la route a une expression régulière pour la partie hôte de l'URI, nous le ferons
+        // compilez cela et obtenez les correspondances de paramètres pour ce domaine. Nous allons alors
+        // les fusionne dans ce tableau de paramètres afin que ce tableau soit complété.
         if (! is_null($this->compiled->getHostRegex())) {
             $parameters = array_merge(
                 $this->bindHostParameters($request), $parameters
@@ -510,7 +522,7 @@ class Route
     }
 
     /**
-     * Get the parameter matches for the path portion of the URI.
+     * Obtenez les correspondances de paramètres pour la partie chemin de l’URI.
      *
      * @param  \Two\Http\Request  $request
      * @return array
@@ -525,7 +537,7 @@ class Route
     }
 
     /**
-     * Extract the parameter list from the host part of the request.
+     * Extrayez la liste des paramètres de la partie hôte de la requête.
      *
      * @param  \Two\Http\Request  $request
      * @return array
@@ -540,7 +552,7 @@ class Route
     }
 
     /**
-     * Combine a set of parameter matches with the route's keys.
+     * Combinez un ensemble de correspondances de paramètres avec les clés de l'itinéraire.
      *
      * @param  array  $matches
      * @return array
@@ -562,7 +574,7 @@ class Route
     }
 
     /**
-     * Replace null parameters with their defaults.
+     * Remplacez les paramètres nuls par leurs valeurs par défaut.
      *
      * @param  array  $parameters
      * @return array
@@ -579,7 +591,7 @@ class Route
     }
 
     /**
-     * Get the route validators for the instance.
+     * Obtenez les validateurs d'itinéraire pour l'instance.
      *
      * @return array
      */
@@ -589,9 +601,9 @@ class Route
             return static::$validators;
         }
 
-        // To match the route, we will use a chain of responsibility pattern with the
-        // validator implementations. We will spin through each one making sure it
-        // passes and then we will know if the route as a whole matches request.
+        // Pour faire correspondre l'itinéraire, nous utiliserons un modèle de chaîne de responsabilité avec le
+        // implémentations du validateur. Nous passerons en revue chacun d'eux pour nous en assurer
+        // réussit et nous saurons alors si la route dans son ensemble correspond à la demande.
 
         return static::$validators = array(
             new UriValidator(),
@@ -602,7 +614,7 @@ class Route
     }
 
     /**
-     * Set a default value for the route.
+     * Définissez une valeur par défaut pour l'itinéraire.
      *
      * @param  string  $key
      * @param  mixed  $value
@@ -616,7 +628,7 @@ class Route
     }
 
     /**
-     * Get the regular expression requirements on the route.
+     * Obtenez les exigences d’expression régulière sur la route.
      *
      * @return array
      */
@@ -626,7 +638,7 @@ class Route
     }
 
     /**
-     * Set a regular expression requirement on the route.
+     * Définissez une exigence d’expression régulière sur la route.
      *
      * @param  array|string  $name
      * @param  string  $expression
@@ -644,7 +656,7 @@ class Route
     }
 
     /**
-     * Returns true if the flag of fallback mode is set.
+     * Renvoie vrai si l’indicateur du mode de secours est défini.
      *
      * @return bool
      */
@@ -654,7 +666,7 @@ class Route
     }
 
     /**
-     * Set the flag of fallback mode on the route.
+     * Définissez le drapeau du mode de secours sur l'itinéraire.
      *
      * @param  bool  $value
      * @return $this
@@ -667,7 +679,7 @@ class Route
     }
 
     /**
-     * Get the URI associated with the route.
+     * Obtenez l'URI associé à l'itinéraire.
      *
      * @return string
      */
@@ -677,7 +689,7 @@ class Route
     }
 
     /**
-     * Get the URI associated with the route.
+     * Obtenez l'URI associé à l'itinéraire.
      *
      * @return string
      */
@@ -687,7 +699,7 @@ class Route
     }
 
     /**
-     * Get the HTTP verbs the route responds to.
+     * Obtenez les verbes HTTP auxquels la route répond.s
      *
      * @return array
      */
@@ -697,7 +709,7 @@ class Route
     }
 
     /**
-     * Get the HTTP verbs the route responds to.
+     * Obtenez les verbes HTTP auxquels la route répond.
      *
      * @return array
      */
@@ -707,7 +719,7 @@ class Route
     }
 
     /**
-     * Determine if the route only responds to HTTP requests.
+     * Déterminez si la route répond uniquement aux requêtes HTTP.
      *
      * @return bool
      */
@@ -717,7 +729,7 @@ class Route
     }
 
     /**
-     * Determine if the route only responds to HTTPS requests.
+     * Déterminez si la route répond uniquement aux requêtes HTTPS.
      *
      * @return bool
      */
@@ -727,7 +739,7 @@ class Route
     }
 
     /**
-     * Determine if the route only responds to HTTPS requests.
+     * Déterminez si la route répond uniquement aux requêtes HTTPS.
      *
      * @return bool
      */
@@ -737,7 +749,7 @@ class Route
     }
 
     /**
-     * Get the domain defined for the route.
+     * Obtenez le domaine défini pour l'itinéraire.
      *
      * @return string|null
      */
@@ -747,7 +759,7 @@ class Route
     }
 
     /**
-     * Get the URI that the route responds to.
+     * Obtenez l'URI auquel la route répond.
      *
      * @return string
      */
@@ -757,7 +769,7 @@ class Route
     }
 
     /**
-     * Set the URI that the route responds to.
+     * Définissez l'URI auquel la route répond.
      *
      * @param  string  $uri
      * $this
@@ -770,7 +782,7 @@ class Route
     }
 
     /**
-     * Get the prefix of the route instance.
+     * Obtenez le préfixe de l'instance de route.
      *
      * @return string
      */
@@ -780,7 +792,7 @@ class Route
     }
 
     /**
-     * Add a prefix to the route URI.
+     * Ajoutez un préfixe à l’URI de la route.
      *
      * @param  string  $prefix
      * @return $this
@@ -793,7 +805,7 @@ class Route
     }
 
     /**
-     * Get the name of the route instance.
+     * Obtenez le nom de l'instance de route.
      *
      * @return string
      */
@@ -803,7 +815,7 @@ class Route
     }
 
     /**
-     * Add or change the route name.
+     * Ajoutez ou modifiez le nom de l'itinéraire.
      *
      * @param  string  $name
      * @return $this
@@ -820,7 +832,7 @@ class Route
     }
 
     /**
-     * Get the action name for the route.
+     * Obtenez le nom de l'action pour l'itinéraire.
      *
      * @return string
      */
@@ -830,7 +842,7 @@ class Route
     }
 
     /**
-     * Get the action array for the route.
+     * Obtenez le tableau d’actions pour l’itinéraire.
      *
      * @return array
      */
@@ -840,7 +852,7 @@ class Route
     }
 
     /**
-     * Set the action array for the route.
+     * Définissez le tableau d'actions pour l'itinéraire.
      *
      * @param  array  $action
      * @return $this
@@ -853,7 +865,7 @@ class Route
     }
 
     /**
-     * Get the compiled version of the route.
+     * Obtenez la version compilée de l'itinéraire.
      *
      * @return \Symfony\Component\Routing\CompiledRoute
      */
@@ -863,7 +875,7 @@ class Route
     }
 
     /**
-     * Set the container instance on the route.
+     * Définissez l'instance de conteneur sur la route.
      *
      * @param  \Two\Container\Container  $container
      * @return $this
@@ -876,7 +888,7 @@ class Route
     }
 
     /**
-     * Set the router instance on the route.
+     * Définissez l'instance de routeur sur la route.
      *
      * @param  \Two\Routing\Router  $router
      * @return $this
@@ -889,7 +901,7 @@ class Route
     }
 
     /**
-     * Dynamically access route parameters.
+     * Accédez dynamiquement aux paramètres d’itinéraire.
      *
      * @param  string  $key
      * @return mixed

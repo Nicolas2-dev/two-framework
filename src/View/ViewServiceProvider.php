@@ -1,30 +1,36 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\View;
 
+use Two\View\Factory;
+use Two\View\Section;
+use Two\View\FileViewFinder;
+use Two\View\Engines\PhpEngine;
+use Two\View\Engines\FileEngine;
+use Two\View\Engines\CompilerEngine;
+use Two\View\Engines\EngineResolver;
 use Two\View\Compilers\MarkdownCompiler;
 use Two\View\Compilers\TemplateCompiler;
-use Two\View\Engines\EngineResolver;
-use Two\View\Engines\CompilerEngine;
-use Two\View\Engines\FileEngine;
-use Two\View\Engines\PhpEngine;
-use Two\View\Factory;
-use Two\View\FileViewFinder;
-use Two\View\Section;
-use Two\Support\ServiceProvider;
+
+use Two\Application\Providers\ServiceProvider;
 
 
 class ViewServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the Provider is deferred.
+     * Indique si le chargement du Provider est différé.
      *
      * @var bool
      */
     protected $defer = true;
 
     /**
-     * Register the Service Provider.
+     * Enregistrez le fournisseur de services.
      *
      * @return void
      */
@@ -40,7 +46,7 @@ class ViewServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the engine resolver instance.
+     * Enregistrez l’instance de résolveur de moteur.
      *
      * @return void
      */
@@ -61,7 +67,7 @@ class ViewServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the PHP engine implementation.
+     * Enregistrez l'implémentation du moteur PHP.
      *
      * @param  \Two\View\Engines\EngineResolver  $resolver
      * @return void
@@ -75,7 +81,7 @@ class ViewServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Template engine implementation.
+     * Enregistrez l’implémentation du moteur de modèle.
      *
      * @param  \Two\View\Engines\EngineResolver  $resolver
      * @return void
@@ -84,9 +90,9 @@ class ViewServiceProvider extends ServiceProvider
     {
         $app = $this->app;
 
-        // The Compiler engine requires an instance of the CompilerInterface, which in
-        // this case will be the Template compiler, so we'll first create the compiler
-        // instance to pass into the engine so it can compile the views properly.
+        // Le moteur du compilateur nécessite une instance de CompilerInterface, qui dans
+        // ce cas sera le compilateur Template, nous allons donc d'abord créer le compilateur
+        // instance à transmettre au moteur afin qu'il puisse compiler les vues correctement.
         $app->singleton('template.compiler', function($app)
         {
             $cachePath = $app['config']['view.compiled'];
@@ -101,7 +107,7 @@ class ViewServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Markdown engine implementation.
+     * Enregistrez l’implémentation du moteur Markdown.
      *
      * @param  \Two\View\Engines\EngineResolver  $resolver
      * @return void
@@ -110,9 +116,9 @@ class ViewServiceProvider extends ServiceProvider
     {
         $app = $this->app;
 
-        // The Compiler engine requires an instance of the CompilerInterface, which in
-        // this case will be the Markdown compiler, so we'll first create the compiler
-        // instance to pass into the engine so it can compile the views properly.
+        // Le moteur du compilateur nécessite une instance de CompilerInterface, qui dans
+        // ce cas sera le compilateur Markdown, nous allons donc d'abord créer le compilateur
+        // instance à transmettre au moteur afin qu'il puisse compiler les vues correctement.
         $app->singleton('markdown.compiler', function($app)
         {
             $cachePath = $app['config']['view.compiled'];
@@ -127,7 +133,7 @@ class ViewServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the File engine implementation.
+     * Enregistrez l’implémentation du moteur de fichiers.
      *
      * @param  \Two\View\Engines\EngineResolver  $resolver
      * @return void
@@ -141,7 +147,7 @@ class ViewServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the View Factory.
+     * Enregistrez View Factory.
      *
      * @return void
      */
@@ -149,18 +155,18 @@ class ViewServiceProvider extends ServiceProvider
     {
         $this->app->singleton('view', function($app)
         {
-            // Next we need to grab the engine resolver instance that will be used by the
-            // environment. The resolver will be used by an environment to get each of
-            // the various engine implementations such as plain PHP or Template engine.
+            // Ensuite, nous devons récupérer l'instance de résolveur de moteur qui sera utilisée par le
+            // environnement. Le résolveur sera utilisé par un environnement pour obtenir chacun des
+            // les différentes implémentations de moteurs tels que PHP simple ou moteur de modèles.
             $resolver = $app['view.engine.resolver'];
 
             $finder = $app['view.finder'];
 
             $factory = new Factory($resolver, $finder, $app['events']);
 
-            // We will also set the container instance on this view environment since the
-            // view composers may be classes registered in the container, which allows
-            // for great testable, flexible composers for the application developer.
+            // Nous définirons également l'instance de conteneur sur cet environnement de vue puisque le
+            // les compositeurs de vues peuvent être des classes enregistrées dans le conteneur, ce qui permet
+            // pour d'excellents compositeurs testables et flexibles pour le développeur d'applications.
             $factory->setContainer($app);
 
             $factory->share('app', $app);
@@ -170,7 +176,7 @@ class ViewServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the view finder implementation.
+     * Enregistrez l’implémentation du viseur.
      *
      * @return void
      */
@@ -185,7 +191,7 @@ class ViewServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the View Section instance.
+     * Enregistrez l’instance de View Section.
      *
      * @return void
      */
@@ -198,7 +204,7 @@ class ViewServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get the services provided by the provider.
+     * Obtenez les services fournis par le fournisseur.
      *
      * @return array
      */

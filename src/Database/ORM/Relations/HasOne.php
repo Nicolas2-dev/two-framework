@@ -1,13 +1,19 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM\Relations;
 
 use Two\Database\ORM\Collection;
 
+
 class HasOne extends HasOneOrMany
 {
     /**
-     * Get the results of the relationship.
+     * Obtenez les résultats de la relation.
      *
      * @return mixed
      */
@@ -17,7 +23,7 @@ class HasOne extends HasOneOrMany
     }
 
     /**
-     * Initialize the relation on a set of models.
+     * Initialisez la relation sur un ensemble de modèles.
      *
      * @param  array   $models
      * @param  string  $relation
@@ -33,7 +39,7 @@ class HasOne extends HasOneOrMany
     }
 
     /**
-     * Match the eagerly loaded results to their parents.
+     * Faites correspondre les résultats chargés avec impatience à leurs parents.
      *
      * @param  array   $models
      * @param  \Two\Database\ORM\Collection  $results

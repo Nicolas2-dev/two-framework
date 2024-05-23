@@ -1,21 +1,26 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Bus;
 
-use Two\Support\ServiceProvider;
+use Two\Application\Providers\ServiceProvider;
 
 
 class BusServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
+     * Indique si le chargement du fournisseur est différé.
      *
      * @var bool
      */
     protected $defer = true;
 
     /**
-     * Register the service provider.
+     * Enregistrez le fournisseur de services.
      *
      * @return void
      */
@@ -30,16 +35,16 @@ class BusServiceProvider extends ServiceProvider
         });
 
         $this->app->alias(
-            'Two\Bus\Dispatcher', 'Two\Bus\DispatcherInterface'
+            'Two\Bus\Dispatcher', 'Two\Bus\Contracts\DispatcherInterface'
         );
 
         $this->app->alias(
-            'Two\Bus\Dispatcher', 'Two\Bus\QueueingDispatcherInterface'
+            'Two\Bus\Dispatcher', 'Two\Bus\Contracts\QueueingDispatcherInterface'
         );
     }
 
     /**
-     * Get the services provided by the provider.
+     * Obtenez les services fournis par le fournisseur.
      *
      * @return array
      */
@@ -47,8 +52,8 @@ class BusServiceProvider extends ServiceProvider
     {
         return [
             'Two\Bus\Dispatcher',
-            'Two\Bus\DispatcherInterface',
-            'Two\Bus\QueueingDispatcherInterface',
+            'Two\Bus\Contracts\DispatcherInterface',
+            'Two\Bus\Contracts\QueueingDispatcherInterface',
         ];
     }
 }

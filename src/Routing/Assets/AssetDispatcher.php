@@ -1,54 +1,59 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Routing\Assets;
 
+use Closure;
 
-use Two\Foundation\Application;
-use Two\Http\JsonResponse;
-use Two\Http\Request;
-use Two\Http\Response;
 use Two\Support\Arr;
 use Two\Support\Str;
+use Two\Http\Request;
+use Two\Http\Response;
+use Two\Application\Two;
+use Two\Http\JsonResponse;
 
+use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Symfony\Component\Mime\MimeTypes;
-
-use Closure;
 
 
 class AssetDispatcher
 {
     /**
-     * The Application instance.
+     * L'instance d'application.
      *
-     * @var \Two\Foundation\Application
+     * @var \Two\Application\Two
      */
     protected $app;
 
     /**
-     * All of the registered Asset Routes.
+     * Toutes les routes d'actifs enregistrées.
      *
      * @var array
      */
     protected $routes = array();
 
     /**
-     * The valid Vendor paths.
+     * Les chemins de fournisseur valides.
+     * 
      * @var array
      */
     protected $paths;
 
     /**
-     * All of the named path hints.
+     * Tous les indices de chemin nommés.
      *
      * @var array
      */
     protected $hints = array();
 
     /**
-     * The wildcard patterns supported by the router.
+     * Les modèles génériques pris en charge par le routeur.
      *
      * @var array
      */
@@ -61,17 +66,17 @@ class AssetDispatcher
 
 
     /**
-     * Create a new Default Dispatcher instance.
+     * Créez une nouvelle instance de répartiteur par défaut.
      *
      * @return void
      */
-    public function __construct(Application $app)
+    public function __construct(Two $app)
     {
         $this->app = $app;
     }
 
     /**
-     * Register a new Asset Route with the manager.
+     * Enregistrez une nouvelle Asset Route auprès du gestionnaire.
      *
      * @param  string  $pattern
      * @param  \Closure  $callback
@@ -83,9 +88,9 @@ class AssetDispatcher
     }
 
     /**
-     * Dispatch a Assets File Response.
+     * Envoyez une réponse au fichier d’actifs.
      *
-     * For proper Assets serving, the file URI should be either of the following:
+     * Pour une diffusion correcte des actifs, l'URI du fichier doit être l'un des éléments suivants :
      *
      * /assets/css/style.css
      * /packages/modules/blog/css/style.css
@@ -117,7 +122,7 @@ class AssetDispatcher
     }
 
     /**
-     * Run the given route callback and process the response.
+     * Exécutez le rappel d'itinéraire donné et traitez la réponse.
      *
      * @param  \Closure  $callback
      * @param  array  $parameters
@@ -126,7 +131,8 @@ class AssetDispatcher
      */
     protected function process($callback, $parameters, Request $request)
     {
-        $parameters[0] = $request; // We will replace the first item (the matched URI) with the Request instance.
+        // Nous remplacerons le premier élément (l’URI correspondant) par l’instance Request.
+        $parameters[0] = $request; 
 
         //
         $response = call_user_func_array($callback, $parameters);
@@ -135,7 +141,7 @@ class AssetDispatcher
             return $response;
         }
 
-        // The response is not a Symfony Response instance.
+        // La réponse n'est pas une instance de Symfony Response.
         else if (is_string($response) && ! empty($path = realpath($response))) {
             return $this->serve($path, $request);
         }
@@ -144,7 +150,7 @@ class AssetDispatcher
     }
 
     /**
-     * Serve a Package File.
+     * Servir un fichier de package.
      *
      * @param  string  $namespace
      * @param  string  $path
@@ -163,7 +169,7 @@ class AssetDispatcher
     }
 
     /**
-     * Serve a Vendor File.
+     * Servir un fichier de fournisseur.
      *
      * @param  string  $path
      * @param  \Symfony\Component\HttpFoundation\Request  $request
@@ -183,7 +189,27 @@ class AssetDispatcher
     }
 
     /**
-     * Serve a File.
+     * Servez un fichier partagé.
+     *
+     * @param  string  $path
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @return  \Symfony\Component\HttpFoundation\Response
+     */
+    public function serveSharedFile($path, Request $request)
+    {
+        $basePath = BASEPATH .'shared';
+
+        if (! Str::startsWith($path, $this->getSharedPaths())) {
+            return new Response('File Not Found', 404);
+        }
+
+        $path = $basePath .DS .str_replace('/', DS, $path);
+
+        return $this->serve($path, $request);
+    }
+
+    /**
+     * Servir un fichier.
      *
      * @param  string  $path
      * @param  \Symfony\Component\HttpFoundation\Request  $request
@@ -201,7 +227,7 @@ class AssetDispatcher
             return new Response('Unauthorized Access', 403);
         }
 
-        // Create a Binary File Response instance.
+        // Créez une instance de réponse de fichier binaire.
         $headers = array(
             'Access-Control-Allow-Origin' => '*',
         );
@@ -217,7 +243,7 @@ class AssetDispatcher
             return new Response('OK', 200, $headers);
         }
 
-        // Not an OPTIONS request.
+        // Pas une demande OPTIONS.
         else {
             $headers['Content-Type'] = $mimeType;
         }
@@ -225,22 +251,22 @@ class AssetDispatcher
         if ($mimeType !== 'application/json') {
             $response = new BinaryFileResponse($path, 200, $headers, true, $disposition, true, false);
 
-            // Set the Content Disposition.
+            // Définissez la disposition du contenu.
             $response->setContentDisposition($disposition, $fileName ?: basename($path));
 
-            // Setup the (browser) Cache Control.
+            // Configurez le contrôle de cache (navigateur).
             $this->setupCacheControl($response);
 
-            // Setup the Not Modified since...
+            // Configurez le paramètre Non modifié depuis...
             $response->isNotModified($request);
         } else {
-            // We will do a special processing for the JSON files.
+            // Nous ferons un traitement spécial pour les fichiers JSON.
             $response = new JsonResponse(
                 json_decode(file_get_contents($path), true), 200, $headers
             );
         }
 
-        // Prepare the Response against the Request instance, if is requested.
+        // Préparez la réponse contre l’instance de requête, si cela est demandé.
         if ($prepared) {
             return $response->prepare($request);
         }
@@ -266,9 +292,9 @@ class AssetDispatcher
 
     protected function guessMimeType($path)
     {
-        // Even the Symfony's HTTP Foundation have troubles with the CSS and JS files?
+        // Même la Fondation HTTP de Symfony a des problèmes avec les fichiers CSS et JS ?
         //
-        // Hard coding the correct mime types for presently needed file extensions.
+        // Codage en dur des types MIME corrects pour les extensions de fichiers actuellement nécessaires.
 
         switch ($fileExt = pathinfo($path, PATHINFO_EXTENSION)) {
             case 'css':
@@ -287,7 +313,7 @@ class AssetDispatcher
                 break;
         }
 
-        // Guess the path's Mime Type.
+        // Devinez le type Mime du chemin.
         $mimeTypes = new MimeTypes();
         return $mimeTypes->guessMimeType($path);
 
@@ -301,10 +327,10 @@ class AssetDispatcher
 
         $files = $this->app['files'];
 
-        // The cache file path.
+        // Le chemin du fichier cache.
         $path = STORAGE_PATH .'framework' .DS .'assets' .DS .'vendor_paths.php';
 
-        // The config path for checking againts the cache file.
+        // Le chemin de configuration pour vérifier par rapport au fichier cache.
         $configPath = APPPATH .'Config' .DS .'Routing.php';
 
         $lastModified = $files->lastModified($configPath);
@@ -331,7 +357,55 @@ class AssetDispatcher
 
         $paths = array_unique($paths);
 
-        // Save to the cache.
+        // Enregistrez dans le cache.
+        $files->makeDirectory(dirname($path), 0755, true, true);
+
+        $content = "<?php\n\nreturn " .var_export($paths, true) .";\n";
+
+        $files->put($path, $content);
+
+        return $this->paths = $paths;
+    }
+
+    public function getSharedPaths()
+    {
+        if (isset($this->paths)) {
+            return $this->paths;
+        }
+
+        $files = $this->app['files'];
+
+        // Le chemin du fichier cache.
+        $path = STORAGE_PATH .'framework' .DS .'assets' .DS .'shared_paths.php';
+
+        // Le chemin de configuration pour vérifier par rapport au fichier cache.
+        $configPath = APPPATH .'Config' .DS .'Routing.php';
+
+        $lastModified = $files->lastModified($configPath);
+
+        if ($files->exists($path) && ! ($lastModified < $files->lastModified($path))) {
+            return $this->paths = $files->getRequire($path);
+        }
+
+        $paths = array();
+
+        $options = $this->app['config']->get('routing.assets.paths', array());
+
+        foreach ($options as $vendor => $value) {
+            $values = is_array($value) ? $value : array($value);
+
+            $values = array_map(function($value) use ($vendor)
+            {
+                return $vendor .'/' .$value .'/';
+
+            }, $values);
+
+            $paths = array_merge($paths, $values);
+        }
+
+        $paths = array_unique($paths);
+
+        // Enregistrez dans le cache.
         $files->makeDirectory(dirname($path), 0755, true, true);
 
         $content = "<?php\n\nreturn " .var_export($paths, true) .";\n";
@@ -342,7 +416,7 @@ class AssetDispatcher
     }
 
     /**
-     * Register a Package for cascading configuration.
+     * Enregistrez un package pour une configuration en cascade.
      *
      * @param  string  $package
      * @param  string  $hint
@@ -357,7 +431,7 @@ class AssetDispatcher
     }
 
     /**
-     * Return true if has the specified namespace hint on the router.
+     * Renvoie true si l'indicateur d'espace de noms spécifié est présent sur le routeur.
      *
      * @param  string  $namespace
      * @return void
@@ -370,7 +444,7 @@ class AssetDispatcher
     }
 
     /**
-     * Add a new namespace to the loader.
+     * Ajoutez un nouvel espace de noms au chargeur.
      *
      * @param  string  $namespace
      * @param  string  $hint
@@ -384,7 +458,7 @@ class AssetDispatcher
     }
 
     /**
-     * Get the configuration namespace for a Package.
+     * Obtenez l’espace de noms de configuration pour un package.
      *
      * @param  string  $package
      * @param  string  $namespace
@@ -402,7 +476,7 @@ class AssetDispatcher
     }
 
     /**
-     * Get the path for a registered namespace.
+     * Obtenez le chemin d’un espace de noms enregistré.
      *
      * @param  string  $namespace
      * @return string|null
@@ -415,7 +489,7 @@ class AssetDispatcher
     }
 
     /**
-     * Returns all registered namespaces with the router.
+     * Renvoie tous les espaces de noms enregistrés auprès du routeur.
      *
      * @return array
      */

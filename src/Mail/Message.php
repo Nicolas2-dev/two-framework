@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Mail;
 
 use Swift_Image;
@@ -9,14 +14,14 @@ use Swift_Attachment;
 class Message
 {
     /**
-     * The Swift Message instance.
+     * L'instance de message Swift.
      *
      * @var \Swift_Message
      */
     protected $swift;
 
     /**
-     * Create a new message instance.
+     * Créez une nouvelle instance de message.
      *
      * @param  \Swift_Message  $swift
      * @return void
@@ -27,7 +32,7 @@ class Message
     }
 
     /**
-     * Add a "from" address to the message.
+     * Ajoutez une adresse « de » au message.
      *
      * @param  string  $address
      * @param  string  $name
@@ -41,7 +46,7 @@ class Message
     }
 
     /**
-     * Set the "sender" of the message.
+     * Définissez "l'expéditeur" du message.
      *
      * @param  string  $address
      * @param  string  $name
@@ -55,7 +60,7 @@ class Message
     }
 
     /**
-     * Set the "return path" of the message.
+     * Définissez le "chemin de retour" du message.
      *
      * @param  string  $address
      * @return $this
@@ -68,7 +73,7 @@ class Message
     }
 
     /**
-     * Add a recipient to the message.
+     * Ajoutez un destinataire au message.
      *
      * @param  string|array  $address
      * @param  string  $name
@@ -80,7 +85,7 @@ class Message
     }
 
     /**
-     * Add a carbon copy to the message.
+     * Ajoutez une copie carbone au message.
      *
      * @param  string  $address
      * @param  string  $name
@@ -92,7 +97,7 @@ class Message
     }
 
     /**
-     * Add a blind carbon copy to the message.
+     * Ajoutez une copie carbone invisible au message.
      *
      * @param  string  $address
      * @param  string  $name
@@ -104,7 +109,7 @@ class Message
     }
 
     /**
-     * Add a reply to address to the message.
+     * Ajoutez une adresse de réponse au message.
      *
      * @param  string  $address
      * @param  string  $name
@@ -116,7 +121,7 @@ class Message
     }
 
     /**
-     * Add a recipient to the message.
+     * Ajoutez un destinataire au message.
      *
      * @param  string|array  $address
      * @param  string  $name
@@ -135,7 +140,7 @@ class Message
     }
 
     /**
-     * Set the subject of the message.
+     * Définissez le sujet du message.
      *
      * @param  string  $subject
      * @return $this
@@ -148,7 +153,7 @@ class Message
     }
 
     /**
-     * Set the message priority level.
+     * Définissez le niveau de priorité des messages.
      *
      * @param  int  $level
      * @return $this
@@ -161,7 +166,7 @@ class Message
     }
 
     /**
-     * Attach a file to the message.
+     * Joindre un fichier au message.
      *
      * @param  string  $file
      * @param  array   $options
@@ -175,7 +180,7 @@ class Message
     }
 
     /**
-     * Create a Swift Attachment instance.
+     * Créez une instance de pièce jointe Swift.
      *
      * @param  string  $file
      * @return \Swift_Attachment
@@ -186,7 +191,7 @@ class Message
     }
 
     /**
-     * Attach in-memory data as an attachment.
+     * Joignez des données en mémoire en pièce jointe.
      *
      * @param  string  $data
      * @param  string  $name
@@ -201,7 +206,7 @@ class Message
     }
 
     /**
-     * Create a Swift Attachment instance from data.
+     * Créez une instance Swift Attachment à partir de données.
      *
      * @param  string  $data
      * @param  string  $name
@@ -213,7 +218,7 @@ class Message
     }
 
     /**
-     * Embed a file in the message and get the CID.
+     * Intégrez un fichier dans le message et obtenez le CID.
      *
      * @param  string  $file
      * @return string
@@ -224,7 +229,7 @@ class Message
     }
 
     /**
-     * Embed in-memory data in the message and get the CID.
+     * Intégrez les données en mémoire dans le message et obtenez le CID.
      *
      * @param  string  $data
      * @param  string  $name
@@ -239,7 +244,7 @@ class Message
     }
 
     /**
-     * Prepare and attach the given attachment.
+     * Préparez et joignez la pièce jointe donnée.
      *
      * @param  \Swift_Attachment  $attachment
      * @param  array  $options
@@ -247,16 +252,16 @@ class Message
      */
     protected function prepAttachment($attachment, $options = array())
     {
-        // First we will check for a MIME type on the message, which instructs the
-        // mail client on what type of attachment the file is so that it may be
-        // downloaded correctly by the user. The MIME option is not required.
+        // Nous allons d'abord vérifier la présence d'un type MIME sur le message, ce qui indique au
+        // client de messagerie sur quel type de pièce jointe se trouve le fichier afin qu'il puisse être
+        // téléchargé correctement par l'utilisateur. L'option MIME n'est pas obligatoire.
         if (isset($options['mime'])) {
             $attachment->setContentType($options['mime']);
         }
 
-        // If an alternative name was given as an option, we will set that on this
-        // attachment so that it will be downloaded with the desired names from
-        // the developer, otherwise the default file names will get assigned.
+        // Si un nom alternatif a été proposé en option, nous le définirons sur ce
+        // pièce jointe pour qu'elle soit téléchargée avec les noms souhaités depuis
+        // le développeur, sinon les noms de fichiers par défaut seront attribués.
         if (isset($options['as'])) {
             $attachment->setFilename($options['as']);
         }
@@ -267,7 +272,7 @@ class Message
     }
 
     /**
-     * Get the underlying Swift Message instance.
+     * Obtenez l'instance Swift Message sous-jacente.
      *
      * @return \Swift_Message
      */
@@ -277,7 +282,7 @@ class Message
     }
 
     /**
-     * Dynamically pass missing methods to the Swift instance.
+     * Transmettez dynamiquement les méthodes manquantes à l’instance Swift.
      *
      * @param  string  $method
      * @param  array   $parameters

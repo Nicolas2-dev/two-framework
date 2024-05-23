@@ -1,46 +1,51 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Routing;
+
+use InvalidArgumentException;
 
 use Two\Http\Request;
 use Two\Support\Arr;
 use Two\Support\Str;
 
-use InvalidArgumentException;
-
 
 class UrlGenerator
 {
     /**
-     * The route collection.
+     * La collection d'itinéraires.
      *
      * @var \Two\Routing\RouteCollection
      */
     protected $routes;
 
     /**
-     * The request instance.
+     * L’instance de requête.
      *
      * @var \Two\Http\Request
      */
     protected $request;
 
     /**
-     * The force URL root.
+     * La racine de l’URL de force.
      *
      * @var string
      */
     protected $forcedRoot;
 
     /**
-     * The forced schema for URLs.
+     * Le schéma forcé pour les URL.
      *
      * @var string
      */
     protected $forceSchema;
 
     /**
-     * Characters that should not be URL encoded.
+     * Caractères qui ne doivent pas être codés en URL.
      *
      * @var array
      */
@@ -60,7 +65,7 @@ class UrlGenerator
     protected $sessionResolver;
 
     /**
-     * Create a new URL Generator instance.
+     * Créez une nouvelle instance de générateur d'URL.
      *
      * @param  \Two\Routing\RouteCollection  $routes
      * @param  \Symfony\Component\HttpFoundation\Request   $request
@@ -74,7 +79,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the full URL for the current request.
+     * Obtenez l'URL complète de la demande en cours.
      *
      * @return string
      */
@@ -84,7 +89,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the current URL for the request.
+     * Obtenez l'URL actuelle de la demande.
      *
      * @return string
      */
@@ -94,7 +99,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the URL for the previous request.
+     * Obtenez l'URL de la demande précédente.
      *
      * @return string
      */
@@ -108,7 +113,7 @@ class UrlGenerator
     }
 
     /**
-     * Generate a absolute URL to the given path.
+     * Générez une URL absolue vers le chemin donné.
      *
      * @param  string  $path
      * @param  mixed  $extra
@@ -117,9 +122,9 @@ class UrlGenerator
      */
     public function to($path, $extra = array(), $secure = null)
     {
-        // First we will check if the URL is already a valid URL. If it is we will not
-        // try to generate a new one but will simply return the URL as is, which is
-        // convenient since developers do not always have to check if it's valid.
+        // Nous allons d’abord vérifier si l’URL est déjà une URL valide. Si c'est le cas, nous ne le ferons pas
+        // essaie d'en générer une nouvelle mais renverra simplement l'URL telle quelle, ce qui est
+        // pratique puisque les développeurs n'ont pas toujours besoin de vérifier si c'est valide.
         if ($this->isValidUrl($path)) {
             return $path;
         }
@@ -128,16 +133,17 @@ class UrlGenerator
 
         $tail = implode('/', array_map('rawurlencode', (array) $extra));
 
-        // Once we have the scheme we will compile the "tail" by collapsing the values
-        // into a single string delimited by slashes. This just makes it convenient
-        // for passing the array of parameters to this URL as a list of segments.
+        // Une fois que nous aurons le schéma, nous compilerons la « queue » en réduisant les valeurs
+        // en une seule chaîne délimitée par des barres obliques. Cela rend les choses plus pratiques
+        // pour transmettre le tableau de paramètres à cette URL sous forme de liste de segments.
+
         $root = $this->getRootUrl($scheme);
 
         return $this->trimUrl($root, $path, $tail);
     }
 
     /**
-     * Generate a secure, absolute URL to the given path.
+     * Générez une URL sécurisée et absolue vers le chemin donné.
      *
      * @param  string  $path
      * @param  array   $parameters
@@ -149,7 +155,7 @@ class UrlGenerator
     }
 
     /**
-     * Generate a URL to an application asset.
+     * Générez une URL vers un actif d'application.
      *
      * @param  string  $path
      * @param  bool|null  $secure
@@ -161,16 +167,16 @@ class UrlGenerator
             return $path;
         }
 
-        // Once we get the root URL, we will check to see if it contains an index.php
-        // file in the paths. If it does, we will remove it since it is not needed
-        // for asset paths, but only for routes to endpoints in the application.
+        // Une fois que nous aurons obtenu l’URL racine, nous vérifierons si elle contient un index.php
+        // fichier dans les chemins. Si c'est le cas, nous le supprimerons car il n'est pas nécessaire
+        // pour les chemins d'accès aux ressources, mais uniquement pour les routes vers les points de terminaison dans l'application.
         $root = $this->getRootUrl($this->getScheme($secure));
 
         return $this->removeIndex($root) .'/' .trim($path, '/');
     }
 
     /**
-     * Remove the index.php file from a path.
+     * Supprimez le fichier index.php d'un chemin.
      *
      * @param  string  $root
      * @return string
@@ -183,7 +189,7 @@ class UrlGenerator
     }
 
     /**
-     * Generate a URL to a secure asset.
+     * Générez une URL vers un actif sécurisé.
      *
      * @param  string  $path
      * @return string
@@ -194,7 +200,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the scheme for a raw URL.
+     * Obtenez le schéma d'une URL brute.
      *
      * @param  bool|null  $secure
      * @return string
@@ -209,7 +215,7 @@ class UrlGenerator
     }
 
     /**
-     * Force the schema for URLs.
+     * Forcez le schéma pour les URL.
      *
      * @param  string  $schema
      * @return void
@@ -220,7 +226,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the URL to a named route.
+     * Obtenez l'URL d'une route nommée.
      *
      * @param  string  $name
      * @param  mixed   $parameters
@@ -244,7 +250,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the URL for a given route instance.
+     * Obtenez l'URL d'une instance de route donnée.
      *
      * @param  \Two\Routing\Route  $route
      * @param  array  $parameters
@@ -266,7 +272,7 @@ class UrlGenerator
     }
 
     /**
-     * Replace the parameters on the root path.
+     * Remplacez les paramètres sur le chemin racine.
      *
      * @param  \Two\Routing\Route  $route
      * @param  string  $domain
@@ -279,7 +285,7 @@ class UrlGenerator
     }
 
     /**
-     * Replace all of the wildcard parameters for a route path.
+     * Remplacez tous les paramètres génériques d’un chemin d’itinéraire.
      *
      * @param  string  $path
      * @param  array  $parameters
@@ -297,7 +303,7 @@ class UrlGenerator
     }
 
     /**
-     * Replace all of the named parameters in the path.
+     * Remplacez tous les paramètres nommés dans le chemin.
      *
      * @param  string  $path
      * @param  array  $parameters
@@ -313,16 +319,16 @@ class UrlGenerator
     }
 
     /**
-     * Get the query string for a given route.
+     * Obtenez la chaîne de requête pour un itinéraire donné.
      *
      * @param  array  $parameters
      * @return string
      */
     protected function getRouteQueryString(array $parameters)
     {
-        // First we will get all of the string parameters that are remaining after we
-        // have replaced the route wildcards. We'll then build a query string from
-        // these string parameters then use it as a starting point for the rest.
+        // Nous obtiendrons d’abord tous les paramètres de chaîne qui restent après avoir
+        // ont remplacé les caractères génériques de route. Nous allons ensuite construire une chaîne de requête à partir de
+        // ces paramètres de chaîne l'utilisent ensuite comme point de départ pour le reste.
         if (count($parameters) == 0) {
             return '';
         }
@@ -331,9 +337,9 @@ class UrlGenerator
             $keyed = $this->getStringParameters($parameters)
         );
 
-        // Lastly, if there are still parameters remaining, we will fetch the numeric
-        // parameters that are in the array and add them to the query string or we
-        // will make the initial query string if it wasn't started with strings.
+        // Enfin, s'il reste encore des paramètres, nous récupérerons les valeurs numériques
+        // les paramètres qui sont dans le tableau et les ajoutons à la chaîne de requête ou nous
+        // créera la chaîne de requête initiale si elle n'a pas été démarrée avec des chaînes.
         if (count($keyed) < count($parameters)) {
             $query .= '&' .implode('&', $this->getNumericParameters($parameters));
         }
@@ -342,7 +348,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the string parameters from a given list.
+     * Récupère les paramètres de chaîne d’une liste donnée.
      *
      * @param  array  $parameters
      * @return array
@@ -356,7 +362,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the numeric parameters from a given list.
+     * Obtenez les paramètres numériques d’une liste donnée.
      *
      * @param  array  $parameters
      * @return array
@@ -370,7 +376,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the formatted domain for a given route.
+     * Obtenez le domaine formaté pour un itinéraire donné.
      *
      * @param  \Two\Routing\Route  $route
      * @param  array  $parameters
@@ -382,7 +388,7 @@ class UrlGenerator
     }
 
     /**
-     * Format the domain and port for the route and request.
+     * Formatez le domaine et le port pour l'itinéraire et la demande.
      *
      * @param  \Two\Routing\Route  $route
      * @param  array  $parameters
@@ -394,7 +400,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the domain and scheme for the route.
+     * Obtenez le domaine et le schéma de l'itinéraire.
      *
      * @param  \Two\Routing\Route  $route
      * @return string
@@ -405,7 +411,7 @@ class UrlGenerator
     }
 
     /**
-     * Add the port to the domain if necessary.
+     * Ajoutez le port au domaine si nécessaire.
      *
      * @param  string  $domain
      * @return string
@@ -420,7 +426,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the root of the route URL.
+     * Obtenez la racine de l'URL de la route.
      *
      * @param  \Two\Routing\Route  $route
      * @param  string  $domain
@@ -432,7 +438,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the scheme for the given route.
+     * Obtenez le schéma pour l'itinéraire donné.
      *
      * @param  \Two\Routing\Route  $route
      * @return string
@@ -449,7 +455,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the URL to a controller action.
+     * Obtenez l'URL d'une action du contrôleur.
      *
      * @param  string  $action
      * @param  mixed   $parameters
@@ -462,7 +468,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the base URL for the request.
+     * Obtenez l'URL de base de la demande.
      *
      * @param  string  $scheme
      * @param  string  $root
@@ -480,7 +486,7 @@ class UrlGenerator
     }
 
     /**
-     * Set the forced root URL.
+     * Définissez l'URL racine forcée.
      *
      * @param  string  $root
      * @return void
@@ -491,7 +497,7 @@ class UrlGenerator
     }
 
     /**
-     * Determine if the given path is a valid URL.
+     * Déterminez si le chemin donné est une URL valide.
      *
      * @param  string  $path
      * @return bool
@@ -506,7 +512,7 @@ class UrlGenerator
     }
 
     /**
-     * Format the given URL segments into a single URL.
+     * Formatez les segments d'URL donnés en une seule URL.
      *
      * @param  string  $root
      * @param  string  $path
@@ -519,7 +525,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the request instance.
+     * Obtenez l’instance de requête.
      *
      * @return \Symfony\Component\HttpFoundation\Request
      */
@@ -529,7 +535,7 @@ class UrlGenerator
     }
 
     /**
-     * Set the current request instance.
+     * Définissez l’instance de requête actuelle.
      *
      * @param  \Two\Http\Request  $request
      * @return void
@@ -540,7 +546,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the previous URL from the session if possible.
+     * Obtenez l'URL précédente de la session si possible.
      *
      * @return string|null
      */
@@ -552,7 +558,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the session implementation from the resolver.
+     * Obtenez l'implémentation de la session à partir du résolveur.
      *
      * @return \Two\Session\Store|null
      */
@@ -564,7 +570,7 @@ class UrlGenerator
     }
 
     /**
-     * Set the session resolver for the generator.
+     * Définissez le résolveur de session pour le générateur.
      *
      * @param  callable  $sessionResolver
      * @return $this

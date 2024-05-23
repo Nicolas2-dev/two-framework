@@ -1,40 +1,45 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Mail\Transport;
-
-use GuzzleHttp\Client;
-use GuzzleHttp\Post\PostFile;
 
 use Swift_Transport;
 use Swift_Mime_Message;
 use Swift_Events_EventListener;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Post\PostFile;
+
 
 class MailgunTransport implements Swift_Transport
 {
     /**
-     * The Mailgun API key.
+     * La clé API Mailgun.
      *
      * @var string
      */
     protected $key;
 
     /**
-     * The Mailgun domain.
+     * Le domaine Mailgun.
      *
      * @var string
      */
     protected $domain;
 
     /**
-     * THe Mailgun API end-point.
+     * Le point final de l'API Mailgun.
      *
      * @var string
      */
     protected $url;
 
     /**
-     * Create a new Mailgun transport instance.
+     * Créez une nouvelle instance de transport Mailgun.
      *
      * @param  string  $key
      * @param  string  $domain
@@ -95,7 +100,7 @@ class MailgunTransport implements Swift_Transport
     }
 
     /**
-     * Get the "to" payload field for the API request.
+     * Obtenez le champ de charge utile « à » pour la requête API.
      *
      * @param  \Swift_Mime_Message  $message
      * @return array
@@ -117,7 +122,7 @@ class MailgunTransport implements Swift_Transport
     }
 
     /**
-     * Get a new HTTP client instance.
+     * Obtenez une nouvelle instance de client HTTP.
      *
      * @return \GuzzleHttp\Client
      */
@@ -127,7 +132,7 @@ class MailgunTransport implements Swift_Transport
     }
 
     /**
-     * Get the API key being used by the transport.
+     * Obtenez la clé API utilisée par le transport.
      *
      * @return string
      */
@@ -137,7 +142,7 @@ class MailgunTransport implements Swift_Transport
     }
 
     /**
-     * Set the API key being used by the transport.
+     * Définissez la clé API utilisée par le transport.
      *
      * @param  string  $key
      * @return void
@@ -148,7 +153,7 @@ class MailgunTransport implements Swift_Transport
     }
 
     /**
-     * Get the domain being used by the transport.
+     * Obtenez le domaine utilisé par le transport.
      *
      * @return string
      */
@@ -158,7 +163,7 @@ class MailgunTransport implements Swift_Transport
     }
 
     /**
-     * Set the domain being used by the transport.
+     * Définissez le domaine utilisé par le transport.
      *
      * @param  string  $domain
      * @return void

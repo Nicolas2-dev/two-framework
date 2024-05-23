@@ -1,51 +1,58 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\View;
 
-use Two\Filesystem\Filesystem;
 use Two\Support\Str;
-use Two\View\ViewFinderInterface;
+
+use InvalidArgumentException;
+use Two\Filesystem\Filesystem;
+use Two\View\Contracts\ViewFinderInterface;
 
 
 class FileViewFinder implements ViewFinderInterface
 {
     /**
-     * The filesystem instance.
+     * L'instance du système de fichiers.
      *
      * @var \Two\Filesystem\Filesystem
      */
     protected $files;
 
     /**
-     * The array of active view paths.
+     * Le tableau des chemins d’affichage actifs.
      *
      * @var array
      */
     protected $paths;
 
     /**
-     * The array of views that have been located.
+     * L'ensemble des vues qui ont été localisées.
      *
      * @var array
      */
     protected $views = array();
 
     /**
-     * The namespace to file path hints.
+     * L'espace de noms pour les indications de chemin de fichier.
      *
      * @var array
      */
     protected $hints = array();
 
     /**
-     * Register a view extension with the finder.
+     * Enregistrez une extension de vue avec le Finder.
      *
      * @var array
      */
     protected $extensions = array('tpl', 'php', 'css', 'js', 'md');
 
     /**
-     * Hint path delimiter value.
+     * Valeur du délimiteur de chemin d’indice.
      *
      * @var string
      */
@@ -53,7 +60,7 @@ class FileViewFinder implements ViewFinderInterface
 
 
     /**
-     * Create a new file view loader instance.
+     * Créez une nouvelle instance de chargeur de vue de fichier.
      *
      * @param  \Two\Filesystem\Filesystem  $files
      * @param  array  $extensions
@@ -72,7 +79,7 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Get the fully qualified location of the view.
+     * Obtenez l’emplacement complet de la vue.
      *
      * @param  string  $name
      * @return string
@@ -91,7 +98,7 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Get the path to a template with a named path.
+     * Obtenez le chemin d'accès à un modèle avec un chemin nommé.
      *
      * @param  string  $name
      * @return string
@@ -114,7 +121,7 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Get the segments of a template with a named path.
+     * Obtenez les segments d'un modèle avec un chemin nommé.
      *
      * @param  string  $name
      * @return array
@@ -126,18 +133,18 @@ class FileViewFinder implements ViewFinderInterface
         $segments = explode(static::HINT_PATH_DELIMITER, $name);
 
         if (count($segments) != 2) {
-            throw new \InvalidArgumentException("View [$name] has an invalid name.");
+            throw new InvalidArgumentException("View [$name] has an invalid name.");
         }
 
         if ( ! isset($this->hints[$segments[0]])) {
-            throw new \InvalidArgumentException("No hint path defined for [{$segments[0]}].");
+            throw new InvalidArgumentException("No hint path defined for [{$segments[0]}].");
         }
 
         return $segments;
     }
 
     /**
-     * Find the given view in the list of paths.
+     * Recherchez la vue donnée dans la liste des chemins.
      *
      * @param  string  $name
      * @param  array   $paths
@@ -157,11 +164,11 @@ class FileViewFinder implements ViewFinderInterface
             }
         }
 
-        throw new \InvalidArgumentException("View [$name] not found.");
+        throw new InvalidArgumentException("View [$name] not found.");
     }
 
     /**
-     * Get an array of possible view files.
+     * Obtenez un tableau de fichiers de visualisation possibles.
      *
      * @param  string  $name
      * @return array
@@ -176,7 +183,7 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Add a location to the finder.
+     * Ajoutez un emplacement au chercheur.
      *
      * @param  string  $location
      * @return void
@@ -187,7 +194,7 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Add a location to the finder.
+     * Ajoutez un emplacement au chercheur.
      *
      * @param  string  $location
      * @return void
@@ -198,7 +205,7 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Add a namespace hint to the finder.
+     * Ajoutez un indice d'espace de noms au chercheur.
      *
      * @param  string  $namespace
      * @param  string|array  $hints
@@ -216,7 +223,7 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Prepend a namespace hint to the finder.
+     * Ajoutez un indice d'espace de noms au chercheur.
      *
      * @param  string  $namespace
      * @param  string|array  $hints
@@ -234,7 +241,7 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Register an extension with the view finder.
+     * Enregistrez une extension avec le viseur.
      *
      * @param  string  $extension
      * @return void
@@ -249,7 +256,7 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Returns whether or not the view specify a hint information.
+     * Indique si la vue spécifie ou non des informations d'indice.
      *
      * @param  string  $name
      * @return boolean
@@ -260,7 +267,7 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Prepend a path specified by its namespace.
+     * Ajoutez un chemin spécifié par son espace de noms.
      *
      * @param  string  $namespace
      * @return void
@@ -273,13 +280,13 @@ class FileViewFinder implements ViewFinderInterface
 
         $paths = $this->hints[$namespace];
 
-        // The folder of Views Override should be located in the same directory with the Views one.
-        // For example: <BASEPATH>/themes/Bootstrap/Views -> <BASEPATH>/themes/Bootstrap/Override
+        // Le dossier Views Override doit être situé dans le même répertoire que celui de Views.
+        // Par exemple : <BASEPATH>/themes/Bootstrap/Views -> <BASEPATH>/themes/Bootstrap/Override
 
         $path = dirname(head($paths)) .DS .'Overrides';
 
         if (! in_array($path, $this->paths) && $this->files->isDirectory($path)) {
-            // If there was previously added another Views overriding path, we will remove it.
+            // Si un autre chemin de remplacement de vues a déjà été ajouté, nous le supprimerons.
 
             if (Str::endsWith(head($this->paths), DS .'Overrides')) {
                 array_shift($this->paths);
@@ -290,7 +297,7 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Get the filesystem instance.
+     * Obtenez l'instance du système de fichiers.
      *
      * @return \Two\Filesystem\Filesystem
      */
@@ -300,7 +307,7 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Get the active view paths.
+     * Obtenez les chemins de vue actifs.
      *
      * @return array
      */
@@ -310,7 +317,7 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Get the namespace to file path hints.
+     * Obtenez l'espace de noms pour les indications de chemin de fichier.
      *
      * @return array
      */
@@ -320,7 +327,7 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Get registered extensions.
+     * Obtenez des extensions enregistrées.
      *
      * @return array
      */

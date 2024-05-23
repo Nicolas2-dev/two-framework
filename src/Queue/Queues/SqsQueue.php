@@ -1,10 +1,15 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Queues;
 
 use Two\Queue\Jobs\SqsJob;
 use Two\Queue\Queue;
-use Two\Queue\QueueInterface;
+use Two\Queue\Contracts\QueueInterface;
 
 use Aws\Sqs\SqsClient;
 
@@ -12,21 +17,21 @@ use Aws\Sqs\SqsClient;
 class SqsQueue extends Queue implements QueueInterface
 {
     /**
-     * The Amazon SQS instance.
+     * L'instance Amazon SQS.
      *
      * @var \Aws\Sqs\SqsClient
      */
     protected $sqs;
 
     /**
-     * The name of the default tube.
+     * Le nom du tube par défaut.
      *
      * @var string
      */
     protected $default;
 
     /**
-     * Create a new Amazon SQS queue instance.
+     * Créez une nouvelle instance de file d'attente Amazon SQS.
      *
      * @param  \Aws\Sqs\SqsClient  $sqs
      * @param  string  $default
@@ -39,9 +44,8 @@ class SqsQueue extends Queue implements QueueInterface
         $this->default = $default;
     }
 
-
     /**
-     * Push a new job onto the queue.
+     * Placez un nouveau travail dans la file d'attente.
      *
      * @param  string  $job
      * @param  mixed   $data
@@ -54,7 +58,7 @@ class SqsQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a raw payload onto the queue.
+     * Insérez une charge utile brute dans la file d'attente.
      *
      * @param  string  $payload
      * @param  string  $queue
@@ -69,7 +73,7 @@ class SqsQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a new job onto the queue after a delay.
+     * Placez une nouvelle tâche dans la file d'attente après un certain délai.
      *
      * @param  \DateTime|int  $delay
      * @param  string  $job
@@ -91,7 +95,7 @@ class SqsQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Pop the next job off of the queue.
+     * Retirez le travail suivant de la file d'attente.
      *
      * @param  string  $queue
      * @return \Two\Queue\Jobs\Job|null
@@ -111,7 +115,7 @@ class SqsQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the queue or return the default.
+     * Obtenez la file d'attente ou renvoyez la valeur par défaut.
      *
      * @param  string|null  $queue
      * @return string
@@ -122,7 +126,7 @@ class SqsQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the underlying SQS instance.
+     * Obtenez l'instance SQS sous-jacente.
      *
      * @return \Aws\Sqs\SqsClient
      */

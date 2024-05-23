@@ -1,19 +1,24 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database;
 
 
 abstract class Grammar
 {
     /**
-     * The grammar table prefix.
+     * Le préfixe de la table de grammaire.
      *
      * @var string
      */
     protected $tablePrefix = '';
 
     /**
-     * Wrap an array of values.
+     * Enveloppez un tableau de valeurs.
      *
      * @param  array  $values
      * @return array
@@ -24,7 +29,7 @@ abstract class Grammar
     }
 
     /**
-     * Wrap a table in keyword identifiers.
+     * Enveloppez un tableau dans des identifiants de mots-clés.
      *
      * @param  string  $table
      * @return string
@@ -37,7 +42,7 @@ abstract class Grammar
     }
 
     /**
-     * Wrap a value in keyword identifiers.
+     * Enveloppez une valeur dans des identifiants de mots-clés.
      *
      * @param  string  $value
      * @return string
@@ -68,7 +73,7 @@ abstract class Grammar
     }
 
     /**
-     * Wrap a single string in keyword identifiers.
+     * Enveloppez une seule chaîne dans des identifiants de mots clés.
      *
      * @param  string  $value
      * @return string
@@ -81,7 +86,7 @@ abstract class Grammar
     }
 
     /**
-     * Convert an array of column names into a delimited string.
+     * Convertit un tableau de noms de colonnes en une chaîne délimitée.
      *
      * @param  array   $columns
      * @return string
@@ -92,7 +97,7 @@ abstract class Grammar
     }
 
     /**
-     * Create query parameter place-holders for an array.
+     * Créez des espaces réservés pour les paramètres de requête pour un tableau.
      *
      * @param  array   $values
      * @return string
@@ -103,7 +108,7 @@ abstract class Grammar
     }
 
     /**
-     * Get the appropriate query parameter place-holder for a value.
+     * Obtenez l’espace réservé du paramètre de requête approprié pour une valeur.
      *
      * @param  mixed   $value
      * @return string
@@ -114,7 +119,7 @@ abstract class Grammar
     }
 
     /**
-     * Get the value of a raw expression.
+     * Obtenez la valeur d'une expression brute.
      *
      * @param  \Two\Database\Query\Expression  $expression
      * @return string
@@ -125,7 +130,7 @@ abstract class Grammar
     }
 
     /**
-     * Determine if the given value is a raw expression.
+     * Déterminez si la valeur donnée est une expression brute.
      *
      * @param  mixed  $value
      * @return bool
@@ -136,7 +141,7 @@ abstract class Grammar
     }
 
     /**
-     * Get the format for database stored dates.
+     * Obtenez le format des dates stockées dans la base de données.
      *
      * @return string
      */
@@ -146,7 +151,7 @@ abstract class Grammar
     }
 
     /**
-     * Get the grammar's table prefix.
+     * Obtenez le préfixe de la table de grammaire.
      *
      * @return string
      */
@@ -156,7 +161,7 @@ abstract class Grammar
     }
 
     /**
-     * Set the grammar's table prefix.
+     * Définissez le préfixe de la table de grammaire.
      *
      * @param  string  $prefix
      * @return $this

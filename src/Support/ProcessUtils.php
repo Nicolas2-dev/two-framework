@@ -1,24 +1,30 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support;
 
+
 /**
- * ProcessUtils is a bunch of utility methods.
+ * ProcessUtils est un ensemble de méthodes utilitaires.
  *
- * This class was originally copied from Symfony 3.
+ * Cette classe a été copiée à l'origine à partir de Symfony 3.
  */
 class ProcessUtils
 {
     /**
-     * Escapes a string to be used as a shell argument.
+     * Échappe une chaîne à utiliser comme argument du shell.
      *
      * @param  string  $argument
      * @return string
      */
     public static function escapeArgument($argument)
     {
-        // Fix for PHP bug #43784 escapeshellarg removes % from given string
-        // Fix for PHP bug #49446 escapeshellarg doesn't work on Windows
+        // Correction du bug PHP #43784 escapeshellarg supprime % de la chaîne donnée
+        // Correction du bug PHP #49446 escapeshellarg ne fonctionne pas sous Windows
         // @see https://bugs.php.net/bug.php?id=43784
         // @see https://bugs.php.net/bug.php?id=49446
         if ('\\' === DIRECTORY_SEPARATOR) {
@@ -33,10 +39,10 @@ class ProcessUtils
                 if ('"' === $part) {
                     $escapedArgument .= '\\"';
                 } elseif (self::isSurroundedBy($part, '%')) {
-                    // Avoid environment variable expansion
+                    // Éviter l'expansion des variables d'environnement
                     $escapedArgument .= '^%"'.substr($part, 1, -1).'"^%';
                 } else {
-                    // escape trailing backslash
+                    // échapper à la barre oblique inverse
                     if ('\\' === substr($part, -1)) {
                         $part .= '\\';
                     }
@@ -56,7 +62,7 @@ class ProcessUtils
     }
 
     /**
-     * Is the given string surrounded by the given character?
+     * La chaîne donnée est-elle entourée du caractère donné ?
      *
      * @param  string  $arg
      * @param  string  $char

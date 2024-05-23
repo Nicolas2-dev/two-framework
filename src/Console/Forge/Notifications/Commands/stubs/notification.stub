@@ -1,0 +1,64 @@
+<?php
+
+namespace {{namespace}};
+
+use Two\Bus\Traits\QueueableTrait;
+use Two\Queue\Contracts\ShouldQueueInterface;
+
+use Two\Notification\Messages\MailMessage;
+use Two\Notification\Notification;
+
+
+class {{className}} extends Notification implements ShouldQueueInterface
+{
+    use QueueableTrait;
+
+
+    /**
+     * Créez une nouvelle instance {{className}}.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Obtenez les canaux de livraison de la notification.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function via($notifiable)
+    {
+        return array('mail');
+    }
+
+    /**
+     * Obtenez la représentation postale de la notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Two\Notification\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+        return with(new MailMessage)
+            ->line('The introduction to the notification.')
+            ->action('Notification Action', 'https://www.Twoframework.com')
+            ->line('Thank you for using our application!');
+    }
+
+    /**
+     * Obtenez la représentation matricielle de la notification.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function toArray($notifiable)
+    {
+        return array(
+            //
+        );
+    }
+}

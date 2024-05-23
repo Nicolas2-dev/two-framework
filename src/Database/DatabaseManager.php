@@ -1,45 +1,53 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database;
+
+use InvalidArgumentException;
 
 use Two\Support\Str;
 use Two\Database\ConnectionFactory;
+use Two\Database\Contracts\ConnectionResolverInterface;
 
 
 class DatabaseManager implements ConnectionResolverInterface
 {
     /**
-     * The application instance.
+     * L'instance d'application.
      *
-     * @var \Two\Foundation\Application
+     * @var \Two\Application\Two
      */
     protected $app;
 
     /**
-     * The database connection factory instance.
+     * Instance de fabrique de connexions à la base de données.
      *
      * @var \Two\Database\ConnectionFactory
      */
     protected $factory;
 
     /**
-     * The active connection instances.
+     * Les instances de connexion actives.
      *
      * @var array
      */
     protected $connections = array();
 
     /**
-     * The custom connection resolvers.
+     * Les résolveurs de connexion personnalisés.
      *
      * @var array
      */
     protected $extensions = array();
 
     /**
-     * Create a new database manager instance.
+     * Créez une nouvelle instance de gestionnaire de base de données.
      *
-     * @param  \Two\Foundation\Application  $app
+     * @param  \Two\Application\Two  $app
      * @param  \Two\Database\ConnectionFactory  $factory
      * @return void
      */
@@ -50,7 +58,7 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Get a database connection instance.
+     * Obtenez une instance de connexion à la base de données.
      *
      * @param  string  $name
      * @return \Two\Database\Connection
@@ -71,7 +79,7 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Parse the connection into an array of the name and read / write type.
+     * Analysez la connexion dans un tableau du nom et du type de lecture/écriture.
      *
      * @param  string  $name
      * @return array
@@ -84,7 +92,7 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Disconnect from the given database and remove from local cache.
+     * Déconnectez-vous de la base de données donnée et supprimez-le du cache local.
      *
      * @param  string  $name
      * @return void
@@ -97,7 +105,7 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Disconnect from the given database.
+     * Déconnectez-vous de la base de données donnée.
      *
      * @param  string  $name
      * @return void
@@ -110,7 +118,7 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Reconnect to the given database.
+     * Reconnectez-vous à la base de données donnée.
      *
      * @param  string  $name
      * @return \Two\Database\Connection
@@ -127,7 +135,7 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Refresh the PDO connections on a given connection.
+     * Actualisez les connexions PDO sur une connexion donnée.
      *
      * @param  string  $name
      * @return \Two\Database\Connection
@@ -142,7 +150,7 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Make the database connection instance.
+     * Créez l'instance de connexion à la base de données.
      *
      * @param  string  $name
      * @return \Two\Database\Connection
@@ -165,7 +173,7 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Prepare the database connection instance.
+     * Préparez l'instance de connexion à la base de données.
      *
      * @param  \Two\Database\Connection  $connection
      * @return \Two\Database\Connection
@@ -194,7 +202,7 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Prepare the read write mode for database connection instance.
+     * Préparez le mode lecture-écriture pour l’instance de connexion à la base de données.
      *
      * @param  \Two\Database\Connection  $connection
      * @param  string  $type
@@ -212,7 +220,7 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Get the configuration for a connection.
+     * Obtenez la configuration pour une connexion.
      *
      * @param  string  $name
      * @return array
@@ -227,14 +235,14 @@ class DatabaseManager implements ConnectionResolverInterface
         $connections = $this->app['config']['database.connections'];
 
         if (is_null($config = array_get($connections, $name))) {
-            throw new \InvalidArgumentException("Database [$name] not configured.");
+            throw new InvalidArgumentException("Database [$name] not configured.");
         }
 
         return $config;
     }
 
     /**
-     * Get the default connection name.
+     * Obtenez le nom de connexion par défaut.
      *
      * @return string
      */
@@ -244,7 +252,7 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Set the default connection name.
+     * Définissez le nom de connexion par défaut.
      *
      * @param  string  $name
      * @return void
@@ -255,7 +263,7 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Register an extension connection resolver.
+     * Enregistrez un résolveur de connexion d’extension.
      *
      * @param  string    $name
      * @param  callable  $resolver
@@ -267,7 +275,7 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Return all of the created connections.
+     * Renvoie toutes les connexions créées.
      *
      * @return array
      */
@@ -277,7 +285,7 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Dynamically pass methods to the default connection.
+     * Transmettez dynamiquement les méthodes à la connexion par défaut.
      *
      * @param  string  $method
      * @param  array   $parameters

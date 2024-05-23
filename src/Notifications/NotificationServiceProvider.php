@@ -1,16 +1,23 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications;
 
-use Two\Bus\DispatcherInterface as BusDispatcher;
+use Two\Application\Providers\ServiceProvider;
+
+
 use Two\Notifications\ChannelManager;
-use Two\Support\ServiceProvider;
+use Two\Bus\Contracts\DispatcherInterface as BusDispatcher;
 
 
 class NotificationServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the Provider is deferred.
+     * Indique si le chargement du Provider est différé.
      *
      * @var bool
      */
@@ -18,7 +25,7 @@ class NotificationServiceProvider extends ServiceProvider
 
 
     /**
-     * Register the Notifications plugin Service Provider.
+     * Enregistrez le fournisseur de services du plugin Notifications.
      *
      * @return void
      */
@@ -33,7 +40,7 @@ class NotificationServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get the services provided by the provider.
+     * Obtenez les services fournis par le fournisseur.
      *
      * @return array
      */

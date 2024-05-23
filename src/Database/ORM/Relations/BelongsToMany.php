@@ -1,61 +1,67 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM\Relations;
 
+use Two\Support\Str;
 use Two\Database\ORM\Model;
 use Two\Database\ORM\Builder;
-use Two\Database\Query\Expression;
 use Two\Database\ORM\Collection;
-use Two\Database\ORM\ModelNotFoundException;
-use Two\Support\Str;
+use Two\Database\Query\Expression;
+use Two\Database\Exception\ModelNotFoundException;
 
 
 class BelongsToMany extends Relation
 {
     /**
-     * The intermediate table for the relation.
+     * La table intermédiaire pour la relation.
      *
      * @var string
      */
     protected $table;
 
     /**
-     * The foreign key of the parent model.
+     * La clé étrangère du modèle parent.
      *
      * @var string
      */
     protected $foreignKey;
 
     /**
-     * The associated key of the relation.
+     * La clé associée à la relation.
      *
      * @var string
      */
     protected $otherKey;
 
     /**
-     * The "name" of the relationship.
+     * Le « nom » de la relation.
      *
      * @var string
      */
     protected $relationName;
 
     /**
-     * The pivot table columns to retrieve.
+     * Les colonnes du tableau croisé dynamique à récupérer.
+
      *
      * @var array
      */
     protected $pivotColumns = array();
 
     /**
-     * Any pivot table restrictions.
+     * Toutes les restrictions du tableau croisé dynamique.
      *
      * @var array
      */
     protected $pivotWheres = array();
 
     /**
-     * The class name of the custom pivot model to use for the relationship.
+     * Nom de classe du modèle pivot personnalisé à utiliser pour la relation.
      *
      * @var string
      */
@@ -63,7 +69,7 @@ class BelongsToMany extends Relation
 
 
     /**
-     * Create a new has many relationship instance.
+     * Créez une nouvelle instance de relation comportant plusieurs.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Model  $parent
@@ -84,7 +90,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Specify the custom Pivot Model to use for the relationship.
+     * Spécifiez le modèle pivot personnalisé à utiliser pour la relation.
      *
      * @param  string  $className
      * @return \Two\Database\ORM\Relations\BelongsToMany
@@ -97,7 +103,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get the results of the relationship.
+     * Obtenez les résultats de la relation.
      *
      * @return mixed
      */
@@ -107,7 +113,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Set a where clause for a pivot table column.
+     * Définissez une clause Where pour une colonne de tableau croisé dynamique.
      *
      * @param  string  $column
      * @param  string  $operator
@@ -123,7 +129,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Set an or where clause for a pivot table column.
+     * Définissez une clause ou où pour une colonne de tableau croisé dynamique.
      *
      * @param  string  $column
      * @param  string  $operator
@@ -136,7 +142,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Execute the query and get the first result.
+     * Exécutez la requête et obtenez le premier résultat.
      *
      * @param  array   $columns
      * @return mixed
@@ -149,12 +155,12 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Execute the query and get the first result or throw an exception.
+     * Exécutez la requête et obtenez le premier résultat ou lancez une exception.
      *
      * @param  array  $columns
      * @return \Two\Database\ORM\Model|static
      *
-     * @throws \Database\ORM\ModelNotFoundException
+     * @throws \Database\Exception\ModelNotFoundException
      */
     public function firstOrFail($columns = array('*'))
     {
@@ -164,7 +170,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Execute the query as a "select" statement.
+     * Exécutez la requête en tant qu'instruction "select".
      *
      * @param  array  $columns
      * @return \Two\Database\ORM\Collection
@@ -187,7 +193,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get a paginator for the "select" statement.
+     * Obtenez un paginateur pour l'instruction "select".
      *
      * @param  int  $perPage
      * @param  array  $columns
@@ -207,7 +213,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Paginate the given query into a simple paginator.
+     * Paginez la requête donnée dans un simple paginateur.
      *
      * @param  int  $perPage
      * @param  array  $columns
@@ -227,7 +233,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Hydrate the pivot table relationship on the models.
+     * Hydratez la relation du tableau croisé dynamique sur les modèles.
      *
      * @param  array  $models
      * @return void
@@ -242,7 +248,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get the pivot attributes from a model.
+     * Obtenez les attributs pivot d'un modèle.
      *
      * @param  \Two\Database\ORM\Model  $model
      * @return array
@@ -263,7 +269,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Set the base constraints on the relation query.
+     * Définissez les contraintes de base sur la requête relationnelle.
      *
      * @return void
      */
@@ -277,7 +283,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Add the constraints for a relationship count query.
+     * Ajoutez les contraintes pour une requête de nombre de relations.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Builder  $parent
@@ -295,7 +301,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Add the constraints for a relationship count query on the same table.
+     * Ajoutez les contraintes pour une requête de nombre de relations sur la même table.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Builder  $parent
@@ -315,7 +321,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get a relationship join table hash.
+     * Obtenez un hachage de table de jointure de relation.
      *
      * @return string
      */
@@ -325,7 +331,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Set the select clause for the relation query.
+     * Définissez la clause select pour la requête de relation.
      *
      * @param  array  $columns
      * @return \Two\Database\ORM\Relations\BelongsToMany
@@ -340,7 +346,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get the pivot columns for the relation.
+     * Obtenez les colonnes pivot pour la relation.
      *
      * @return array
      */
@@ -358,7 +364,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Determine whether the given column is defined as a pivot column.
+     * Déterminez si la colonne donnée est définie comme colonne pivot.
      *
      * @param  string  $column
      * @return bool
@@ -369,7 +375,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Set the join clause for the relation query.
+     * Définissez la clause de jointure pour la requête de relation.
      *
      * @param  \Two\Database\ORM\Builder|null
      * @return $this
@@ -388,7 +394,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Set the where clause for the relation query.
+     * Définissez la clause Where pour la requête relationnelle.
      *
      * @return $this
      */
@@ -402,7 +408,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Set the constraints for an eager load of the relation.
+     * Définissez les contraintes pour un chargement hâtif de la relation.
      *
      * @param  array  $models
      * @return void
@@ -413,7 +419,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Initialize the relation on a set of models.
+     * Initialisez la relation sur un ensemble de modèles.
      *
      * @param  array   $models
      * @param  string  $relation
@@ -429,7 +435,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Match the eagerly loaded results to their parents.
+     * Faites correspondre les résultats chargés avec impatience à leurs parents.
      *
      * @param  array   $models
      * @param  \Two\Database\ORM\Collection  $results
@@ -452,7 +458,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Build model dictionary keyed by the relation's foreign key.
+     * Construisez un dictionnaire de modèle saisi par la clé étrangère de la relation.
      *
      * @param  \Two\Database\ORM\Collection  $results
      * @return array
@@ -471,9 +477,9 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Touch all of the related models for the relationship.
+     * Touchez tous les modèles associés à la relation.
      *
-     * E.g.: Touch all roles associated with this user.
+     * Par exemple : touchez tous les rôles associés à cet utilisateur.
      *
      * @return void
      */
@@ -491,7 +497,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get all of the IDs for the related models.
+     * Obtenez tous les identifiants des modèles associés.
      *
      * @return array
      */
@@ -505,7 +511,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Save a new model and attach it to the parent model.
+     * Enregistrez un nouveau modèle et attachez-le au modèle parent.
      *
      * @param  \Two\Database\ORM\Model  $model
      * @param  array  $joining
@@ -522,7 +528,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Save an array of new models and attach them to the parent model.
+     * Enregistrez un tableau de nouveaux modèles et attachez-les au modèle parent.
      *
      * @param  array  $models
      * @param  array  $joinings
@@ -540,7 +546,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Create a new instance of the related model.
+     * Créez une nouvelle instance du modèle associé.
      *
      * @param  array  $attributes
      * @param  array  $joining
@@ -559,7 +565,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Create an array of new instances of the related models.
+     * Créez un tableau de nouvelles instances des modèles associés.
      *
      * @param  array  $records
      * @param  array  $joinings
@@ -579,7 +585,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Sync the intermediate tables with a list of IDs or collection of models.
+     * Synchronisez les tables intermédiaires avec une liste d'identifiants ou une collection de modèles.
      *
      * @param  array  $ids
      * @param  bool   $detaching
@@ -617,7 +623,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Format the sync list so that it is keyed by ID.
+     * Formatez la liste de synchronisation afin qu'elle soit saisie par ID.
      *
      * @param  array  $records
      * @return array
@@ -638,7 +644,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Attach all of the IDs that aren't in the current array.
+     * Attachez tous les ID qui ne figurent pas dans le tableau actuel.
      *
      * @param  array  $records
      * @param  array  $current
@@ -663,7 +669,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Update an existing pivot record on the table.
+     * Mettez à jour un enregistrement pivot existant sur la table.
      *
      * @param  mixed  $id
      * @param  array  $attributes
@@ -684,7 +690,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Attach a model to the parent.
+     * Attachez un modèle au parent.
      *
      * @param  mixed  $id
      * @param  array  $attributes
@@ -703,7 +709,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Create an array of records to insert into the pivot table.
+     * Créez un tableau d'enregistrements à insérer dans le tableau croisé dynamique.
      *
      * @param  array  $ids
      * @param  array  $attributes
@@ -723,7 +729,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Create a full attachment record payload.
+     * Créez une charge utile d’enregistrement de pièce jointe complète.
      *
      * @param  int    $key
      * @param  mixed  $value
@@ -741,7 +747,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get the attach record ID and extra attributes.
+     * Obtenez l’ID de l’enregistrement joint et les attributs supplémentaires.
      *
      * @param  mixed  $key
      * @param  mixed  $value
@@ -758,7 +764,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Create a new pivot attachment record.
+     * Créez un nouvel enregistrement de pièce jointe pivot.
      *
      * @param  int   $id
      * @param  bool  $timed
@@ -778,7 +784,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Set the creation and update timestamps on an attach record.
+     * Définissez les horodatages de création et de mise à jour sur un enregistrement en pièce jointe.
      *
      * @param  array  $record
      * @param  bool   $exists
@@ -800,7 +806,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Detach models from the relationship.
+     * Détachez les modèles de la relation.
      *
      * @param  int|array  $ids
      * @param  bool  $touch
@@ -826,7 +832,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * If we're touching the parent model, touch.
+     * Si nous touchons le modèle parent, touchez.
      *
      * @return void
      */
@@ -838,7 +844,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Determine if we should touch the parent on sync.
+     * Déterminez si nous devons toucher le parent lors de la synchronisation.
      *
      * @return bool
      */
@@ -848,7 +854,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Attempt to guess the name of the inverse of the relation.
+     * Essayez de deviner le nom de l’inverse de la relation.
      *
      * @return string
      */
@@ -860,7 +866,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Create a new query builder for the pivot table.
+     * Créez un nouveau générateur de requêtes pour le tableau croisé dynamique.
      *
      * @return \Two\Database\Query\Builder
      */
@@ -876,7 +882,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get a new plain query builder for the pivot table.
+     * Obtenez un nouveau générateur de requêtes simples pour le tableau croisé dynamique.
      *
      * @return \Two\Database\Query\Builder
      */
@@ -886,7 +892,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get a new pivot statement for a given "other" ID.
+     * Obtenez une nouvelle instruction pivot pour un « autre » identifiant donné.
      *
      * @param  mixed  $id
      * @return \Two\Database\Query\Builder
@@ -897,7 +903,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Create a new pivot model instance.
+     * Créez une nouvelle instance de modèle pivot.
      *
      * @param  array  $attributes
      * @param  bool   $exists
@@ -911,7 +917,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Create a new existing pivot model instance.
+     * Créez une nouvelle instance de modèle pivot existante.
      *
      * @param  array  $attributes
      * @return \Two\Database\ORM\Relations\Pivot
@@ -922,7 +928,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Set the columns on the pivot table to retrieve.
+     * Définissez les colonnes du tableau croisé dynamique à récupérer.
      *
      * @param  mixed  $columns
      * @return $this
@@ -937,7 +943,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Specify that the pivot table has creation and update timestamps.
+     * Spécifiez que le tableau croisé dynamique comporte des horodatages de création et de mise à jour.
      *
      * @param  mixed  $createdAt
      * @param  mixed  $updatedAt
@@ -949,7 +955,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get the related model's updated at column name.
+     * Obtenez la mise à jour du modèle associé au nom de la colonne.
      *
      * @return string
      */
@@ -959,7 +965,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get the key for comparing against the parent key in "has" query.
+     * Obtenez la clé à comparer avec la clé parent dans la requête "has".
      *
      * @return string
      */
@@ -969,7 +975,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get the fully qualified foreign key for the relation.
+     * Obtenez la clé étrangère complète pour la relation.
      *
      * @return string
      */
@@ -979,7 +985,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get the fully qualified "other key" for the relation.
+     * Obtenez l’« autre clé » pleinement qualifiée pour la relation.
      *
      * @return string
      */
@@ -989,7 +995,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get the intermediate table for the relationship.
+     * Obtenez la table intermédiaire pour la relation.
      *
      * @return string
      */
@@ -999,7 +1005,7 @@ class BelongsToMany extends Relation
     }
 
     /**
-     * Get the relationship name for the relationship.
+     * Obtenez le nom de la relation.
      *
      * @return string
      */

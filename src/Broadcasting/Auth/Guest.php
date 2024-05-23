@@ -1,12 +1,17 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Broadcasting\Auth;
 
-use Two\Auth\UserInterface;
-
-use Two\Contracts\ArrayableInterface;
 
 use JsonSerializable;
+
+use Two\Auth\Contracts\UserInterface;
+use Two\Application\TwoContracts\ArrayableInterface;
 
 
 class Guest implements UserInterface, ArrayableInterface, JsonSerializable
@@ -23,7 +28,7 @@ class Guest implements UserInterface, ArrayableInterface, JsonSerializable
 
 
     /**
-     * Create a new Guest User object.
+     * Créez un nouvel objet Utilisateur invité.
      *
      * @param  string  $id
      * @param  string  $remoteIp
@@ -35,7 +40,7 @@ class Guest implements UserInterface, ArrayableInterface, JsonSerializable
     }
 
     /**
-     * Convert the object instance to an array.
+     * Convertissez l'instance d'objet en tableau.
      *
      * @return array
      */
@@ -48,7 +53,7 @@ class Guest implements UserInterface, ArrayableInterface, JsonSerializable
     }
 
     /**
-     * Convert the object into something JSON serializable.
+     * Convertissez l'objet en quelque chose de sérialisable JSON.
      *
      * @return array
      */
@@ -58,7 +63,7 @@ class Guest implements UserInterface, ArrayableInterface, JsonSerializable
     }
 
     /**
-     * Get the unique identifier for the user.
+     * Obtenez l'identifiant unique de l'utilisateur.
      *
      * @return mixed
      */
@@ -68,17 +73,17 @@ class Guest implements UserInterface, ArrayableInterface, JsonSerializable
     }
 
     /**
-     * Get the password for the user.
+     * Obtenez le mot de passe de l'utilisateur.
      *
      * @return string
      */
     public function getAuthPassword()
     {
-        // The guest Users has no password.
+        // Les utilisateurs invités n'ont pas de mot de passe.
     }
 
     /**
-     * Get the token value for the "remember me" session.
+     * Obtenez la valeur du jeton pour la session « Se souvenir de moi ».
      *
      * @return string
      */
@@ -88,7 +93,7 @@ class Guest implements UserInterface, ArrayableInterface, JsonSerializable
     }
 
     /**
-     * Set the token value for the "remember me" session.
+     * Définissez la valeur du jeton pour la session « Se souvenir de moi ».
      *
      * @param  string  $value
      * @return void
@@ -99,7 +104,7 @@ class Guest implements UserInterface, ArrayableInterface, JsonSerializable
     }
 
     /**
-     * Get the column name for the "remember me" token.
+     * Obtenez le nom de la colonne pour le jeton « souvenez-vous de moi ».
      *
      * @return string
      */

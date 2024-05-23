@@ -1,22 +1,27 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Pagination;
 
-use Two\Support\Collection;
-use Two\Support\HtmlString;
-use Two\Contracts\JsonableInterface;
-use Two\Contracts\ArrayableInterface;
-
-use ArrayAccess;
 use Countable;
-use IteratorAggregate;
+use ArrayAccess;
 use JsonSerializable;
+use IteratorAggregate;
+
+use Two\Collection\Collection;
+use Two\Support\HtmlString;
+use Two\Application\Contracts\JsonableInterface;
+use Two\Application\Contracts\ArrayableInterface;
 
 
 class SimplePaginator extends AbstractPaginator implements ArrayableInterface, ArrayAccess, Countable, IteratorAggregate, JsonSerializable, JsonableInterface
 {
     /**
-     * Determine if there are more items in the data source.
+     * Déterminez s’il y a plus d’éléments dans la source de données.
      *
      * @return bool
      */
@@ -24,7 +29,7 @@ class SimplePaginator extends AbstractPaginator implements ArrayableInterface, A
 
 
     /**
-     * Create a new paginator instance.
+     * Créez une nouvelle instance de paginateur.
      *
      * @param  mixed  $items
      * @param  int  $perPage
@@ -56,7 +61,7 @@ class SimplePaginator extends AbstractPaginator implements ArrayableInterface, A
     }
 
     /**
-     * Create and return a new SimplePaginator instance.
+     * Créez et renvoyez une nouvelle instance SimplePaginator.
      *
      * @param  int  $page
      * @return bool
@@ -73,7 +78,7 @@ class SimplePaginator extends AbstractPaginator implements ArrayableInterface, A
     }
 
     /**
-     * Get the current page for the request.
+     * Obtenez la page actuelle de la demande.
      *
      * @param  int  $currentPage
      * @return int
@@ -86,7 +91,7 @@ class SimplePaginator extends AbstractPaginator implements ArrayableInterface, A
     }
 
     /**
-     * Get the URL for the next page.
+     * Obtenez l'URL de la page suivante.
      *
      * @return string|null
      */
@@ -98,7 +103,7 @@ class SimplePaginator extends AbstractPaginator implements ArrayableInterface, A
     }
 
     /**
-     * Render the paginator using the given view.
+     * Rendre le paginateur en utilisant la vue donnée.
      *
      * @param  string|null  $view
      * @param  array  $data
@@ -110,7 +115,7 @@ class SimplePaginator extends AbstractPaginator implements ArrayableInterface, A
     }
 
     /**
-     * Render the paginator using the given view.
+     * Rendre le paginateur en utilisant la vue donnée.
      *
      * @param  string|null  $view
      * @param  array  $data
@@ -132,7 +137,7 @@ class SimplePaginator extends AbstractPaginator implements ArrayableInterface, A
     }
 
     /**
-     * Manually indicate that the paginator does have more pages.
+     * Indiquez manuellement que le paginateur a plus de pages.
      *
      * @param  bool  $value
      * @return $this
@@ -145,7 +150,7 @@ class SimplePaginator extends AbstractPaginator implements ArrayableInterface, A
     }
 
     /**
-     * Determine if there are more items in the data source.
+     * Déterminez s’il y a plus d’éléments dans la source de données.
      *
      * @return bool
      */
@@ -155,7 +160,7 @@ class SimplePaginator extends AbstractPaginator implements ArrayableInterface, A
     }
 
     /**
-     * Get the instance as an array.
+     * Obtenez l'instance sous forme de tableau.
      *
      * @return array
      */
@@ -173,7 +178,7 @@ class SimplePaginator extends AbstractPaginator implements ArrayableInterface, A
     }
 
     /**
-     * Convert the object into something JSON serializable.
+     * Convertissez l'objet en quelque chose de sérialisable JSON.
      *
      * @return array
      */
@@ -183,7 +188,7 @@ class SimplePaginator extends AbstractPaginator implements ArrayableInterface, A
     }
 
     /**
-     * Convert the object to its JSON representation.
+     * Convertissez l'objet en sa représentation JSON.
      *
      * @param  int  $options
      * @return string

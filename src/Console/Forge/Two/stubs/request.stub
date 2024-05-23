@@ -1,0 +1,31 @@
+<?php
+
+namespace {{namespace}};
+
+use Two\Application\Http\FormRequest;
+
+
+class {{className}} extends FormRequest
+{
+    /**
+     * Déterminez si l'utilisateur est autorisé à faire cette demande.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return false;
+    }
+
+    /**
+     * Obtenez les règles de validation qui s'appliquent à la demande.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return array(
+            //
+        );
+    }
+}

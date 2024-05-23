@@ -1,34 +1,39 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\View\Compilers;
+
+use Closure;
 
 use Two\Support\Arr;
 use Two\Support\Str;
 use Two\View\Compilers\Compiler;
-use Two\View\Compilers\CompilerInterface;
-
-use Closure;
+use Two\View\Contracts\Compilers\CompilerInterface;
 
 
 class TemplateCompiler extends Compiler implements CompilerInterface
 {
 
     /**
-     * All of the registered extensions.
+     * Toutes les extensions enregistrées.
      *
      * @var array
      */
     protected $extensions = array();
 
     /**
-     * The file currently being compiled.
+     * Le fichier est en cours de compilation.
      *
      * @var string
      */
     protected $path;
 
     /**
-     * All of the available compiler functions.
+     * Toutes les fonctions disponibles du compilateur.
      *
      * @var array
      */
@@ -40,42 +45,42 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     );
 
     /**
-     * Array of opening and closing tags for escaped echos.
+     * Tableau de balises d'ouverture et de fermeture pour les échos échappés.
      *
      * @var array
      */
     protected $contentTags = array('{{', '}}');
 
     /**
-     * Array of opening and closing tags for escaped echos.
+     * Tableau de balises d'ouverture et de fermeture pour les échos échappés.
      *
      * @var array
      */
     protected $escapedTags = array('{{{', '}}}');
 
     /**
-     * Array of footer lines to be added to template.
+     * Tableau de lignes de pied de page à ajouter au modèle.
      *
      * @var array
      */
     protected $footer = array();
 
     /**
-     * Placeholder to temporary mark the position of verbatim blocks.
+     * Espace réservé pour marquer temporairement la position des blocs verbatim.
      *
      * @var string
      */
     protected $verbatimPlaceholder = '@__verbatim__@';
 
     /**
-     * Array to temporary store the verbatim blocks found in the template.
+     * Tableau pour stocker temporairement les blocs verbatim trouvés dans le modèle.
      *
      * @var array
      */
     protected $verbatimBlocks = [];
 
     /**
-     * Counter to keep track of nested forelse statements.
+     * Compteur pour garder une trace des instructions forelse imbriquées.
      *
      * @var int
      */
@@ -83,7 +88,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
 
 
     /**
-     * Compile the view at the given path.
+     * Compilez la vue sur le chemin donné.
      *
      * @param  string  $path
      * @return void
@@ -102,7 +107,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Get the path currently being compiled.
+     * Obtenez le chemin en cours de compilation.
      *
      * @return string
      */
@@ -112,7 +117,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Set the path currently being compiled.
+     * Définissez le chemin en cours de compilation.
      *
      * @param  string  $path
      * @return void
@@ -123,7 +128,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the given Template template contents.
+     * Compilez le contenu du modèle de modèle donné.
      *
      * @param  string  $value
      * @return string
@@ -138,8 +143,8 @@ class TemplateCompiler extends Compiler implements CompilerInterface
 
         $this->footer = array();
 
-        // Here we will loop through all of the tokens returned by the Zend lexer and parse each one into the corresponding valid PHP.
-        // We will then have this template as the correctly rendered PHP that can be rendered natively.
+        // Ici, nous allons parcourir tous les jetons renvoyés par le lexer Zend et analyser chacun d'eux dans le PHP valide correspondant.
+        // Nous aurons alors ce modèle comme PHP correctement rendu et pouvant être rendu nativement.
         foreach (token_get_all($value) as $token) {
             $result .= is_array($token) ? $this->parseToken($token) : $token;
         }
@@ -148,8 +153,8 @@ class TemplateCompiler extends Compiler implements CompilerInterface
             $result = $this->restoreVerbatimBlocks($result);
         }
 
-        // If there are any footer lines that need to get added to a template we will add them here at the end of the template.
-        // This gets used mainly for the template inheritance via the extends keyword that should be appended.
+        // Si des lignes de pied de page doivent être ajoutées à un modèle, nous les ajouterons ici à la fin du modèle.
+        // Ceci est utilisé principalement pour l'héritage du modèle via le mot-clé extends qui doit être ajouté.
         if (count($this->footer) > 0) {
             $result = ltrim($result, PHP_EOL) .PHP_EOL .implode(PHP_EOL, array_reverse($this->footer));
         }
@@ -158,7 +163,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Store the verbatim blocks and replace them with a temporary placeholder.
+     * Stockez les blocs verbatim et remplacez-les par un espace réservé temporaire.
      *
      * @param  string  $value
      * @return string
@@ -173,7 +178,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Replace the raw placeholders with the original code stored in the raw blocks.
+     * Remplacez les espaces réservés bruts par le code d'origine stocké dans les blocs bruts.
      *
      * @param  string  $result
      * @return string
@@ -192,7 +197,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Parse the tokens from the template.
+     * Analysez les jetons du modèle.
      *
      * @param  array  $token
      * @return string
@@ -213,7 +218,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Execute the user defined extensions.
+     * Exécutez les extensions définies par l'utilisateur.
      *
      * @param  string  $value
      * @return string
@@ -228,7 +233,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile Template comments into valid PHP.
+     * Compilez les commentaires du modèle en PHP valide.
      *
      * @param  string  $value
      * @return string
@@ -241,7 +246,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile Template echos into valid PHP.
+     * Compilez les échos du modèle dans un PHP valide.
      *
      * @param  string  $value
      * @return string
@@ -258,7 +263,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile Template Statements that start with "@"
+     * Compilez les instructions de modèle commençant par « @ »
      *
      * @param  string  $value
      * @return mixed
@@ -278,7 +283,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the "regular" echo statements.
+     * Compilez les instructions d'écho "régulières".
      *
      * @param  string  $value
      * @return string
@@ -298,7 +303,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the escaped echo statements.
+     * Compilez les instructions d'écho échappées.
      *
      * @param  string  $value
      * @return string
@@ -318,7 +323,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the default values for the echo statement.
+     * Compilez les valeurs par défaut pour l'instruction echo.
      *
      * @param  string  $value
      * @return string
@@ -329,7 +334,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the each statements into valid PHP.
+     * Compilez chaque instruction en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -340,7 +345,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the yield statements into valid PHP.
+     * Compilez les instructions de rendement en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -351,7 +356,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the show statements into valid PHP.
+     * Compilez les instructions show en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -362,7 +367,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the section statements into valid PHP.
+     * Compilez les instructions de section en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -373,7 +378,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the append statements into valid PHP.
+     * Compilez les instructions append en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -384,7 +389,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the end-section statements into valid PHP.
+     * Compilez les instructions de fin de section en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -394,9 +399,8 @@ class TemplateCompiler extends Compiler implements CompilerInterface
         return "<?php \$__env->stopSection(); ?>";
     }
 
-
     /**
-     * Compile the stop statements into valid PHP.
+     * Compilez les instructions stop en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -407,7 +411,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the overwrite statements into valid PHP.
+     * Compilez les instructions d'écrasement en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -418,7 +422,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the unless statements into valid PHP.
+     * Compilez les instructions à moins que ce soit en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -429,7 +433,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the end unless statements into valid PHP.
+     * Compilez les instructions de fin à moins que ce soit en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -440,7 +444,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the else statements into valid PHP.
+     * Compilez les instructions else en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -451,7 +455,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the for statements into valid PHP.
+     * Compilez les instructions for en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -462,7 +466,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the foreach statements into valid PHP.
+     * Compilez les instructions foreach en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -473,7 +477,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the break statements into valid PHP.
+     * Compilez les instructions break en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -484,7 +488,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the continue statements into valid PHP.
+     * Compilez les instructions continue en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -495,7 +499,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the forelse statements into valid PHP.
+     * Compilez les instructions forelse en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -508,29 +512,29 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the can statements into valid PHP.
+     * Compilez les instructions can en PHP valide.
      *
      * @param  string  $expression
      * @return string
      */
     protected function compileCan($expression)
     {
-        return "<?php if (app('Two\\Auth\\Access\\GateInterface')->check{$expression}): ?>";
+        return "<?php if (app('Two\\Auth\\Contracts\\Access\\GateInterface')->check{$expression}): ?>";
     }
 
     /**
-     * Compile the cannot statements into valid PHP.
+     * Compilez les instructions impossible en PHP valide.
      *
      * @param  string  $expression
      * @return string
      */
     protected function compileCannot($expression)
     {
-        return "<?php if (app('Two\\Auth\\Access\\GateInterface')->denies{$expression}): ?>";
+        return "<?php if (app('Two\\Auth\\Contracts\\Access\\GateInterface')->denies{$expression}): ?>";
     }
 
     /**
-     * Compile the if statements into valid PHP.
+     * Compilez les instructions if en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -541,7 +545,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the else-if statements into valid PHP.
+     * Compilez les instructions else-if en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -552,7 +556,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the forelse statements into valid PHP.
+     * Compilez les instructions forelse en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -565,7 +569,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the has section statements into valid PHP.
+     * Compilez les instructions de la section has en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -576,7 +580,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the while statements into valid PHP.
+     * Compilez les instructions while en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -587,7 +591,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the end-while statements into valid PHP.
+     * Compilez les instructions de fin de période en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -598,7 +602,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the end-for statements into valid PHP.
+     * Compilez les instructions de fin en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -609,7 +613,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the end-for-each statements into valid PHP.
+     * Compilez les instructions de fin pour chaque en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -620,7 +624,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the end-can statements into valid PHP.
+     * Compilez les instructions end-can en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -631,7 +635,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the end-cannot statements into valid PHP.
+     * Compilez les instructions end-cannot en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -642,7 +646,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the end-if statements into valid PHP.
+     * Compilez les instructions end-if en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -653,7 +657,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the end-for-else statements into valid PHP.
+     * Compilez les instructions de fin pour le reste en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -664,7 +668,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the raw PHP statements into valid PHP.
+     * Compilez les instructions PHP brutes en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -675,7 +679,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile end-php statement into valid PHP.
+     * Compilez l'instruction end-php en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -686,7 +690,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the unset statements into valid PHP.
+     * Compilez les instructions non définies en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -697,7 +701,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the extends statements into valid PHP.
+     * Compilez les instructions extends en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -714,7 +718,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the include statements into valid PHP.
+     * Compilez les instructions include en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -727,7 +731,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the stack statements into the content
+     * Compilez les instructions de pile dans le contenu
      *
      * @param  string  $expression
      * @return string
@@ -738,7 +742,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the push statements into valid PHP.
+     * Compilez les instructions push en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -749,7 +753,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Compile the endpush statements into valid PHP.
+     * Compilez les instructions endpush en PHP valide.
      *
      * @param  string  $expression
      * @return string
@@ -760,7 +764,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Strip the parentheses from the given expression.
+     * Supprimez les parenthèses de l’expression donnée.
      *
      * @param  string  $expression
      * @return string
@@ -775,7 +779,8 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Register a custom Template compiler.
+     * Enregistrez un compilateur de modèles personnalisé.
+
      *
      * @param  \Closure  $compiler
      * @return void
@@ -786,7 +791,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Get the regular expression for a generic Template function.
+     * Obtenez l’expression régulière d’une fonction Template générique.
      *
      * @param  string  $function
      * @return string
@@ -797,7 +802,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Get the regular expression for a generic Template function.
+     * Obtenez l’expression régulière d’une fonction Template générique.
      *
      * @param  string  $function
      * @return string
@@ -808,7 +813,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Create a plain Template matcher.
+     * Créez un simple modèle de correspondance.
      *
      * @param  string  $function
      * @return string
@@ -819,7 +824,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Sets the content tags used for the compiler.
+     * Définit les balises de contenu utilisées pour le compilateur.
      *
      * @param  string  $openTag
      * @param  string  $closeTag
@@ -834,7 +839,7 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-     * Sets the escaped content tags used for the compiler.
+     * Définit les balises de contenu échappées utilisées pour le compilateur.
      *
      * @param  string  $openTag
      * @param  string  $closeTag
@@ -846,27 +851,27 @@ class TemplateCompiler extends Compiler implements CompilerInterface
     }
 
     /**
-    * Gets the content tags used for the compiler.
-    *
-    * @return string
-    */
+     * Obtient les balises de contenu utilisées pour le compilateur.
+     *
+     * @return string
+     */
     public function getContentTags()
     {
         return $this->getTags();
     }
 
     /**
-    * Gets the escaped content tags used for the compiler.
-    *
-    * @return string
-    */
+     * Obtient les balises de contenu échappées utilisées pour le compilateur.
+     *
+     * @return string
+     */
     public function getEscapedContentTags()
     {
         return $this->getTags(true);
     }
 
     /**
-     * Gets the tags used for the compiler.
+     * Obtient les balises utilisées pour le compilateur.
      *
      * @param  bool  $escaped
      * @return array

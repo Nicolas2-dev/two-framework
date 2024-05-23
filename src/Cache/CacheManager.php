@@ -1,18 +1,30 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Cache;
 
-use Two\Support\Manager;
-
-//use Closure;
+use Two\Cache\Apc\ApcStore;
+use Two\Cache\Apc\ApcWrapper;
+use Two\Cache\file\FileStore;
+use Two\Cache\Store\NullStore;
+use Two\Cache\Redis\RedisStore;
+use Two\Cache\Store\ArrayStore;
+use Two\Cache\Datanase\DatabaseStore;
+use Two\Cache\Contracts\StoreInterface;
+use Two\Cache\Memcached\MemcachedStore;
+use Two\Application\Manager;
 
 
 class CacheManager extends Manager
 {
     /**
-     * Create an instance of the APC cache driver.
+     * Créez une instance du pilote de cache APC.
      *
-     * @return \Two\Cache\ApcStore
+     * @return \Two\Cache\Apc\ApcStore
      */
     protected function createApcDriver()
     {
@@ -20,9 +32,9 @@ class CacheManager extends Manager
     }
 
     /**
-     * Create an instance of the array cache driver.
+     * Créez une instance du pilote de cache de tableau.
      *
-     * @return \Two\Cache\ArrayStore
+     * @return \Two\Cache\Store\ArrayStore
      */
     protected function createArrayDriver()
     {
@@ -30,9 +42,9 @@ class CacheManager extends Manager
     }
 
     /**
-     * Create an instance of the file cache driver.
+     * Créez une instance du pilote de cache de fichiers.
      *
-     * @return \Two\Cache\FileStore
+     * @return \Two\Cache\File\FileStore
      */
     protected function createFileDriver()
     {
@@ -42,9 +54,9 @@ class CacheManager extends Manager
     }
 
     /**
-     * Create an instance of the Memcached cache driver.
+     * Créez une instance du pilote de cache Memcached.
      *
-     * @return \Two\Cache\MemcachedStore
+     * @return \Two\Cache\Memcached\MemcachedStore
      */
     protected function createMemcachedDriver()
     {
@@ -56,9 +68,9 @@ class CacheManager extends Manager
     }
 
     /**
-     * Create an instance of the Null cache driver.
+     * Créez une instance du pilote de cache Null.
      *
-     * @return \Two\Cache\NullStore
+     * @return \Two\Cache\Store\NullStore
      */
     protected function createNullDriver()
     {
@@ -66,9 +78,9 @@ class CacheManager extends Manager
     }
 
     /**
-     * Create an instance of the Redis cache driver.
+     * Créez une instance du pilote de cache Redis.
      *
-     * @return \Two\Cache\RedisStore
+     * @return \Two\Cache\Redis\RedisStore
      */
     protected function createRedisDriver()
     {
@@ -78,9 +90,9 @@ class CacheManager extends Manager
     }
 
     /**
-     * Create an instance of the database cache driver.
+     * Créez une instance du pilote de cache de base de données.
      *
-     * @return \Two\Cache\DatabaseStore
+     * @return \Two\Cache\Database\DatabaseStore
      */
     protected function createDatabaseDriver()
     {
@@ -88,9 +100,9 @@ class CacheManager extends Manager
 
         $encrypter = $this->app['encrypter'];
 
-        // We allow the developer to specify which connection and table should be used
-        // to store the cached items. We also need to grab a prefix in case a table
-        // is being used by multiple applications although this is very unlikely.
+        // Nous permettons au développeur de spécifier quelle connexion et quelle table doivent être utilisées
+        // pour stocker les éléments mis en cache. Nous devons également récupérer un préfixe au cas où une table
+        // est utilisé par plusieurs applications bien que cela soit très improbable.
         $table = $this->app['config']['cache.table'];
 
         $prefix = $this->getPrefix();
@@ -99,7 +111,7 @@ class CacheManager extends Manager
     }
 
     /**
-     * Get the database connection for the database driver.
+     * Obtenez la connexion à la base de données pour le pilote de base de données.
      *
      * @return \Two\Database\Connection
      */
@@ -111,7 +123,7 @@ class CacheManager extends Manager
     }
 
     /**
-     * Get the cache "prefix" value.
+     * Obtenez la valeur du "préfixe" du cache.
      *
      * @return string
      */
@@ -121,7 +133,7 @@ class CacheManager extends Manager
     }
 
     /**
-     * Set the cache "prefix" value.
+     * Définissez la valeur du « préfixe » du cache.
      *
      * @param  string  $name
      * @return void
@@ -132,9 +144,9 @@ class CacheManager extends Manager
     }
 
     /**
-     * Create a new cache repository with the given implementation.
+     * Créez un nouveau référentiel de cache avec l'implémentation donnée.
      *
-     * @param  \Two\Cache\StoreInterface  $store
+     * @param  \Two\Cache\Contracts\StoreInterface  $store
      * @return \Two\Cache\Repository
      */
     public function repository(StoreInterface $store)
@@ -143,7 +155,7 @@ class CacheManager extends Manager
     }
 
     /**
-     * Get the default cache driver name.
+     * Obtenez le nom du pilote de cache par défaut.
      *
      * @return string
      */
@@ -153,7 +165,7 @@ class CacheManager extends Manager
     }
 
     /**
-     * Set the default cache driver name.
+     * Définissez le nom du pilote de cache par défaut.
      *
      * @param  string  $name
      * @return void

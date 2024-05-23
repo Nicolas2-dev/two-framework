@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM\Relations;
 
 use Two\Database\ORM\Model;
@@ -9,30 +14,30 @@ use Two\Database\ORM\Builder;
 class MorphToMany extends BelongsToMany
 {
     /**
-     * The type of the polymorphic relation.
+     * Le type de relation polymorphe.
      *
      * @var string
      */
     protected $morphType;
 
     /**
-     * The class name of the morph type constraint.
+     * Le nom de classe de la contrainte de type de morphing.
      *
      * @var string
      */
     protected $morphClass;
 
     /**
-     * Indicates if we are connecting the inverse of the relation.
+     * Indique si nous connectons l'inverse de la relation.
      *
-     * This primarily affects the morphClass constraint.
+     * Cela affecte principalement la contrainte morphClass.
      *
      * @var bool
      */
     protected $inverse;
 
     /**
-     * Create a new has many relationship instance.
+     * Créez une nouvelle instance de relation comportant plusieurs.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Model  $parent
@@ -56,7 +61,7 @@ class MorphToMany extends BelongsToMany
     }
 
     /**
-     * Set the where clause for the relation query.
+     * Définissez la clause Where pour la requête relationnelle.
      *
      * @return $this
      */
@@ -70,7 +75,7 @@ class MorphToMany extends BelongsToMany
     }
 
     /**
-     * Add the constraints for a relationship count query.
+     * Ajoutez les contraintes pour une requête de nombre de relations.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Builder  $parent
@@ -84,7 +89,7 @@ class MorphToMany extends BelongsToMany
     }
 
     /**
-     * Set the constraints for an eager load of the relation.
+     * Définissez les contraintes pour un chargement hâtif de la relation.
      *
      * @param  array  $models
      * @return void
@@ -97,7 +102,7 @@ class MorphToMany extends BelongsToMany
     }
 
     /**
-     * Create a new pivot attachment record.
+     * Créez un nouvel enregistrement de pièce jointe pivot.
      *
      * @param  int   $id
      * @param  bool  $timed
@@ -111,7 +116,7 @@ class MorphToMany extends BelongsToMany
     }
 
     /**
-     * Create a new query builder for the pivot table.
+     * Créez un nouveau générateur de requêtes pour le tableau croisé dynamique.
      *
      * @return \Two\Database\Query\Builder
      */
@@ -123,7 +128,7 @@ class MorphToMany extends BelongsToMany
     }
 
     /**
-     * Create a new pivot model instance.
+     * Créez une nouvelle instance de modèle pivot.
      *
      * @param  array  $attributes
      * @param  bool   $exists
@@ -143,7 +148,7 @@ class MorphToMany extends BelongsToMany
     }
 
     /**
-     * Get the foreign key "type" name.
+     * Obtenez le nom du « type » de clé étrangère.
      *
      * @return string
      */
@@ -153,7 +158,7 @@ class MorphToMany extends BelongsToMany
     }
 
     /**
-     * Get the class name of the parent model.
+     * Obtenez le nom de classe du modèle parent.
      *
      * @return string
      */

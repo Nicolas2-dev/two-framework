@@ -1,11 +1,16 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Connectors;
 
 use IronMQ;
 
 use Two\Http\Request;
-use Two\Queue\Connectors\ConnectorInterface;
+use Two\Queue\Contracts\Connectors\ConnectorInterface;
 use Two\Queue\Queues\IronQueue;
 use Two\Encryption\Encrypter;
 
@@ -14,21 +19,21 @@ class IronConnector implements ConnectorInterface
 {
 
     /**
-     * The encrypter instance.
+     * L'instance du chiffreur.
      *
      * @var \Two\Encryption\Encrypter
      */
     protected $crypt;
 
     /**
-     * The current request instance.
+     * L’instance de requête actuelle.
      *
      * @var \Two\Http\Request
      */
     protected $request;
 
     /**
-     * Create a new Iron connector instance.
+     * Créez une nouvelle instance de connecteur Iron.
      *
      * @param  \Two\Encryption\Encrypter  $crypt
      * @param  \Two\Http\Request  $request
@@ -41,7 +46,7 @@ class IronConnector implements ConnectorInterface
     }
 
     /**
-     * Establish a queue connection.
+     * Établissez une connexion à la file d'attente.
      *
      * @param  array  $config
      * @return \Two\Queue\Contracts\QueueInterface

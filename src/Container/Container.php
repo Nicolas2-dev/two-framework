@@ -1,14 +1,22 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Container;
 
 use Closure;
 use ArrayAccess;
 use ReflectionClass;
-use ReflectionFunction;
 use ReflectionMethod;
+use ReflectionFunction;
 use ReflectionParameter;
 use InvalidArgumentException;
+
+use Two\Container\Exception\BindingResolutionException;
+
 
 class Container implements ArrayAccess
 {
@@ -244,7 +252,7 @@ class Container implements ArrayAccess
     public function extend($abstract, Closure $closure)
     {
         if (! isset($this->bindings[$abstract])) {
-            throw new \InvalidArgumentException("Type {$abstract} is not bound.");
+            throw new InvalidArgumentException("Type {$abstract} is not bound.");
         }
 
         if (isset($this->instances[$abstract])) {
@@ -1003,8 +1011,7 @@ class Container implements ArrayAccess
     {
         // Si la valeur n'est pas une Closure, nous en ferons une. Cela donne simplement
         // plus de fonctionnalités de remplacement "drop-in" pour le Pimple que cela
-        // Les fonctions les plus simples du conteneur sont modélisées de base et construites
-        // après.
+        // Les fonctions les plus simples du conteneur sont modélisées de base et construites après.
         if (! $value instanceof Closure) {
             $value = function() use ($value)
             {

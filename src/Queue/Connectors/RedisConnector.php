@@ -1,8 +1,13 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Connectors;
 
-use Two\Queue\Connectors\ConnectorInterface;
+use Two\Queue\Contracts\Connectors\ConnectorInterface;
 use Two\Queue\Queues\RedisQueue;
 use Two\Redis\Database;
 
@@ -11,21 +16,21 @@ class RedisConnector implements ConnectorInterface
 {
 
     /**
-    * The Redis database instance.
-    *
+     * L'instance de base de données Redis.
+     *
      * @var \Two\Redis\Database
      */
     protected $redis;
 
     /**
-     * The connection name.
+     * Le nom de la connexion.
      *
      * @var string
      */
     protected $connection;
 
     /**
-     * Create a new Redis queue connector instance.
+     * Créez une nouvelle instance de connecteur de file d'attente Redis.
      *
      * @param  \Two\Redis\Database  $redis
      * @param  string|null  $connection
@@ -38,7 +43,7 @@ class RedisConnector implements ConnectorInterface
     }
 
     /**
-     * Establish a queue connection.
+     * Établissez une connexion à la file d'attente.
      *
      * @param  array  $config
      * @return \Two\Queue\Contracts\QueueInterface

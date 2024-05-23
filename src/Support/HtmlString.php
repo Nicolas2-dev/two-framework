@@ -1,21 +1,26 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support;
 
-use Two\Contracts\HtmlableInterface;
+use Two\Application\Contracts\HtmlableInterface;
 
 
 class HtmlString implements HtmlableInterface
 {
     /**
-     * The HTML string.
+     * La chaîne HTML.
      *
      * @var string
      */
     protected $html;
 
     /**
-     * Create a new HTML string instance.
+     * Créez une nouvelle instance de chaîne HTML.
      *
      * @param  string  $html
      * @return void
@@ -26,7 +31,7 @@ class HtmlString implements HtmlableInterface
     }
 
     /**
-     * Get the HTML string.
+     * Obtenez la chaîne HTML.
      *
      * @return string
      */
@@ -36,7 +41,7 @@ class HtmlString implements HtmlableInterface
     }
 
     /**
-     * Get the HTML string.
+     * Obtenez la chaîne HTML.
      *
      * @return string
      */

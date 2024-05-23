@@ -1,16 +1,20 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Http;
-
-
-use Two\Http\ResponseTrait;
-use Two\Contracts\JsonableInterface;
-use Two\Contracts\RenderableInterface;
-
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use ArrayObject;
 use Exception;
+
+use Two\Http\ResponseTrait;
+use Two\Application\Contracts\JsonableInterface;
+use Two\Application\Contracts\RenderableInterface;
+
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 
 class Response extends SymfonyResponse

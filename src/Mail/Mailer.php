@@ -1,6 +1,15 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Mail;
+
+use Swift_Mailer;
+use Swift_Message;
+use Closure;
 
 use Two\Log\Writer;
 use Two\View\Factory;
@@ -11,79 +20,74 @@ use Two\Support\Arr;
 
 use SuperClosure\Serializer;
 
-use Swift_Mailer;
-use Swift_Message;
-
-use Closure;
-
 
 class Mailer
 {
     /**
-     * The view factory instance.
+     * L'instance de fabrique de vues.
      *
      * @var \Two\View\Factory
      */
     protected $views;
 
     /**
-     * The Swift Mailer instance.
+     * L'instance Swift Mailer.
      *
      * @var \Swift_Mailer
      */
     protected $swift;
 
     /**
-     * The event dispatcher instance.
+     * L'instance du répartiteur d'événements.
      *
      * @var \Two\Events\Dispatcher
      */
     protected $events;
 
     /**
-     * The global from address and name.
+     * L'adresse et le nom global de l'expéditeur.
      *
      * @var array
      */
     protected $from;
 
     /**
-     * The log writer instance.
+     * Instance de l'auteur de journal.
      *
      * @var \Two\Log\Writer
      */
     protected $logger;
 
     /**
-     * The IoC container instance.
+     * L'instance de conteneur IoC.
      *
      * @var \Two\Container\Container
      */
     protected $container;
 
     /**
-     * The QueueManager instance.
+     * L'instance de QueueManager.
      *
      * @var \Two\Queue\QueueManager
      */
     protected $queue;
 
     /**
-     * Indicates if the actual sending is disabled.
+     * Indique si l'envoi réel est désactivé.
      *
      * @var bool
      */
     protected $pretending = false;
 
     /**
-     * Array of failed recipients.
+     * Tableau de destinataires ayant échoué.
      *
      * @var array
      */
     protected $failedRecipients = array();
 
     /**
-     * Array of parsed views containing html and text view name.
+     * Tableau de vues analysées contenant le nom de la vue HTML et texte.
      *
      * @var array
      */
@@ -91,7 +95,7 @@ class Mailer
 
 
     /**
-     * Create a new Mailer instance.
+     * Créez une nouvelle instance de Mailer.
      *
      * @param  \Two\View\Factory  $views
      * @param  \Swift_Mailer  $swift
@@ -106,7 +110,7 @@ class Mailer
     }
 
     /**
-     * Set the global from address and name.
+     * Définissez l’adresse et le nom global de.
      *
      * @param  string  $address
      * @param  string  $name
@@ -118,7 +122,7 @@ class Mailer
     }
 
     /**
-     * Send a new message when only a raw text part.
+     * Envoyez un nouveau message lorsqu'il ne s'agit que d'une partie de texte brut.
      *
      * @param  string  $text
      * @param  mixed  $callback
@@ -130,7 +134,7 @@ class Mailer
     }
 
     /**
-     * Send a new message when only a plain part.
+     * Envoyez un nouveau message lorsqu'il ne s'agit que d'une partie simple.
      *
      * @param  string  $view
      * @param  array   $data
@@ -143,7 +147,7 @@ class Mailer
     }
 
     /**
-     * Send a new message using a view.
+     * Envoyez un nouveau message en utilisant une vue.
      *
      * @param  string|array  $view
      * @param  array  $data
@@ -152,18 +156,18 @@ class Mailer
      */
     public function send($view, array $data, $callback)
     {
-        // First we need to parse the view, which could either be a string or an array
-        // containing both an HTML and plain text versions of the view which should
-        // be used when sending an e-mail. We will extract both of them out here.
+        // Nous devons d’abord analyser la vue, qui peut être une chaîne ou un tableau.
+        // contenant à la fois une version HTML et une version texte brut de la vue qui devrait
+        // être utilisé lors de l'envoi d'un e-mail. Nous allons les extraire tous les deux ici.
         list($view, $plain, $raw) = $this->parseView($view);
 
         $data['message'] = $message = $this->createMessage();
 
         $this->callMessageBuilder($callback, $message);
 
-        // Once we have retrieved the view content for the e-mail we will set the body
-        // of this message using the HTML type, which will provide a simple wrapper
-        // to creating view based emails that are able to receive arrays of data.
+        // Une fois que nous aurons récupéré le contenu de l'affichage de l'e-mail, nous définirons le corps
+        // de ce message en utilisant le type HTML, qui fournira un simple wrapper
+        // pour créer des e-mails basés sur des vues capables de recevoir des tableaux de données.
         $this->addContent($message, $view, $plain, $raw, $data);
 
         $message = $message->getSwiftMessage();
@@ -172,7 +176,7 @@ class Mailer
     }
 
     /**
-     * Queue a new e-mail message for sending.
+     * Mettez en file d'attente un nouveau message électronique pour l'envoi.
      *
      * @param  string|array  $view
      * @param  array   $data
@@ -188,7 +192,7 @@ class Mailer
     }
 
     /**
-     * Queue a new e-mail message for sending on the given queue.
+     * Mettre en file d'attente un nouveau message électronique à envoyer dans la file d'attente donnée.
      *
      * @param  string  $queue
      * @param  string|array  $view
@@ -202,7 +206,7 @@ class Mailer
     }
 
     /**
-     * Queue a new e-mail message for sending after (n) seconds.
+     * Mettez en file d'attente un nouveau message électronique à envoyer après (n) secondes.
      *
      * @param  int  $delay
      * @param  string|array  $view
@@ -219,7 +223,7 @@ class Mailer
     }
 
     /**
-     * Queue a new e-mail message for sending after (n) seconds on the given queue.
+     * Mettre en file d'attente un nouveau message électronique à envoyer après (n) secondes dans la file d'attente donnée.
      *
      * @param  string  $queue
      * @param  int  $delay
@@ -234,7 +238,7 @@ class Mailer
     }
 
     /**
-     * Build the callable for a queued e-mail job.
+     * Créez l'appelable pour une tâche de courrier électronique en file d'attente.
      *
      * @param  mixed  $callback
      * @return mixed
@@ -247,7 +251,7 @@ class Mailer
     }
 
     /**
-     * Handle a queued e-mail message job.
+     * Gérer un travail de messagerie électronique en file d'attente.
      *
      * @param  \Two\Queue\Jobs\Job  $job
      * @param  array  $data
@@ -261,7 +265,7 @@ class Mailer
     }
 
     /**
-     * Get the true callable for a queued e-mail message.
+     * Obtenez le véritable appelable pour un message électronique en file d'attente.
      *
      * @param  array  $data
      * @return mixed
@@ -276,7 +280,7 @@ class Mailer
     }
 
     /**
-     * Add the content to a given message.
+     * Ajoutez le contenu à un message donné.
      *
      * @param  \Two\Mail\Message  $message
      * @param  string  $view
@@ -303,7 +307,7 @@ class Mailer
     }
 
     /**
-     * Parse the given view name or array.
+     * Analyse le nom de la vue ou le tableau donné.
      *
      * @param  string|array  $view
      * @return array
@@ -316,16 +320,16 @@ class Mailer
             return array($view, null, null);
         }
 
-        // If the given view is an array with numeric keys, we will just assume that
-        // both a "pretty" and "plain" view were provided, so we will return this
-        // array as is, since must should contain both views with numeric keys.
+        // Si la vue donnée est un tableau avec des touches numériques, nous supposerons simplement que
+        // une vue "jolie" et "simple" a été fournie, nous allons donc renvoyer ceci
+        // tableau tel quel, car il doit contenir les deux vues avec des touches numériques.
         if (is_array($view) && isset($view[0])) {
             return array($view[0], $view[1], null);
         }
 
-        // If the view is an array, but doesn't contain numeric keys, we will assume
-        // the the views are being explicitly specified and will extract them via
-        // named keys instead, allowing the developers to use one or the other.
+        // Si la vue est un tableau mais ne contient pas de touches numériques, nous supposerons
+        // les vues sont explicitement spécifiées et les extrairont via
+        // clés nommées à la place, permettant aux développeurs d'utiliser l'une ou l'autre.
         else if (is_array($view)) {
             return array(
                 Arr::get($view, 'html'),
@@ -338,7 +342,7 @@ class Mailer
     }
 
     /**
-     * Send a Swift Message instance.
+     * Envoyez une instance de message Swift.
      *
      * @param  \Swift_Message  $message
      * @return void
@@ -358,14 +362,14 @@ class Mailer
             }
         }
 
-        // In the pretending mode.
+        // En mode simulation.
         else if (isset($this->logger)) {
             $this->logMessage($message);
         }
     }
 
     /**
-     * Log that a message was sent.
+     * Enregistrez qu'un message a été envoyé.
      *
      * @param  \Swift_Message  $message
      * @return void
@@ -378,7 +382,7 @@ class Mailer
     }
 
     /**
-     * Call the provided message builder.
+     * Appelez le générateur de messages fourni.
      *
      * @param  \Closure|string  $callback
      * @param  \Two\Mail\Message  $message
@@ -398,7 +402,7 @@ class Mailer
     }
 
     /**
-     * Create a new message instance.
+     * Créez une nouvelle instance de message.
      *
      * @return \Two\Mail\Message
      */
@@ -406,9 +410,9 @@ class Mailer
     {
         $message = new Message(new Swift_Message);
 
-        // If a global from address has been specified we will set it on every message
-        // instances so the developer does not have to repeat themselves every time
-        // they create a new message. We will just go ahead and push the address.
+        // Si une adresse d'expéditeur globale a été spécifiée, nous la définirons sur chaque message
+        // instances pour que le développeur n'ait pas à se répéter à chaque fois
+        // ils créent un nouveau message. Nous allons simplement aller de l'avant et promouvoir l'adresse.
         if (isset($this->from['address'])) {
             $message->from($this->from['address'], $this->from['name']);
         }
@@ -417,7 +421,7 @@ class Mailer
     }
 
     /**
-     * Render the given view.
+     * Rendre la vue donnée.
      *
      * @param  string  $view
      * @param  array   $data
@@ -429,7 +433,7 @@ class Mailer
     }
 
     /**
-     * Tell the mailer to not really send messages.
+     * Dites au courrier de ne pas vraiment envoyer de messages.
      *
      * @param  bool  $value
      * @return void
@@ -440,7 +444,7 @@ class Mailer
     }
 
     /**
-     * Check if the mailer is pretending to send messages.
+     * Vérifiez si le logiciel de messagerie fait semblant d'envoyer des messages.
      *
      * @return bool
      */
@@ -450,7 +454,7 @@ class Mailer
     }
 
     /**
-     * Get the view factory instance.
+     * Obtenez l’instance de fabrique de vues.
      *
      * @return \Two\View\Factory
      */
@@ -460,7 +464,7 @@ class Mailer
     }
 
     /**
-     * Get the Swift Mailer instance.
+     * Obtenez l'instance Swift Mailer.
      *
      * @return \Swift_Mailer
      */
@@ -470,7 +474,7 @@ class Mailer
     }
 
     /**
-     * Get the array of failed recipients.
+     * Obtenez le tableau des destinataires ayant échoué.
      *
      * @return array
      */
@@ -480,7 +484,7 @@ class Mailer
     }
 
     /**
-     * Set the Swift Mailer instance.
+     * Définissez l'instance Swift Mailer.
      *
      * @param  \Swift_Mailer  $swift
      * @return void
@@ -491,7 +495,7 @@ class Mailer
     }
 
     /**
-     * Set the log writer instance.
+     * Définissez l'instance d'écriture de journaux.
      *
      * @param  \Two\Log\Writer  $logger
      * @return $this
@@ -504,7 +508,7 @@ class Mailer
     }
 
     /**
-     * Set the Queue Manager instance.
+     * Définissez l'instance du gestionnaire de files d'attente.
      *
      * @param  \Two\Queue\QueueManager  $queue
      * @return $this
@@ -517,7 +521,7 @@ class Mailer
     }
 
     /**
-     * Set the IoC container instance.
+     * Définissez l'instance de conteneur IoC.
      *
      * @param  \Two\Container\Container  $container
      * @return void

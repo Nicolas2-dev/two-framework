@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Cookie;
 
 use Symfony\Component\HttpFoundation\Cookie;
@@ -8,28 +13,28 @@ use Symfony\Component\HttpFoundation\Cookie;
 class CookieJar
 {
     /**
-     * The default path (if specified).
+     * Le chemin par défaut (si spécifié).
      *
      * @var string
      */
     protected $path = '/';
 
     /**
-     * The default domain (if specified).
+     * Le domaine par défaut (si spécifié).
      *
      * @var string
      */
     protected $domain = null;
 
     /**
-     * All of the cookies queued for sending.
+     * Tous les cookies en file d'attente pour l'envoi.
      *
      * @var array
      */
     protected $queued = array();
 
     /**
-     * Create a new Cookie instance.
+     * Créez une nouvelle instance de Cookie.
      *
      * @param  string  $name
      * @param  string  $value
@@ -50,7 +55,7 @@ class CookieJar
     }
 
     /**
-     * Create a cookie that lasts "forever" (five years).
+     * Créez un cookie qui dure « pour toujours » (cinq ans).
      *
      * @param  string  $name
      * @param  string  $value
@@ -66,7 +71,7 @@ class CookieJar
     }
 
     /**
-     * Expire the given Cookie.
+     * Faire expirer le cookie donné.
      *
      * @param  string  $name
      * @param  string  $path
@@ -79,7 +84,7 @@ class CookieJar
     }
 
     /**
-     * Determine if a Cookie has been queued.
+     * Déterminez si un cookie a été mis en file d'attente.
      *
      * @param  string  $key
      * @return bool
@@ -90,7 +95,7 @@ class CookieJar
     }
 
     /**
-     * Get a queued Cookie instance.
+     * Obtenez une instance de Cookie en file d'attente.
      *
      * @param  string  $key
      * @param  mixed   $default
@@ -102,7 +107,7 @@ class CookieJar
     }
 
     /**
-     * Queue a Cookie to send with the next response.
+     * Mettez en file d'attente un cookie à envoyer avec la prochaine réponse.
      *
      * @param  dynamic
      * @return void
@@ -121,7 +126,7 @@ class CookieJar
     }
 
     /**
-     * Remove a cookie from the queue.
+     * Supprimez un cookie de la file d'attente.
      *
      * @param $cookieName
      */
@@ -131,7 +136,7 @@ class CookieJar
     }
 
     /**
-     * Get the path and domain, or the default values.
+     * Obtenez le chemin et le domaine, ou les valeurs par défaut.
      *
      * @param  string  $path
      * @param  string  $domain
@@ -143,7 +148,7 @@ class CookieJar
     }
 
     /**
-     * Set the default path and domain for the jar.
+     * Définissez le chemin et le domaine par défaut du fichier jar.
      *
      * @param  string  $path
      * @param  string  $domain
@@ -157,7 +162,7 @@ class CookieJar
     }
 
     /**
-     * Get the cookies which have been queued for the next request
+     * Récupère les cookies qui ont été mis en file d'attente pour la prochaine requête
      *
      * @return array
      */

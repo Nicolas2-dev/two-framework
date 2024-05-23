@@ -1,0 +1,30 @@
+<?php
+
+namespace {{namespace}};
+
+use {{fullEvent}};
+
+
+class {{className}}
+{
+    /**
+     * Créez l'écouteur d'événement.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Gérer l'événement.
+     *
+     * @param  {{fullEvent}}  $event
+     * @return void
+     */
+    public function handle({{event}} $event)
+    {
+        //
+    }
+}

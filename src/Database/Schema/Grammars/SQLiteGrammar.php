@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Schema\Grammars;
 
 use Two\Support\Fluent;
@@ -11,21 +16,21 @@ use Two\Database\Schema\Grammar;
 class SQLiteGrammar extends Grammar
 {
     /**
-     * The possible column modifiers.
+     * Les modificateurs de colonnes possibles.
      *
      * @var array
      */
     protected $modifiers = array('Nullable', 'Default', 'Increment');
 
     /**
-     * The columns available as serials.
+     * Les colonnes disponibles en série.
      *
      * @var array
      */
     protected $serials = array('bigInteger', 'integer');
 
     /**
-     * Compile the query to determine if a table exists.
+     * Compilez la requête pour déterminer si une table existe.
      *
      * @return string
      */
@@ -35,7 +40,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile the query to determine the list of columns.
+     * Compilez la requête pour déterminer la liste des colonnes.
      *
      * @param  string  $table
      * @return string
@@ -46,7 +51,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile a create table command.
+     * Compilez une commande de création de table.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -58,9 +63,9 @@ class SQLiteGrammar extends Grammar
 
         $sql = 'create table '.$this->wrapTable($blueprint)." ($columns";
 
-        // SQLite forces primary keys to be added when the table is initially created
-        // so we will need to check for a primary key commands and add the columns
-        // to the table's declaration here so they can be created on the tables.
+        // SQLite force l'ajout des clés primaires lors de la création initiale de la table
+        // nous devrons donc rechercher une commande de clé primaire et ajouter les colonnes
+        // à la déclaration de la table ici afin qu'elles puissent être créées sur les tables.
         $sql .= (string) $this->addForeignKeys($blueprint);
 
         $sql .= (string) $this->addPrimaryKeys($blueprint);
@@ -69,7 +74,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Get the foreign key syntax for a table creation statement.
+     * Obtenez la syntaxe de clé étrangère pour une instruction de création de table.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @return string|null
@@ -80,9 +85,9 @@ class SQLiteGrammar extends Grammar
 
         $foreigns = $this->getCommandsByName($blueprint, 'foreign');
 
-        // Once we have all the foreign key commands for the table creation statement
-        // we'll loop through each of them and add them to the create table SQL we
-        // are building, since SQLite needs foreign keys on the tables creation.
+        // Une fois que nous avons toutes les commandes de clé étrangère pour l'instruction de création de table
+        // nous allons parcourir chacun d'eux et les ajouter à la table de création SQL que nous
+        // sont en cours de construction, puisque SQLite a besoin de clés étrangères pour la création des tables.
         foreach ($foreigns as $foreign) {
             $sql .= $this->getForeignKey($foreign);
 
@@ -99,7 +104,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Get the SQL for the foreign key.
+     * Obtenez le SQL pour la clé étrangère.
      *
      * @param  \Two\Support\Fluent  $foreign
      * @return string
@@ -108,9 +113,9 @@ class SQLiteGrammar extends Grammar
     {
         $on = $this->wrapTable($foreign->on);
 
-        // We need to columnize the columns that the foreign key is being defined for
-        // so that it is a properly formatted list. Once we have done this, we can
-        // return the foreign key SQL declaration to the calling method for use.
+        // Nous devons créer une colonne dans les colonnes pour lesquelles la clé étrangère est définie.
+        // pour qu'il s'agisse d'une liste correctement formatée. Une fois que nous avons fait cela, nous pouvons
+        // renvoie la déclaration SQL de clé étrangère à la méthode appelante pour utilisation.
         $columns = $this->columnize($foreign->columns);
 
         $onColumns = $this->columnize((array) $foreign->references);
@@ -119,7 +124,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Get the primary key syntax for a table creation statement.
+     * Obtenez la syntaxe de clé primaire pour une instruction de création de table.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @return string|null
@@ -136,7 +141,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile alter table commands for adding columns
+     * Compilez les commandes alter table pour ajouter des colonnes
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -158,7 +163,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile a unique key command.
+     * Compilez un raccourci clavier unique.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -174,7 +179,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile a plain index key command.
+     * Compilez une commande de touche d'index simple.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -190,7 +195,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile a foreign key command.
+     * Compilez une commande de clé étrangère.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -198,11 +203,11 @@ class SQLiteGrammar extends Grammar
      */
     public function compileForeign(Blueprint $blueprint, Fluent $command)
     {
-        // Handled on table creation...
+        // Géré lors de la création de la table...
     }
 
     /**
-     * Compile a drop table command.
+     * Compilez une commande drop table.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -214,7 +219,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile a drop table (if exists) command.
+     * Compilez une commande drop table (si elle existe).
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -226,7 +231,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile a drop column command.
+     * Compilez une commande de suppression de colonne.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -249,7 +254,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile a drop unique key command.
+     * Compilez un raccourci clavier unique.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -261,7 +266,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile a drop index command.
+     * Compilez une commande drop index.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -273,7 +278,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile a rename table command.
+     * Compilez une commande de renommage de table.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -287,7 +292,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a char type.
+     * Créez la définition de colonne pour un type char.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -298,7 +303,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a string type.
+     * Créez la définition de colonne pour un type de chaîne.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -309,7 +314,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a text type.
+     * Créez la définition de colonne pour un type de texte.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -320,7 +325,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a medium text type.
+     * Créez la définition de colonne pour un type de texte moyen.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -331,7 +336,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a long text type.
+     * Créez la définition de colonne pour un type de texte long.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -342,7 +347,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a integer type.
+     * Créez la définition de colonne pour un type entier.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -353,7 +358,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a big integer type.
+     * Créez la définition de colonne pour un type grand entier.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -364,7 +369,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a medium integer type.
+     * Créez la définition de colonne pour un type entier moyen.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -375,7 +380,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a tiny integer type.
+     * Créez la définition de colonne pour un type entier minuscule.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -386,7 +391,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a small integer type.
+     * Créez la définition de colonne pour un petit type entier.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -397,7 +402,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a float type.
+     * Créez la définition de colonne pour un type float.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -408,7 +413,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a double type.
+     * Créez la définition de colonne pour un type double.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -419,7 +424,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a decimal type.
+     * Créez la définition de colonne pour un type décimal.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -430,7 +435,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a boolean type.
+     * Créez la définition de colonne pour un type booléen.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -441,7 +446,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for an enum type.
+     * Créez la définition de colonne pour un type enum.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -452,7 +457,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a date type.
+     * Créez la définition de colonne pour un type de date.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -463,7 +468,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a date-time type.
+     * Créez la définition de colonne pour un type date-heure.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -474,7 +479,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a time type.
+     * Créez la définition de colonne pour un type d'heure.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -485,7 +490,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a timestamp type.
+     * Créez la définition de colonne pour un type d'horodatage.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -496,7 +501,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a binary type.
+     * Créez la définition de colonne pour un type binaire.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -507,7 +512,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Get the SQL for a nullable column modifier.
+     * Obtenez le SQL pour un modificateur de colonne nullable.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $column
@@ -519,7 +524,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Get the SQL for a default column modifier.
+     * Obtenez le SQL pour un modificateur de colonne par défaut.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $column
@@ -533,7 +538,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Get the SQL for an auto-increment column modifier.
+     * Obtenez le SQL pour un modificateur de colonne à incrémentation automatique.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $column

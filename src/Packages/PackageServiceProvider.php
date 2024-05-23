@@ -1,21 +1,26 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Packages;
 
-use Two\Packages\PackageManager;
 use Two\Packages\Repository;
-use Two\Support\ServiceProvider;
+use Two\Packages\PackageManager;
+use Two\Application\Providers\ServiceProvider;
 
 
 class PackageServiceProvider extends ServiceProvider
 {
     /**
-     * @var bool Indicates if loading of the Provider is deferred.
+     * @var bool Indique si le chargement du Provider est différé.
      */
     protected $defer = false;
 
     /**
-     * Boot the Service Provider.
+     * Démarrez le fournisseur de services.
      */
     public function boot()
     {
@@ -25,7 +30,7 @@ class PackageServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Service Provider.
+     * Enregistrez le fournisseur de services.
      */
     public function register()
     {
@@ -38,7 +43,7 @@ class PackageServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get the Services provided by the Provider.
+     * Obtenez les services fournis par le fournisseur.
      *
      * @return string
      */

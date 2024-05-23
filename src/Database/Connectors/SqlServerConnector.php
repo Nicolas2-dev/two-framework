@@ -1,17 +1,22 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Connectors;
 
-use Two\Database\Connector;
-use Two\Database\ConnectorInterface;
-
 use PDO;
+
+use Two\Database\Connector;
+use Two\Database\Contracts\ConnectorInterface;
 
 
 class SqlServerConnector extends Connector implements ConnectorInterface
 {
     /**
-     * The PDO connection options.
+     * Les options de connexion PDO.
      *
      * @var array
      */
@@ -23,7 +28,7 @@ class SqlServerConnector extends Connector implements ConnectorInterface
     );
 
     /**
-     * Establish a database connection.
+     * Établissez une connexion à la base de données.
      *
      * @param  array  $config
      * @return \PDO
@@ -36,7 +41,7 @@ class SqlServerConnector extends Connector implements ConnectorInterface
     }
 
     /**
-     * Create a DSN string from a configuration.
+     * Créez une chaîne DSN à partir d'une configuration.
      *
      * @param  array   $config
      * @return string
@@ -45,9 +50,9 @@ class SqlServerConnector extends Connector implements ConnectorInterface
     {
         extract($config);
 
-        // First we will create the basic DSN setup as well as the port if it is in
-        // in the configuration options. This will give us the basic DSN we will
-        // need to establish the PDO connections and return them back for use.
+        // Nous allons d'abord créer la configuration de base du DSN ainsi que le port s'il est dans
+        // dans les options de configuration. Cela nous donnera le DSN de base que nous allons
+        // besoin d'établir les connexions PDO et de les renvoyer pour utilisation.
         if (in_array('dblib', $this->getAvailableDrivers())) {
             $port = isset($config['port']) ? ':'.$port : '';
 
@@ -62,7 +67,7 @@ class SqlServerConnector extends Connector implements ConnectorInterface
     }
 
     /**
-     * Get the available PDO drivers.
+     * Obtenez les pilotes PDO disponibles.
      *
      * @return array
      */

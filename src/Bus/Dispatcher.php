@@ -1,46 +1,47 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Bus;
-
-
-use Two\Container\Container;
-
-use Two\Foundation\Pipeline;
-
-use Two\Queue\QueueInterface;
-use Two\Queue\ShouldQueueInterface;
-
-use Two\Bus\QueueingDispatcherInterface;
 
 use Closure;
 use RuntimeException;
+
+use Two\Container\Container;
+use Two\Application\Pipeline;
+use Two\Queue\contracts\QueueInterface;
+use Two\Queue\Contracts\ShouldQueueInterface;
+use Two\Bus\Contracts\QueueingDispatcherInterface;
 
 
 class Dispatcher implements QueueingDispatcherInterface
 {
     /**
-     * The container implementation.
+     * L’implémentation du conteneur.
      *
      * @var \Two\Container\Container
      */
     protected $container;
 
     /**
-     * The pipes to send commands through before dispatching.
+     * Les canaux par lesquels envoyer les commandes avant la distribution.
      *
      * @var array
      */
     protected $pipes = array();
 
     /**
-     * The command to handler mapping for non-self-handling events.
+     * La commande pour gérer le mappage pour les événements non auto-gérés.
      *
      * @var array
      */
     protected $handlers = array();
 
     /**
-     * The queue resolver callback.
+     * Le rappel du résolveur de file d’attente.
      *
      * @var \Closure|null
      */
@@ -48,7 +49,7 @@ class Dispatcher implements QueueingDispatcherInterface
 
 
     /**
-     * Create a new command dispatcher instance.
+     * Créez une nouvelle instance de répartiteur de commandes.
      *
      * @param  \Two\Container\Container  $container
      * @param  \Closure|null  $queueResolver
@@ -62,7 +63,7 @@ class Dispatcher implements QueueingDispatcherInterface
     }
 
     /**
-     * Dispatch a command to its appropriate handler.
+     * Envoyez une commande à son gestionnaire approprié.
      *
      * @param  mixed  $command
      * @return mixed
@@ -77,7 +78,7 @@ class Dispatcher implements QueueingDispatcherInterface
     }
 
     /**
-     * Dispatch a command to its appropriate handler in the current process.
+     * Envoyez une commande à son gestionnaire approprié dans le processus en cours.
      *
      * @param  mixed  $command
      * @param  mixed  $handler
@@ -92,7 +93,7 @@ class Dispatcher implements QueueingDispatcherInterface
             };
         }
 
-        // The command is self handling.
+        // La commande est auto-gérée.
         else {
             $callback = function ($command)
             {
@@ -106,7 +107,7 @@ class Dispatcher implements QueueingDispatcherInterface
     }
 
     /**
-     * Determine if the given command has a handler.
+     * Déterminez si la commande donnée a un gestionnaire.
      *
      * @param  mixed  $command
      * @return bool
@@ -119,7 +120,7 @@ class Dispatcher implements QueueingDispatcherInterface
     }
 
     /**
-     * Retrieve the handler for a command.
+     * Récupérez le gestionnaire d’une commande.
      *
      * @param  mixed  $command
      * @return bool|mixed
@@ -136,7 +137,7 @@ class Dispatcher implements QueueingDispatcherInterface
     }
 
     /**
-     * Determine if the given command should be queued.
+     * Déterminez si la commande donnée doit être mise en file d'attente.
      *
      * @param  mixed  $command
      * @return bool
@@ -147,7 +148,7 @@ class Dispatcher implements QueueingDispatcherInterface
     }
 
     /**
-     * Dispatch a command to its appropriate handler behind a queue.
+     * Envoyez une commande à son gestionnaire approprié derrière une file d'attente.
      *
      * @param  mixed  $command
      * @return mixed
@@ -172,7 +173,7 @@ class Dispatcher implements QueueingDispatcherInterface
     }
 
     /**
-     * Push the command onto the given queue instance.
+     * Poussez la commande sur l’instance de file d’attente donnée.
      *
      * @param  \Two\Queue\Contracts\QueueInterface  $queue
      * @param  mixed  $command
@@ -196,7 +197,7 @@ class Dispatcher implements QueueingDispatcherInterface
     }
 
     /**
-     * Set the pipes through which commands should be piped before dispatching.
+     * Définissez les canaux par lesquels les commandes doivent être acheminées avant leur expédition.
      *
      * @param  array  $pipes
      * @return $this
@@ -208,8 +209,8 @@ class Dispatcher implements QueueingDispatcherInterface
         return $this;
     }
 
-    /**
-     * Map a command to a handler.
+    /**Mappez une commande à un gestionnaire.
+     * 
      *
      * @param  array  $map
      * @return $this

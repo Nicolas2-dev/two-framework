@@ -1,142 +1,149 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Validation;
 
-use Two\Config\Repository as Config;
-use Two\Container\Container;
-use Two\Support\Fluent;
-use Two\Support\MessageBag;
+use Closure;
+use DateTime;
+use Countable;
+use Exception;
+use DateTimeZone;
+use BadMethodCallException;
+use InvalidArgumentException;
+
 use Two\Support\Arr;
 use Two\Support\Str;
-use Two\Contracts\MessageProviderInterface;
-use Two\Validation\PresenceVerifierInterface;
+use Two\Support\Fluent;
+use Two\Support\MessageBag;
+use Two\Container\Container;
+use Two\Config\Repository as Config;
+use Two\Application\Contracts\MessageProviderInterface;
+use Two\Validation\Contracts\PresenceVerifierInterface;
 
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
-use Closure;
-use Countable;
-use DateTime;
-use DateTimeZone;
-use InvalidArgumentException;
 
 
 class Validator implements MessageProviderInterface
 {
     /**
-     * The Config instance.
+     * L'instance de configuration.
      *
      * @var \Two\Config\Repository
      */
     protected $config;
 
     /**
-     * The Container instance.
+     * L'instance de conteneur.
      *
      * @var \Two\Container\Container
      */    
     protected $container;
 
     /**
-     * The Presence Verifier implementation.
+     * L’implémentation du vérificateur de présence.
      *
-     * @var \Two\Validation\PresenceVerifierInterface
+     * @var \Two\Validation\Contracts\PresenceVerifierInterface
      */
     protected $presenceVerifier;
 
     /**
-     * The failed validation rules.
+     * Les règles de validation ayant échoué.
      *
      * @var array
      */
     protected $failedRules = array();
 
     /**
-     * The message bag instance.
+     * L'instance du sac de messages.
      *
      * @var \Two\Support\MessageBag
      */
     protected $messages;
 
     /**
-     * The data under validation.
+     * Les données en cours de validation.
      *
      * @var array
      */
     protected $data;
 
     /**
-     * The files under validation.
+     * Les dossiers en cours de validation.
      *
      * @var array
      */
     protected $files = array();
 
     /**
-     * The rules to be applied to the data.
+     * Les règles à appliquer aux données.
      *
      * @var array
      */
     protected $rules;
 
     /**
-     * The array of custom error messages.
+     * Le tableau de messages d’erreur personnalisés.
      *
      * @var array
      */
     protected $customMessages = array();
 
     /**
-     * The array of fallback error messages.
+     * Le tableau des messages d’erreur de secours.
      *
      * @var array
      */
     protected $fallbackMessages = array();
 
     /**
-     * The array of custom attribute names.
+     * Le tableau de noms d’attributs personnalisés.
      *
      * @var array
      */
     protected $customAttributes = array();
 
     /**
-     * The array of custom displayabled values.
+     * Le tableau de valeurs affichées personnalisées.
      *
      * @var array
      */
     protected $customValues = array();
 
     /**
-     * All of the custom validator extensions.
+     * Toutes les extensions de validateur personnalisées.
      *
      * @var array
      */
     protected $extensions = array();
 
     /**
-     * All of the custom replacer extensions.
+     * Toutes les extensions de remplacement personnalisées.
      *
      * @var array
      */
     protected $replacers = array();
 
     /**
-     * The size related validation rules.
+     * Les règles de validation liées à la taille.
      *
      * @var array
      */
     protected $sizeRules = array('Size', 'Between', 'Min', 'Max');
 
     /**
-     * The numeric related validation rules.
+     * Les règles de validation liées aux valeurs numériques.
      *
      * @var array
      */
     protected $numericRules = array('Numeric', 'Integer');
 
     /**
-     * The validation rules that imply the field is required.
+     * Les règles de validation qui impliquent que le champ est obligatoire.
      *
      * @var array
      */
@@ -146,7 +153,7 @@ class Validator implements MessageProviderInterface
 
 
     /**
-     * Create a new Validator instance.
+     * Créez une nouvelle instance de validateur.
      *
      * @param  \Two\Config\Repository  $config
      * @param  array  $data
@@ -168,7 +175,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Parse the data and hydrate the files array.
+     * Analysez les données et hydratez le tableau de fichiers.
      *
      * @param  array   $data
      * @param  string  $arrayKey
@@ -183,9 +190,9 @@ class Validator implements MessageProviderInterface
         foreach ($data as $key => $value) {
             $key = ($arrayKey) ? "$arrayKey.$key" : $key;
 
-            // If this value is an instance of the HttpFoundation File class we will
-            // remove it from the data array and add it to the files array, which
-            // we use to conveniently separate out these files from other data.
+            // Si cette valeur est une instance de la classe HttpFoundation File, nous le ferons
+            // le supprime du tableau data et l'ajoute au tableau files, ce qui
+            // nous utilisons pour séparer facilement ces fichiers des autres données.
             if ($value instanceof File) {
                 $this->files[$key] = $value;
 
@@ -199,7 +206,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Explode the rules into an array of rules.
+     * Décomposez les règles en un ensemble de règles.
      *
      * @param  string|array  $rules
      * @return array
@@ -214,7 +221,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Add conditions to a given field based on a Closure.
+     * Ajoutez des conditions à un champ donné en fonction d'une fermeture.
      *
      * @param  string  $attribute
      * @param  string|array  $rules
@@ -233,7 +240,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Define a set of rules that apply to each element in an array attribute.
+     * Définissez un ensemble de règles qui s'appliquent à chaque élément d'un attribut de tableau.
      *
      * @param  string  $attribute
      * @param  string|array  $rules
@@ -265,7 +272,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Merge additional rules into a given attribute.
+     * Fusionnez des règles supplémentaires dans un attribut donné.
      *
      * @param  string  $attribute
      * @param  string|array  $rules
@@ -281,7 +288,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Determine if the data passes the validation rules.
+     * Déterminez si les données satisfont aux règles de validation.
      *
      * @return bool
      */
@@ -289,9 +296,9 @@ class Validator implements MessageProviderInterface
     {
         $this->messages = new MessageBag;
 
-        // We'll spin through each rule, validating the attributes attached to that
-        // rule. Any error messages will be added to the containers with each of
-        // the other error messages, returning true if we don't have messages.
+        // Nous passerons en revue chaque règle, en validant les attributs qui y sont attachés
+        // règle. Tous les messages d'erreur seront ajoutés aux conteneurs avec chacun des
+        // les autres messages d'erreur, renvoyant vrai si nous n'avons pas de messages.
         foreach ($this->rules as $attribute => $rules) {
             foreach ($rules as $rule) {
                 $this->validate($attribute, $rule);
@@ -302,7 +309,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Determine if the data fails the validation rules.
+     * Déterminez si les données ne respectent pas les règles de validation.
      *
      * @return bool
      */
@@ -312,7 +319,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate a given attribute against a rule.
+     * Valider un attribut donné par rapport à une règle.
      *
      * @param  string  $attribute
      * @param  string  $rule
@@ -326,9 +333,9 @@ class Validator implements MessageProviderInterface
             return;
         }
 
-        // We will get the value for the given attribute from the array of data and then
-        // verify that the attribute is indeed validatable. Unless the rule implies
-        // that the attribute is required, rules are not run for missing values.
+        // Nous obtiendrons la valeur de l'attribut donné à partir du tableau de données, puis
+        // vérifie que l'attribut est bien validable. Sauf si la règle implique
+        // que l'attribut est requis, les règles ne sont pas exécutées pour les valeurs manquantes.
         $value = $this->getValue($attribute);
 
         $validatable = $this->isValidatable($rule, $attribute, $value);
@@ -341,7 +348,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Returns the data which was valid.
+     * Renvoie les données qui étaient valides.
      *
      * @return array
      */
@@ -355,7 +362,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Returns the data which was invalid.
+     * Renvoie les données invalides.
      *
      * @return array
      */
@@ -369,7 +376,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the value of a given attribute.
+     * Obtenez la valeur d'un attribut donné.
      *
      * @param  string  $attribute
      * @return mixed
@@ -384,7 +391,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Determine if the attribute is validatable.
+     * Déterminez si l'attribut est validable.
      *
      * @param  string  $rule
      * @param  string  $attribute
@@ -399,7 +406,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Determine if the field is present, or the rule implies required.
+     * Déterminez si le champ est présent ou si la règle implique qu'il est obligatoire.
      *
      * @param  string  $rule
      * @param  string  $attribute
@@ -412,7 +419,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Determine if the attribute passes any optional check.
+     * Déterminez si l’attribut réussit une vérification facultative.
      *
      * @param  string  $attribute
      * @return bool
@@ -429,7 +436,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Determine if a given rule implies the attribute is required.
+     * Déterminez si une règle donnée implique que l'attribut est requis.
      *
      * @param  string  $rule
      * @return bool
@@ -440,9 +447,9 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Determine if it's a necessary presence validation.
+     * Déterminez s'il s'agit d'une validation de présence nécessaire.
      *
-     * This is to avoid possible database type comparison errors.
+     * Ceci permet d'éviter d'éventuelles erreurs de comparaison des types de bases de données.
      *
      * @param  string  $rule
      * @param  string  $attribute
@@ -456,7 +463,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Add a failed rule and error message to the collection.
+     * Ajoutez une règle ayant échoué et un message d'erreur à la collection.
      *
      * @param  string  $attribute
      * @param  string  $rule
@@ -471,7 +478,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Add an error message to the validator's collection of messages.
+     * Ajoutez un message d'erreur à la collection de messages du validateur.
      *
      * @param  string  $attribute
      * @param  string  $rule
@@ -488,9 +495,9 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * "Validate" optional attributes.
+     * "Valider" les attributs facultatifs.
      *
-     * Always returns true, just lets us put sometimes in rules.
+     * Renvoie toujours vrai, permet-nous simplement de mettre parfois des règles.
      *
      * @return bool
      */
@@ -500,7 +507,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that a required attribute exists.
+     * Vérifiez qu'un attribut obligatoire existe.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -522,7 +529,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate the given attribute is filled if it is present.
+     * Validez que l'attribut donné est rempli s'il est présent.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -538,7 +545,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Determine if any of the given attributes fail the required test.
+     * Déterminez si l’un des attributs donnés échoue au test requis.
      *
      * @param  array  $attributes
      * @return bool
@@ -555,7 +562,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Determine if all of the given attributes fail the required test.
+     * Déterminez si tous les attributs donnés échouent au test requis.
      *
      * @param  array  $attributes
      * @return bool
@@ -572,7 +579,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute exists when any other attribute exists.
+     * Vérifiez qu'un attribut existe lorsqu'un autre attribut existe.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -589,7 +596,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute exists when all other attributes exists.
+     * Vérifiez qu'un attribut existe lorsque tous les autres attributs existent.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -606,7 +613,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute exists when another attribute does not.
+     * Vérifiez qu'un attribut existe alors qu'un autre attribut ne l'existe pas.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -623,7 +630,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute exists when all other attributes do not.
+     * Vérifiez qu'un attribut existe alors que tous les autres attributs ne le sont pas.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -640,7 +647,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute exists when another attribute has a given value.
+     * Validez qu'un attribut existe lorsqu'un autre attribut a une valeur donnée.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -663,7 +670,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the number of attributes in a list that are present.
+     * Obtenez le nombre d'attributs présents dans une liste.
      *
      * @param  array  $attributes
      * @return int
@@ -682,7 +689,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute has a matching confirmation.
+     * Vérifiez qu'un attribut a une confirmation correspondante.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -694,7 +701,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that two attributes match.
+     * Vérifiez que deux attributs correspondent.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -711,7 +718,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute is different from another attribute.
+     * Validez qu’un attribut est différent d’un autre attribut.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -728,9 +735,9 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute was "accepted".
+     * Valider qu'un attribut a été "accepté".
      *
-     * This validation rule implies the attribute is "required".
+     * Cette règle de validation implique que l'attribut est "obligatoire".
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -744,7 +751,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute is an array.
+     * Vérifiez qu'un attribut est un tableau.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -756,7 +763,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute is a boolean.
+     * Vérifiez qu'un attribut est un booléen.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -770,7 +777,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute is an integer.
+     * Vérifiez qu'un attribut est un entier.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -782,7 +789,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute is numeric.
+     * Vérifiez qu'un attribut est numérique.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -794,7 +801,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute is a string.
+     * Vérifiez qu'un attribut est une chaîne.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -806,7 +813,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute has a given number of digits.
+     * Vérifiez qu'un attribut a un nombre donné de chiffres.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -822,7 +829,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute is between a given number of digits.
+     * Vérifiez qu'un attribut est compris entre un nombre donné de chiffres.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -840,7 +847,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate the size of an attribute.
+     * Validez la taille d'un attribut.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -855,7 +862,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate the size of an attribute is between a set of values.
+     * Valider que la taille d'un attribut se situe entre un ensemble de valeurs.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -872,7 +879,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate the size of an attribute is greater than a minimum value.
+     * Valider que la taille d'un attribut est supérieure à une valeur minimale.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -887,7 +894,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate the size of an attribute is less than a maximum value.
+     * Valider que la taille d'un attribut est inférieure à une valeur maximale.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -906,7 +913,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the size of an attribute.
+     * Obtenez la taille d'un attribut.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -916,10 +923,10 @@ class Validator implements MessageProviderInterface
     {
         $hasNumeric = $this->hasRule($attribute, $this->numericRules);
 
-        // This method will determine if the attribute is a number, string, or file and
-        // return the proper size accordingly. If it is a number, then number itself
-        // is the size. If it is a file, we take kilobytes, and for a string the
-        // entire length of the string will be considered the attribute size.
+        // Cette méthode déterminera si l'attribut est un nombre, une chaîne ou un fichier et
+        // renvoie la taille appropriée en conséquence. Si c'est un nombre, alors le numéro lui-même
+        // est la taille. Si c'est un fichier, on prend des kilo-octets, et pour une chaîne le
+        // toute la longueur de la chaîne sera considérée comme la taille de l'attribut.
         if (is_numeric($value) && $hasNumeric) {
             return Arr::get($this->data, $attribute);
         } else if (is_array($value)) {
@@ -932,7 +939,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the size of a string.
+     * Obtenez la taille d'une chaîne.
      *
      * @param  string  $value
      * @return int
@@ -947,7 +954,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate an attribute is contained within a list of values.
+     * Valider qu'un attribut est contenu dans une liste de valeurs.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -960,7 +967,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate an attribute is not contained within a list of values.
+     * Vérifier qu'un attribut n'est pas contenu dans une liste de valeurs.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -973,9 +980,9 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate the uniqueness of an attribute value on a given database table.
+     * Valider l'unicité d'une valeur d'attribut sur une table de base de données donnée.
      *
-     * If a database column is not specified, the attribute will be used.
+     * Si une colonne de base de données n'est pas spécifiée, l'attribut sera utilisé.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -988,9 +995,9 @@ class Validator implements MessageProviderInterface
 
         list($connection, $table) = $this->parseTable($parameters[0]);
 
-        // The second parameter position holds the name of the column that needs to
-        // be verified as unique. If this parameter isn't specified we will just
-        // assume that this column to be verified shares the attribute's name.
+        // La position du deuxième paramètre contient le nom de la colonne qui doit
+        // être vérifié comme unique. Si ce paramètre n'est pas spécifié, nous le ferons simplement
+        // suppose que cette colonne à vérifier partage le nom de l'attribut.
         $column = isset($parameters[1]) ? $parameters[1] : $attribute;
 
         list($idColumn, $id) = array(null, null);
@@ -1003,9 +1010,9 @@ class Validator implements MessageProviderInterface
             }
         }
 
-        // The presence verifier is responsible for counting rows within this store
-        // mechanism which might be a relational database or any other permanent
-        // data store like Redis, etc. We will use it to determine uniqueness.
+        // Le vérificateur de présence est responsable du comptage des lignes dans ce magasin
+        // mécanisme qui peut être une base de données relationnelle ou tout autre mécanisme permanent
+        // magasin de données comme Redis, etc. Nous l'utiliserons pour déterminer l'unicité.
         $verifier = $this->getPresenceVerifier();
 
         if (! is_null($connection)) {
@@ -1021,7 +1028,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Parse the connection / table for the unique / exists rules.
+     * Analysez la connexion/la table pour les règles uniques/existantes.
      *
      * @param  string  $table
      * @return array
@@ -1036,7 +1043,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the excluded ID column and value for the unique rule.
+     * Obtenez la colonne d’ID exclus et la valeur de la règle unique.
      *
      * @param  array  $parameters
      * @return array
@@ -1049,7 +1056,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the extra conditions for a unique rule.
+     * Obtenez les conditions supplémentaires pour une règle unique.
      *
      * @param  array  $parameters
      * @return array
@@ -1064,7 +1071,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate the existence of an attribute value in a database table.
+     * Valider l'existence d'une valeur d'attribut dans une table de base de données.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1077,9 +1084,9 @@ class Validator implements MessageProviderInterface
 
         list($connection, $table) = $this->parseTable($parameters[0]);
 
-        // The second parameter position holds the name of the column that should be
-        // verified as existing. If this parameter is not specified we will guess
-        // that the columns being "verified" shares the given attribute's name.
+        // La deuxième position du paramètre contient le nom de la colonne qui doit être
+        // vérifié comme existant. Si ce paramètre n'est pas précisé nous devinerons
+        // que les colonnes en cours de "vérification" partagent le nom de l'attribut donné.
         $column = isset($parameters[1]) ? $parameters[1] : $attribute;
 
         $expected = (is_array($value)) ? count($value) : 1;
@@ -1088,7 +1095,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the number of records that exist in storage.
+     * Obtenez le nombre d’enregistrements existants en stockage.
      *
      * @param  string  $connection
      * @param  string  $table
@@ -1115,7 +1122,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the extra exist conditions.
+     * Obtenez les conditions d'existence supplémentaires.
      *
      * @param  array  $parameters
      * @return array
@@ -1126,7 +1133,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the extra conditions for a unique / exists rule.
+     * Obtenez les conditions supplémentaires pour une règle unique/existe.
      *
      * @param  array  $segments
      * @return array
@@ -1145,7 +1152,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute is a valid IP.
+     * Vérifiez qu'un attribut est une adresse IP valide.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1157,7 +1164,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute is a valid e-mail address.
+     * Vérifiez qu'un attribut est une adresse e-mail valide.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1169,7 +1176,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute is a valid URL.
+     * Vérifiez qu'un attribut est une URL valide.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1181,7 +1188,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute is an active URL.
+     * Vérifiez qu'un attribut est une URL active.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1195,7 +1202,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate the MIME type of a file is an image MIME type.
+     * Valider que le type MIME d'un fichier est un type MIME image.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1207,7 +1214,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate the MIME type of a file upload attribute is in a set of MIME types.
+     * Vérifiez que le type MIME d'un attribut de téléchargement de fichier se trouve dans un ensemble de types MIME.
      *
      * @param  string  $attribute
      * @param  mixed  $value
@@ -1224,7 +1231,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Check that the given value is a valid file instance.
+     * Vérifiez que la valeur donnée est une instance de fichier valide.
      *
      * @param  mixed  $value
      * @return bool
@@ -1239,7 +1246,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute contains only alphabetic characters.
+     * Vérifiez qu'un attribut contient uniquement des caractères alphabétiques.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1251,7 +1258,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute contains only alpha-numeric characters.
+     * Vérifiez qu'un attribut contient uniquement des caractères alphanumériques.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1263,7 +1270,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute contains only alpha-numeric characters, dashes, and underscores.
+     * Vérifiez qu'un attribut contient uniquement des caractères alphanumériques, des tirets et des traits de soulignement.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1275,7 +1282,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute passes a regular expression check.
+     * Vérifiez qu'un attribut réussit une vérification d'expression régulière.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1290,7 +1297,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute is a valid date.
+     * Vérifiez qu'un attribut est une date valide.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1310,7 +1317,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute matches a date format.
+     * Vérifiez qu'un attribut correspond à un format de date.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1327,7 +1334,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate the date is before a given date.
+     * Validez que la date est antérieure à une date donnée.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1350,7 +1357,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate the date is before a given date with a given format.
+     * Valider que la date est antérieure à une date donnée avec un format donné.
      *
      * @param  string  $format
      * @param  mixed   $value
@@ -1365,7 +1372,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate the date is after a given date.
+     * Validez que la date est postérieure à une date donnée.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1388,7 +1395,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate the date is after a given date with a given format.
+     * Valider que la date est postérieure à une date donnée avec un format donné.
      *
      * @param  string  $format
      * @param  mixed   $value
@@ -1403,7 +1410,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Given two date/time strings, check that one is after the other.
+     * Étant donné deux chaînes date/heure, vérifiez que l’une est après l’autre.
      *
      * @param  string  $format
      * @param  string  $before
@@ -1420,7 +1427,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get a DateTime instance from a string.
+     * Obtenez une instance DateTime à partir d’une chaîne.
      *
      * @param  string  $format
      * @param  string  $value
@@ -1443,7 +1450,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Validate that an attribute is a valid timezone.
+     * Vérifiez qu'un attribut est un fuseau horaire valide.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1454,7 +1461,7 @@ class Validator implements MessageProviderInterface
         try {
             new DateTimeZone($value);
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             return false;
         }
 
@@ -1462,7 +1469,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the date format for an attribute if it has one.
+     * Obtenez le format de date d'un attribut s'il en possède un.
      *
      * @param  string  $attribute
      * @return string|null
@@ -1475,7 +1482,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the validation message for an attribute and rule.
+     * Obtenez le message de validation pour un attribut et une règle.
      *
      * @param  string  $attribute
      * @param  string  $rule
@@ -1487,9 +1494,9 @@ class Validator implements MessageProviderInterface
 
         $inlineMessage = $this->getInlineMessage($attribute, $lowerRule);
 
-        // First we will retrieve the custom message for the validation rule if one
-        // exists. If a custom validation message is being used we'll return the
-        // custom message, otherwise we'll keep searching for a valid message.
+        // Nous allons d'abord récupérer le message personnalisé pour la règle de validation si une
+        // existe. Si un message de validation personnalisé est utilisé, nous renverrons le
+        // message personnalisé, sinon nous continuerons à rechercher un message valide.
         if (! is_null($inlineMessage)) {
             return $inlineMessage;
         }
@@ -1498,23 +1505,23 @@ class Validator implements MessageProviderInterface
 
         $customMessage = $this->config->get($customKey);
 
-        // First we check for a custom defined validation message for the attribute
-        // and rule. This allows the developer to specify specific messages for
-        // only some attributes and rules that need to get specially formed.
+        // Nous vérifions d’abord s’il existe un message de validation personnalisé pour l’attribut
+        // et règle. Cela permet au développeur de spécifier des messages spécifiques pour
+        // seulement certains attributs et règles qui doivent être spécialement formés.
         if (! is_null($customMessage)) {
             return $customMessage;
         }
 
-        // If the rule being validated is a "size" rule, we will need to gather the
-        // specific error message for the type of attribute being validated such
-        // as a number, file or string which all have different message types.
+        // Si la règle en cours de validation est une règle de « taille », nous devrons rassembler les
+        // message d'erreur spécifique au type d'attribut en cours de validation tel
+        // sous forme de nombre, de fichier ou de chaîne ayant tous des types de messages différents.
         else if (in_array($rule, $this->sizeRules)) {
             return $this->getSizeMessage($attribute, $rule);
         }
 
-        // Finally, if no developer specified messages have been set, and no other
-        // special messages apply for this rule, we will just pull the default
-        // messages out of the translator service for this validation rule.
+        // Enfin, si aucun message spécifié par le développeur n'a été défini et qu'aucun autre
+        // des messages spéciaux s'appliquent à cette règle, nous allons simplement extraire la valeur par défaut
+        // messages sortant du service de traduction pour cette règle de validation.
         $key = "validation.{$lowerRule}";
 
         if (! is_null($value = $this->config->get($key))) {
@@ -1530,7 +1537,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the inline message for a rule if it exists.
+     * Obtenez le message en ligne pour une règle si elle existe.
      *
      * @param  string  $attribute
      * @param  string  $lowerRule
@@ -1543,9 +1550,9 @@ class Validator implements MessageProviderInterface
 
         $keys = array("{$attribute}.{$lowerRule}", $lowerRule);
 
-        // First we will check for a custom message for an attribute specific rule
-        // message for the fields, then we will check for a general custom line
-        // that is not attribute specific. If we find either we'll return it.
+        // Nous allons d'abord rechercher un message personnalisé pour une règle spécifique à un attribut.
+        // message pour les champs, puis nous rechercherons une ligne personnalisée générale
+        // ce n'est pas spécifique à un attribut. Si nous trouvons l'un ou l'autre, nous le rendrons.
         foreach ($keys as $key) {
             if (isset($source[$key])) {
                 return $source[$key];
@@ -1554,7 +1561,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the proper error message for an attribute and size rule.
+     * Obtenez le message d’erreur approprié pour une règle d’attribut et de taille.
      *
      * @param  string  $attribute
      * @param  string  $rule
@@ -1564,9 +1571,9 @@ class Validator implements MessageProviderInterface
     {
         $lowerRule = Str::camel($rule);
 
-        // There are three different types of size validations. The attribute may be
-        // either a number, file, or string so we will check a few things to know
-        // which type of value it is and return the correct line for that type.
+        // Il existe trois types différents de validations de taille. L'attribut peut être
+        // soit un nombre, un fichier ou une chaîne, nous allons donc vérifier quelques points à savoir
+        // de quel type de valeur il s'agit et renvoie la ligne correcte pour ce type.
         $type = $this->getAttributeType($attribute);
 
         $key = "validation.{$lowerRule}.{$type}";
@@ -1575,16 +1582,17 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the data type of the given attribute.
+     * Obtenez le type de données de l'attribut donné.
      *
      * @param  string  $attribute
      * @return string
      */
     protected function getAttributeType($attribute)
     {
-        // We assume that the attributes present in the file array are files so that
-        // means that if the attribute does not have a numeric rule and the files
-        // list doesn't have it we'll just consider it a string by elimination.
+        // Nous supposons que les attributs présents dans le tableau file sont des fichiers donc
+        // signifie que si l'attribut n'a pas de règle numérique et que les fichiers
+        // la liste ne l'a pas, nous la considérerons simplement comme une chaîne par élimination.
+
         if ($this->hasRule($attribute, $this->numericRules)) {
             return 'numeric';
         } else if ($this->hasRule($attribute, array('Array'))) {
@@ -1597,7 +1605,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all error message place-holders with actual values.
+     * Remplacez tous les espaces réservés des messages d’erreur par des valeurs réelles.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1621,7 +1629,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Transform an array of attributes to their displayable form.
+     * Transformez un tableau d'attributs en leur forme affichable.
      *
      * @param  array  $values
      * @return array
@@ -1630,9 +1638,9 @@ class Validator implements MessageProviderInterface
     {
         $attributes = array();
 
-        // For each attribute in the list we will simply get its displayable form as
-        // this is convenient when replacing lists of parameters like some of the
-        // replacement functions do when formatting out the validation message.
+        // Pour chaque attribut de la liste, nous obtiendrons simplement sa forme affichable sous la forme
+        // ceci est pratique pour remplacer des listes de paramètres comme certains des
+        // les fonctions de remplacement le font lors du formatage du message de validation.
         foreach ($values as $key => $value) {
             $attributes[$key] = $this->getAttribute($value);
         }
@@ -1641,37 +1649,37 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the displayable name of the attribute.
+     * Obtenez le nom affichable de l’attribut.
      *
      * @param  string  $attribute
      * @return string
      */
     protected function getAttribute($attribute)
     {
-        // The developer may dynamically specify the array of custom attributes
-        // on this Validator instance. If the attribute exists in this array
-        // it takes precedence over all other ways we can pull attributes.
+        // Le développeur peut spécifier dynamiquement le tableau d'attributs personnalisés
+        // sur cette instance du Validator. Si l'attribut existe dans ce tableau
+        // cela a priorité sur toutes les autres façons dont nous pouvons extraire des attributs.
         if (isset($this->customAttributes[$attribute])) {
             return $this->customAttributes[$attribute];
         }
 
         $key = "validation.attributes.{$attribute}";
 
-        // We allow for the developer to specify language lines for each of the
-        // attributes allowing for more displayable counterparts of each of
-        // the attributes. This provides the ability for simple formats.
+        // Nous permettons au développeur de spécifier des lignes de langue pour chacun des
+        // attributs permettant des contreparties plus affichables de chacun des
+        // les attributs. Cela offre la possibilité d’utiliser des formats simples.
         if (! is_null($line = $this->config->get($key))) {
             return $line;
         }
 
-        // If no language line has been specified for the attribute all of the
-        // underscores are removed from the attribute name and that will be
-        // used as default versions of the attribute's displayable names.
+        // Si aucune ligne de langue n'a été spécifiée pour l'attribut, tous les
+        // les traits de soulignement sont supprimés du nom de l'attribut et ce sera
+        // utilisé comme versions par défaut des noms affichables de l'attribut.
         return str_replace('_', ' ', Str::snake($attribute));
     }
 
     /**
-     * Get the displayable name of the value.
+     * Obtenez le nom affichable de la valeur.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -1693,7 +1701,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the between rule.
+     * Remplacez tous les espaces réservés pour la règle between.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1707,7 +1715,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the digits rule.
+     * Remplacez tous les espaces réservés pour la règle des chiffres.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1721,7 +1729,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the digits (between) rule.
+     * Remplacez tous les espaces réservés pour la règle des chiffres (entre).
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1735,7 +1743,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the size rule.
+     * Remplacez tous les espaces réservés pour la règle de taille.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1749,7 +1757,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the min rule.
+     * Remplacez tous les espaces réservés pour la règle min.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1763,7 +1771,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the max rule.
+     * Remplacez tous les espaces réservés pour la règle max.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1777,7 +1785,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the in rule.
+     * Remplacez tous les espaces réservés pour la règle in.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1795,7 +1803,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the not_in rule.
+     * Remplacez tous les espaces réservés pour la règle not_in.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1809,7 +1817,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the mimes rule.
+     * Remplacez tous les espaces réservés pour la règle des mimes.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1823,7 +1831,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the required_with rule.
+     * Remplacez tous les espaces réservés pour la règle require_with.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1839,7 +1847,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the required_without rule.
+     * Remplacez tous les espaces réservés pour la règle require_without.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1853,7 +1861,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the required_without_all rule.
+     * Remplacez tous les espaces réservés pour la règle require_without_all.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1867,7 +1875,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the required_if rule.
+     * Remplacez tous les espaces réservés pour la règle require_if.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1885,7 +1893,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the same rule.
+     * Remplacez tous les espaces réservés pour la même règle.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1899,7 +1907,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the different rule.
+     * Remplacez tous les espaces réservés pour les différentes règles.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1913,7 +1921,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the date_format rule.
+     * Remplacez tous les espaces réservés pour la règle date_format.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1927,7 +1935,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the before rule.
+     * Remplacez tous les espaces réservés pour la règle avant.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1945,7 +1953,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Replace all place-holders for the after rule.
+     * Remplacez tous les espaces réservés pour la règle after.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -1959,7 +1967,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Determine if the given attribute has a rule in the given set.
+     * Déterminez si l'attribut donné a une règle dans l'ensemble donné.
      *
      * @param  string  $attribute
      * @param  string|array  $rules
@@ -1971,7 +1979,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get a rule and its parameters for a given attribute.
+     * Obtenez une règle et ses paramètres pour un attribut donné.
      *
      * @param  string  $attribute
      * @param  string|array  $rules
@@ -1995,7 +2003,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Extract the rule name and parameters from a rule.
+     * Extrayez le nom de la règle et les paramètres d'une règle.
      *
      * @param  array|string  $rules
      * @return array
@@ -2010,7 +2018,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Parse an array based rule.
+     * Analyser une règle basée sur un tableau.
      *
      * @param  array  $rules
      * @return array
@@ -2025,7 +2033,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Parse a string based rule.
+     * Analyser une règle basée sur une chaîne.
      *
      * @param  string  $rules
      * @return array
@@ -2034,9 +2042,9 @@ class Validator implements MessageProviderInterface
     {
         $parameters = array();
 
-        // The format for specifying validation rules and parameters follows an
-        // easy {rule}:{parameters} formatting convention. For instance the
-        // rule "Max:3" states that the value may only be three letters.
+        // Le format de spécification des règles et paramètres de validation suit un
+        // convention de formatage simple {rule} : {parameters}. Par exemple le
+        // la règle "Max:3" indique que la valeur ne peut contenir que trois lettres.
         if (strpos($rules, ':') !== false) {
             list($rules, $parameter) = explode(':', $rules, 2);
 
@@ -2049,7 +2057,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Parse a parameter list.
+     * Analyser une liste de paramètres.
      *
      * @param  string  $rule
      * @param  string  $parameter
@@ -2065,7 +2073,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the array of custom validator extensions.
+     * Obtenez la gamme d’extensions de validateur personnalisées.
      *
      * @return array
      */
@@ -2075,7 +2083,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Register an array of custom validator extensions.
+     * Enregistrez un tableau d’extensions de validateur personnalisées.
      *
      * @param  array  $extensions
      * @return void
@@ -2092,7 +2100,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Register an array of custom implicit validator extensions.
+     * Enregistrez un tableau d’extensions de validateur implicites personnalisées.
      *
      * @param  array  $extensions
      * @return void
@@ -2107,7 +2115,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Register a custom validator extension.
+     * Enregistrez une extension de validateur personnalisée.
      *
      * @param  string  $rule
      * @param  \Closure|string  $extension
@@ -2119,7 +2127,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Register a custom implicit validator extension.
+     * Enregistrez une extension de validateur implicite personnalisée.
      *
      * @param  string   $rule
      * @param  \Closure|string  $extension
@@ -2133,7 +2141,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the array of custom validator message replacers.
+     * Obtenez la gamme de remplaçants de messages de validateur personnalisés.
      *
      * @return array
      */
@@ -2143,7 +2151,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Register an array of custom validator message replacers.
+     * Enregistrez un tableau de remplacements de messages de validateur personnalisés.
      *
      * @param  array  $replacers
      * @return void
@@ -2160,7 +2168,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Register a custom validator message replacer.
+     * Enregistrez un remplaçant de message de validateur personnalisé.
      *
      * @param  string  $rule
      * @param  \Closure|string  $replacer
@@ -2172,7 +2180,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the data under validation.
+     * Obtenez les données en cours de validation.
      *
      * @return array
      */
@@ -2182,7 +2190,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Set the data under validation.
+     * Définissez les données sous validation.
      *
      * @param  array  $data
      * @return void
@@ -2193,7 +2201,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the validation rules.
+     * Obtenez les règles de validation.
      *
      * @return array
      */
@@ -2203,7 +2211,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Set the validation rules.
+     * Définissez les règles de validation.
      *
      * @param  array  $rules
      * @return $this
@@ -2216,7 +2224,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Set the custom attributes on the validator.
+     * Définissez les attributs personnalisés sur le validateur.
      *
      * @param  array  $attributes
      * @return $this
@@ -2229,7 +2237,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Set the custom values on the validator.
+     * Définissez les valeurs personnalisées sur le validateur.
      *
      * @param  array  $values
      * @return $this
@@ -2242,7 +2250,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the files under validation.
+     * Obtenez les fichiers en cours de validation.
      *
      * @return array
      */
@@ -2252,7 +2260,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Set the files under validation.
+     * Mettez les fichiers en cours de validation.
      *
      * @param  array  $files
      * @return $this
@@ -2265,7 +2273,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the Presence Verifier implementation.
+     * Obtenez l’implémentation de Presence Verifier.
      *
      * @return \Two\Validation\Contracts\PresenceVerifierInterface
      *
@@ -2281,7 +2289,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Set the Presence Verifier implementation.
+     * Définissez l’implémentation de Presence Verifier.
      *
      * @param  \Two\Validation\Contracts\PresenceVerifierInterface  $presenceVerifier
      * @return void
@@ -2292,7 +2300,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the custom messages for the validator
+     * Obtenez les messages personnalisés pour le validateur
      *
      * @return array
      */
@@ -2302,7 +2310,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Set the custom messages for the validator
+     * Définir les messages personnalisés pour le validateur
      *
      * @param  array  $messages
      * @return void
@@ -2313,7 +2321,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the custom attributes used by the validator.
+     * Obtenez les attributs personnalisés utilisés par le validateur.
      *
      * @return array
      */
@@ -2323,7 +2331,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Add custom attributes to the validator.
+     * Ajoutez des attributs personnalisés au validateur.
      *
      * @param  array  $customAttributes
      * @return $this
@@ -2336,7 +2344,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the custom values for the validator.
+     * Obtenez les valeurs personnalisées pour le validateur.
      *
      * @return array
      */
@@ -2346,7 +2354,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Add the custom values for the validator.
+     * Ajoutez les valeurs personnalisées pour le validateur.
      *
      * @param  array  $customValues
      * @return $this
@@ -2359,7 +2367,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the fallback messages for the validator.
+     * Obtenez les messages de secours pour le validateur.
      *
      * @return array
      */
@@ -2369,7 +2377,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Set the fallback messages for the validator.
+     * Définissez les messages de secours pour le validateur.
      *
      * @param  array  $messages
      * @return void
@@ -2380,7 +2388,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the failed validation rules.
+     * Obtenez les règles de validation ayant échoué.
      *
      * @return array
      */
@@ -2390,7 +2398,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the message container for the validator.
+     * Obtenez le conteneur de messages pour le validateur.
      *
      * @return \Two\Support\MessageBag
      */
@@ -2404,7 +2412,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * An alternative more semantic shortcut to the message container.
+     * Un raccourci alternatif plus sémantique vers le conteneur de messages.
      *
      * @return \Two\Support\MessageBag
      */
@@ -2414,7 +2422,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Get the messages for the instance.
+     * Récupérez les messages de l'instance.
      *
      * @return \Two\Support\MessageBag
      */
@@ -2424,7 +2432,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Set the IoC container instance.
+     * Définissez l'instance de conteneur IoC.
      *
      * @param  \Two\Container\Container  $container
      * @return void
@@ -2435,7 +2443,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Call a custom validator extension.
+     * Appelez une extension de validateur personnalisée.
      *
      * @param  string  $rule
      * @param  array   $parameters
@@ -2453,7 +2461,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Call a class based validator extension.
+     * Appelez une extension de validateur basée sur une classe.
      *
      * @param  string  $callback
      * @param  array   $parameters
@@ -2469,7 +2477,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Call a custom validator message replacer.
+     * Appelez un remplaçant de message de validateur personnalisé.
      *
      * @param  string  $message
      * @param  string  $attribute
@@ -2489,7 +2497,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Call a class based validator message replacer.
+     * Appelez un remplaçant de message de validateur basé sur une classe.
      *
      * @param  string  $callback
      * @param  string  $message
@@ -2508,7 +2516,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Require a certain number of parameters to be present.
+     * Nécessite la présence d'un certain nombre de paramètres.
      *
      * @param  int    $count
      * @param  array  $parameters
@@ -2524,7 +2532,7 @@ class Validator implements MessageProviderInterface
     }
 
     /**
-     * Handle dynamic calls to class methods.
+     * Gérez les appels dynamiques aux méthodes de classe.
      *
      * @param  string  $method
      * @param  array   $parameters
@@ -2540,6 +2548,6 @@ class Validator implements MessageProviderInterface
             return $this->callExtension($rule, $parameters);
         }
 
-        throw new \BadMethodCallException("Method [$method] does not exist.");
+        throw new BadMethodCallException("Method [$method] does not exist.");
     }
 }

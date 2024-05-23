@@ -2,6 +2,10 @@
 
 namespace Two\Environment;
 
+
+use Two\Environment\Contracts\EnvironmentVariablesLoaderInterface;
+
+
 /**
  * Chargeur PHP $_ENV pour protéger les options de configuration sensibles.
  *
@@ -13,7 +17,7 @@ class EnvironmentVariables
     /**
      * L'implémentation du chargeur d'environnement.
      *
-     * @var \Two\Environment\EnvironmentLoaderInterface  $loader
+     * @var \Two\Environment\Contracts\EnvironmentLoaderInterface  $loader
      */
     protected $loader;
 
@@ -21,7 +25,7 @@ class EnvironmentVariables
     /**
      * L'instance d'environnement de serveur.
      *
-     * @param  \Two\Environment\EnvironmentLoaderInterface  $loader
+     * @param  \Two\Environment\Contracts\EnvironmentLoaderInterface  $loader
      * @return void
      */
     public function __construct(EnvironmentVariablesLoaderInterface $loader)

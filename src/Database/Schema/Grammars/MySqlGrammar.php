@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Schema\Grammars;
 
 use Two\Support\Fluent;
@@ -11,21 +16,21 @@ use Two\Database\Schema\Grammar;
 class MySqlGrammar extends Grammar
 {
     /**
-     * The possible column modifiers.
+     * Les modificateurs de colonnes possibles.
      *
      * @var array
      */
     protected $modifiers = array('Unsigned', 'Nullable', 'Default', 'Increment', 'Comment', 'After');
 
     /**
-     * The possible column serials
+     * Les séries de colonnes possibles
      *
      * @var array
      */
     protected $serials = array('bigInteger', 'integer', 'mediumInteger', 'smallInteger', 'tinyInteger');
 
     /**
-     * Compile the query to determine the list of tables.
+     * Compilez la requête pour déterminer la liste des tables.
      *
      * @return string
      */
@@ -35,7 +40,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile the query to determine the list of columns.
+     * Compilez la requête pour déterminer la liste des colonnes.
      *
      * @return string
      */
@@ -45,7 +50,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a create table command.
+     * Compilez une commande de création de table.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -58,9 +63,9 @@ class MySqlGrammar extends Grammar
 
         $sql = 'create table '.$this->wrapTable($blueprint)." ($columns)";
 
-        // Once we have the primary SQL, we can add the encoding option to the SQL for
-        // the table.  Then, we can check if a storage engine has been supplied for
-        // the table. If so, we will add the engine declaration to the SQL query.
+        // Une fois que nous avons le SQL principal, nous pouvons ajouter l'option d'encodage au SQL pour
+        // la table. Ensuite, nous pouvons vérifier si un moteur de stockage a été fourni pour
+        // la table. Si tel est le cas, nous ajouterons la déclaration du moteur à la requête SQL.
         $sql = $this->compileCreateEncoding($sql, $connection);
 
         if (isset($blueprint->engine)) {
@@ -71,7 +76,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Append the character set specifications to a command.
+     * Ajoutez les spécifications du jeu de caractères à une commande.
      *
      * @param  string  $sql
      * @param  \Two\Database\Connection  $connection
@@ -91,7 +96,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile an add column command.
+     * Compilez une commande d’ajout de colonne.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -107,7 +112,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a primary key command.
+     * Compilez une commande clé primaire.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -121,7 +126,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a unique key command.
+     * Compilez un raccourci clavier unique.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -133,7 +138,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a plain index key command.
+     * Compilez une commande de touche d'index simple.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -145,7 +150,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile an index creation command.
+     * Compilez une commande de création d'index.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -162,7 +167,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a drop table command.
+     * Compilez une commande drop table.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -174,7 +179,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a drop table (if exists) command.
+     * Compilez une commande drop table (si elle existe).
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -186,7 +191,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a drop column command.
+     * Compilez une commande de suppression de colonne.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -202,7 +207,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a drop primary key command.
+     * Compilez une commande de clé primaire drop.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -214,7 +219,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a drop unique key command.
+     * Compilez un raccourci clavier unique.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -228,7 +233,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a drop index command.
+     * Compilez une commande drop index.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -242,7 +247,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a drop foreign key command.
+     * Compilez une commande de clé étrangère drop.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -256,7 +261,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a rename table command.
+     * Compilez une commande de renommage de table.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -270,7 +275,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a char type.
+     * Créez la définition de colonne pour un type char.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -281,7 +286,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a string type.
+     * Créez la définition de colonne pour un type de chaîne.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -292,7 +297,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a text type.
+     * Créez la définition de colonne pour un type de texte.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -303,7 +308,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a medium text type.
+     * Créez la définition de colonne pour un type de texte moyen.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -314,7 +319,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a long text type.
+     * Créez la définition de colonne pour un type de texte long.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -325,7 +330,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a big integer type.
+     * Créez la définition de colonne pour un type grand entier.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -336,7 +341,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a integer type.
+     * Créez la définition de colonne pour un type entier.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -347,7 +352,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a medium integer type.
+     * Créez la définition de colonne pour un type entier moyen.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -358,7 +363,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a tiny integer type.
+     * Créez la définition de colonne pour un type entier minuscule.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -369,7 +374,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a small integer type.
+     * Créez la définition de colonne pour un petit type entier.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -380,7 +385,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a float type.
+     * Créez la définition de colonne pour un type float.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -391,7 +396,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a double type.
+     * Créez la définition de colonne pour un type double.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -407,7 +412,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a decimal type.
+     * Créez la définition de colonne pour un type décimal.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -418,7 +423,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a boolean type.
+     * Créez la définition de colonne pour un type booléen.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -429,7 +434,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for an enum type.
+     * Créez la définition de colonne pour un type enum.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -440,7 +445,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a date type.
+     * Créez la définition de colonne pour un type de date.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -451,7 +456,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a date-time type.
+     * Créez la définition de colonne pour un type date-heure.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -462,7 +467,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a time type.
+     * Créez la définition de colonne pour un type d'heure.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -473,7 +478,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a timestamp type.
+     * Créez la définition de colonne pour un type d'horodatage.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -486,7 +491,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a binary type.
+     * Créez la définition de colonne pour un type binaire.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -497,7 +502,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Get the SQL for an unsigned column modifier.
+     * Obtenez le SQL pour un modificateur de colonne non signé.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $column
@@ -509,7 +514,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Get the SQL for a nullable column modifier.
+     * Obtenez le SQL pour un modificateur de colonne nullable.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $column
@@ -521,7 +526,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Get the SQL for a default column modifier.
+     * Obtenez le SQL pour un modificateur de colonne par défaut.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $column
@@ -535,7 +540,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Get the SQL for an auto-increment column modifier.
+     * Obtenez le SQL pour un modificateur de colonne à incrémentation automatique.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $column
@@ -549,7 +554,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Get the SQL for an "after" column modifier.
+     * Obtenez le SQL pour un modificateur de colonne "après".
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $column
@@ -563,7 +568,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Get the SQL for an "comment" column modifier.
+     * Obtenez le SQL pour un modificateur de colonne "commentaire".
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $column
@@ -577,7 +582,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Wrap a single string in keyword identifiers.
+     * Enveloppez une seule chaîne dans des identifiants de mots clés.
      *
      * @param  string  $value
      * @return string

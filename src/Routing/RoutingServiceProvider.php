@@ -1,21 +1,24 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Routing;
 
-
-use Two\Routing\ResponseFactory;
 use Two\Routing\Router;
 use Two\Routing\Redirector;
 use Two\Routing\UrlGenerator;
+use Two\Routing\Response\ResponseFactory;
 
-use Two\Support\ServiceProvider;
-
+use Two\Application\Providers\ServiceProvider;
 
 class RoutingServiceProvider extends ServiceProvider
 {
 
     /**
-     * Register the Service Provider.
+     * Enregistrez le fournisseur de services.
      *
      * @return void
      */
@@ -29,12 +32,12 @@ class RoutingServiceProvider extends ServiceProvider
 
         $this->registerResponseFactory();
 
-        // Register the additional service providers.
+        // Enregistrez les prestataires de services supplémentaires.
         $this->app->register('Two\Routing\Assets\AssetServiceProvider');
     }
 
     /**
-     * Register the router instance.
+     * Enregistrez l'instance de routeur.
      *
      * @return void
      */
@@ -47,7 +50,7 @@ class RoutingServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the URL generator service.
+     * Enregistrez le service générateur d'URL.
      *
      * @return void
      */
@@ -55,9 +58,9 @@ class RoutingServiceProvider extends ServiceProvider
     {
         $this->app->singleton('url', function ($app)
         {
-            // The URL generator needs the route collection that exists on the router.
-            // Keep in mind this is an object, so we're passing by references here
-            // and all the registered routes will be available to the generator.
+            // Le générateur d'URL a besoin de la collection de routes qui existe sur le routeur.
+            // Gardez à l'esprit qu'il s'agit d'un objet, nous passons donc par références ici
+            // et toutes les routes enregistrées seront disponibles pour le générateur.
             $routes = $app['router']->getRoutes();
 
             $url = new UrlGenerator($routes, $app->rebinding('request', function ($app, $request)
@@ -75,7 +78,7 @@ class RoutingServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Redirector service.
+     * Enregistrez le service de redirection.
      *
      * @return void
      */
@@ -85,9 +88,9 @@ class RoutingServiceProvider extends ServiceProvider
         {
             $redirector = new Redirector($app['url']);
 
-            // If the session is set on the application instance, we'll inject it into
-            // the redirector instance. This allows the redirect responses to allow
-            // for the quite convenient "with" methods that flash to the session.
+            // Si la session est définie sur l'instance d'application, nous l'injecterons dans
+            // l'instance du redirecteur. Cela permet aux réponses de redirection d'autoriser
+            // pour les méthodes "with" très pratiques qui clignotent dans la session.
             if (isset($app['session.store'])) {
                 $redirector->setSession($app['session.store']);
             }
@@ -97,7 +100,7 @@ class RoutingServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the response factory implementation.
+     * Enregistrez l’implémentation de la fabrique de réponses.
      *
      * @return void
      */

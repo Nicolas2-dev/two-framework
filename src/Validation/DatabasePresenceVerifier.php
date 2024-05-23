@@ -1,23 +1,28 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Validation;
 
-use Two\Database\ConnectionResolverInterface;
+use Two\Database\Contracts\ConnectionResolverInterface;
 use Two\Database\Query\Builder as QueryBuilder;
-use Two\Validation\PresenceVerifierInterface;
+use Two\Validation\Contracts\PresenceVerifierInterface;
 
 
 class DatabasePresenceVerifier implements PresenceVerifierInterface
 {
     /**
-     * The Database Connection Resolver implementation.
+     * Implémentation du résolveur de connexion à la base de données.
      *
-     * @var  \Two\Database\ConnectionResolverInterface
+     * @var  \Two\Database\Contracts\ConnectionResolverInterface
      */
     protected $db;
 
     /**
-     * The database connection to use.
+     * La connexion à la base de données à utiliser.
      *
      * @var string
      */
@@ -25,7 +30,7 @@ class DatabasePresenceVerifier implements PresenceVerifierInterface
 
 
     /**
-     * Create a new Database Presence Verifier.
+     * Créez un nouveau vérificateur de présence de base de données.
      *
      * @return void
      */
@@ -35,7 +40,7 @@ class DatabasePresenceVerifier implements PresenceVerifierInterface
     }
 
     /**
-     * Count the number of objects in a collection having the given value.
+     * Comptez le nombre d'objets dans une collection ayant la valeur donnée.
      *
      * @param  string  $collection
      * @param  string  $column
@@ -61,7 +66,7 @@ class DatabasePresenceVerifier implements PresenceVerifierInterface
     }
 
     /**
-     * Count the number of objects in a collection with the given values.
+     * Comptez le nombre d'objets dans une collection avec les valeurs données.
      *
      * @param  string  $collection
      * @param  string  $column
@@ -81,7 +86,7 @@ class DatabasePresenceVerifier implements PresenceVerifierInterface
     }
 
     /**
-     * Add a "WHERE" clause to the given query.
+     * Ajoutez une clause "WHERE" à la requête donnée.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  string  $key
@@ -100,7 +105,7 @@ class DatabasePresenceVerifier implements PresenceVerifierInterface
     }
 
     /**
-     * Get a QueryBuilder instance for the given database Table.
+     * Obtenez une instance QueryBuilder pour la table de base de données donnée.
      *
      * @param  string  $table
      * @return \Two\Database\Query\Builder
@@ -113,7 +118,7 @@ class DatabasePresenceVerifier implements PresenceVerifierInterface
     }
 
     /**
-     * Set the connection to be used.
+     * Définissez la connexion à utiliser.
      *
      * @param  string  $connection
      * @return void

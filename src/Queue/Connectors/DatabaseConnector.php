@@ -1,26 +1,31 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Connectors;
 
-use Two\Database\ConnectionResolverInterface;
-use Two\Queue\Connectors\ConnectorInterface;
-use Two\Queue\Queues\DatabaseQueue;
 use Two\Support\Arr;
+use Two\Queue\Queues\DatabaseQueue;
+use Two\Queue\Contracts\Connectors\ConnectorInterface;
+use Two\Database\Contracts\ConnectionResolverInterface;
 
 
 class DatabaseConnector implements ConnectorInterface
 {
     /**
-     * Database connections.
+     * Connexions à la base de données.
      *
-     * @var \Two\Database\ConnectionResolverInterface
+     * @var \Two\Database\Contracts\ConnectionResolverInterface
      */
     protected $connections;
 
     /**
-     * Create a new connector instance.
+     * Créez une nouvelle instance de connecteur.
      *
-     * @param  \Two\Database\ConnectionResolverInterface  $connections
+     * @param  \Two\Database\Contracts\ConnectionResolverInterface  $connections
      * @return void
      */
     public function __construct(ConnectionResolverInterface $connections)
@@ -29,10 +34,10 @@ class DatabaseConnector implements ConnectorInterface
     }
 
     /**
-     * Establish a queue connection.
+     * Établissez une connexion à la file d'attente.
      *
      * @param  array  $config
-     * @return \Two\Contracts\Queue\Queue
+     * @return \Two\Queue\Queue
      */
     public function connect(array $config)
     {

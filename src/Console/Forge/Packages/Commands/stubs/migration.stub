@@ -1,0 +1,29 @@
+<?php
+
+use Two\Database\Schema\Blueprint;
+use Two\Database\Migrations\Migration;
+
+
+class {{className}} extends Migration
+{
+
+    /**
+     * Exécutez les migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        //
+    }
+
+    /**
+     * Inversez les migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        //
+    }
+}

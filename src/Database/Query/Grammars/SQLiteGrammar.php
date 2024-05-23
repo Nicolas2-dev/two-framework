@@ -1,9 +1,9 @@
 <?php
 /**
- * SQLiteGrammar - A simple SQLite Grammar for the QueryBuilder.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
  */
 
 namespace Two\Database\Query\Grammars;
@@ -15,7 +15,7 @@ use Two\Database\Query\Grammar;
 class SQLiteGrammar extends Grammar
 {
     /**
-     * All of the available clause operators.
+     * Tous les opérateurs de clause disponibles.
      *
      * @var array
      */
@@ -26,7 +26,7 @@ class SQLiteGrammar extends Grammar
     );
 
     /**
-     * Compile an insert statement into SQL.
+     * Compilez une instruction d'insertion dans SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $values
@@ -58,7 +58,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile a truncate table statement into SQL.
+     * Compilez une instruction de table tronquée en SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return array
@@ -74,7 +74,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile a "where day" clause.
+     * Compilez une clause « où jour ».
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -86,7 +86,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile a "where month" clause.
+     * Compilez une clause « où mois ».
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -98,7 +98,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile a "where year" clause.
+     * Compilez une clause « où année ».
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $where
@@ -110,7 +110,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile a date based where clause.
+     * Compilez une date basée sur la clause Where.
      *
      * @param  string  $type
      * @param  \Two\Database\Query\Builder  $query

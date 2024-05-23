@@ -1,29 +1,34 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Pagination;
 
-use Two\Support\Collection;
-use Two\Support\HtmlString;
-use Two\Contracts\JsonableInterface;
-use Two\Contracts\ArrayableInterface;
-
-use ArrayAccess;
 use Countable;
-use IteratorAggregate;
+use ArrayAccess;
 use JsonSerializable;
+use IteratorAggregate;
+
+use Two\Collection\Collection;
+use Two\Support\HtmlString;
+use Two\Application\Contracts\JsonableInterface;
+use Two\Application\Contracts\ArrayableInterface;
 
 
 class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAccess, Countable, IteratorAggregate, JsonSerializable, JsonableInterface
 {
     /**
-     * The total number of items before slicing.
+     * Le nombre total d'éléments avant le découpage.
      *
      * @var int
      */
     protected $total;
 
     /**
-     * The last available page.
+     * La dernière page disponible.
      *
      * @var int
      */
@@ -31,7 +36,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
 
 
     /**
-     * Create a new paginator instance.
+     * Créez une nouvelle instance de paginateur.
      *
      * @param  mixed  $items
      * @param  int  $total
@@ -65,7 +70,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Create and return a new Paginator instance.
+     * Créez et renvoyez une nouvelle instance de Paginator.
      *
      * @param  int  $page
      * @return bool
@@ -82,7 +87,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Get the current page for the request.
+     * Obtenez la page actuelle de la demande.
      *
      * @param  int  $currentPage
      * @param  string  $pageName
@@ -96,7 +101,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Render the paginator using the given view.
+     * Rendre le paginateur en utilisant la vue donnée.
      *
      * @param  string  $view
      * @param  array  $data
@@ -108,7 +113,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Render the paginator using the given view.
+     * Rendre le paginateur en utilisant la vue donnée.
      *
      * @param  string  $view
      * @param  array  $data
@@ -131,7 +136,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Get the array of elements to pass to the view.
+     * Obtenez le tableau d’éléments à transmettre à la vue.
      *
      * @return array
      */
@@ -149,7 +154,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Get the window of URLs to be shown.
+     * Obtenez la fenêtre des URL à afficher.
      *
      * @param  int  $onEachSide
      * @return array
@@ -166,28 +171,28 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
             return $this->getSmallSlider();
         }
 
-        // If the current page is very close to the beginning of the page range, we will
-        // just render the beginning of the page range, followed by the last 2 of the
-        // links in this list, since we will not have room to create a full slider.
+        // Si la page actuelle est très proche du début de la plage de pages, nous
+        // affiche simplement le début de la plage de pages, suivi des 2 dernières pages
+        // liens dans cette liste, puisque nous n'aurons pas de place pour créer un slider complet.
         if ($this->currentPage() <= $window) {
             return $this->getSliderTooCloseToBeginning($window);
         }
 
-        // If the current page is close to the ending of the page range we will just get
-        // this first couple pages, followed by a larger window of these ending pages
-        // since we're too close to the end of the list to create a full on slider.
+        // Si la page actuelle est proche de la fin de la plage de pages, nous obtiendrons simplement
+        // ces deux premières pages, suivies d'une fenêtre plus grande de ces pages de fin
+        // puisque nous sommes trop près de la fin de la liste pour créer un curseur complet.
         else if ($this->currentPage() > ($this->lastPage() - $window)) {
             return $this->getSliderTooCloseToEnding($window);
         }
 
-        // If we have enough room on both sides of the current page to build a slider we
-        // will surround it with both the beginning and ending caps, with this window
-        // of pages in the middle providing a Google style sliding paginator setup.
+        // Si nous avons suffisamment d'espace des deux côtés de la page actuelle pour créer un curseur, nous
+        // l'entourera des majuscules de début et de fin, avec cette fenêtre
+        // de pages au milieu fournissant une configuration de paginateur coulissant de style Google.
         return $this->getFullSlider($onEachSide);
     }
 
     /**
-     * Get the slider of URLs there are not enough pages to slide.
+     * Obtenez le curseur des URL, il n'y a pas assez de pages à glisser.
      *
      * @return array
      */
@@ -201,7 +206,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Get the slider of URLs when too close to beginning of window.
+     * Obtenez le curseur des URL lorsqu'il est trop proche du début de la fenêtre.
      *
      * @param  int  $window
      * @return array
@@ -218,7 +223,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Get the slider of URLs when too close to ending of window.
+     * Obtenez le curseur des URL lorsqu'il est trop proche de la fin de la fenêtre.
      *
      * @param  int  $window
      * @return array
@@ -237,7 +242,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Get the slider of URLs when a full slider can be made.
+     * Obtenez le curseur des URL lorsqu'un curseur complet peut être créé.
      *
      * @param  int  $onEachSide
      * @return array
@@ -261,7 +266,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Get the total number of items being paginated.
+     * Obtenez le nombre total d’éléments paginés.
      *
      * @return int
      */
@@ -271,7 +276,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Determine if there are pages to show.
+     * Déterminez s’il y a des pages à afficher.
      *
      * @return bool
      */
@@ -281,7 +286,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Determine if there are more items in the data source.
+     * Déterminez s’il y a plus d’éléments dans la source de données.
      *
      * @return bool
      */
@@ -291,7 +296,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Get the URL for the next page.
+     * Obtenez l'URL de la page suivante.
      *
      * @return string|null
      */
@@ -303,7 +308,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Get the last page.
+     * Obtenez la dernière page.
      *
      * @return int
      */
@@ -313,7 +318,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Get the instance as an array.
+     * Obtenez l'instance sous forme de tableau.
      *
      * @return array
      */
@@ -333,7 +338,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Convert the object into something JSON serializable.
+     * Convertissez l'objet en quelque chose de sérialisable JSON.
      *
      * @return array
      */
@@ -343,7 +348,7 @@ class Paginator extends AbstractPaginator implements ArrayableInterface, ArrayAc
     }
 
     /**
-     * Convert the object to its JSON representation.
+     * Convertissez l'objet en sa représentation JSON.
      *
      * @param  int  $options
      * @return string

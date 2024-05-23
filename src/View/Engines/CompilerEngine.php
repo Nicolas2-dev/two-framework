@@ -1,31 +1,36 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\View\Engines;
 
-use Two\View\Compilers\CompilerInterface;
-use Two\Debug\Exception\FatalThrowableError;
+use Two\Exceptions\Exception\FatalThrowableError;
+use Two\View\Contracts\Compilers\CompilerInterface;
 
 
 class CompilerEngine extends PhpEngine
 {
     /**
-     * The Axe compiler instance.
+     * L'instance du compilateur Axe.
      *
-     * @var \Two\View\Compilers\CompilerInterface
+     * @var \Two\View\Contracts\Compilers\CompilerInterface
      */
     protected $compiler;
 
     /**
-     * A stack of the last compiled templates.
+     * Une pile des derniers modèles compilés.
      *
      * @var array
      */
     protected $lastCompiled = array();
 
     /**
-     * Create a new Axe view engine instance.
+     * Créez une nouvelle instance de moteur de vue Axe.
      *
-     * @param  \Two\View\Compilers\CompilerInterface  $compiler
+     * @param  \Two\View\Contracts\Compilers\CompilerInterface  $compiler
      * @return void
      */
     public function __construct(CompilerInterface $compiler)
@@ -34,7 +39,7 @@ class CompilerEngine extends PhpEngine
     }
 
     /**
-     * Get the evaluated contents of the View.
+     * Obtenez le contenu évalué de la vue.
      *
      * @param  string  $path
      * @param  array   $data
@@ -44,18 +49,18 @@ class CompilerEngine extends PhpEngine
     {
         $this->lastCompiled[] = $path;
 
-        // If this given view has expired, which means it has simply been edited since
-        // it was last compiled, we will re-compile the views so we can evaluate a
-        // fresh copy of the view. We'll pass the compiler the path of the view.
+        // Si cette vue donnée a expiré, cela signifie qu'elle a simplement été modifiée depuis
+        // il a été compilé pour la dernière fois, nous allons recompiler les vues afin de pouvoir évaluer un
+        // nouvelle copie de la vue. Nous transmettrons au compilateur le chemin de la vue.
         if ($this->compiler->isExpired($path)) {
             $this->compiler->compile($path);
         }
 
         $compiled = $this->compiler->getCompiledPath($path);
 
-        // Once we have the path to the compiled file, we will evaluate the paths with
-        // typical PHP just like any other templates. We also keep a stack of views
-        // which have been rendered for right exception messages to be generated.
+        // Une fois que nous aurons le chemin d'accès au fichier compilé, nous évaluerons les chemins avec
+        // PHP typique comme n'importe quel autre modèle. Nous conservons également une pile de vues
+        // qui ont été rendus pour que les messages d'exception de droit soient générés.
         $results = $this->evaluatePath($compiled, $data);
 
         array_pop($this->lastCompiled);
@@ -64,7 +69,7 @@ class CompilerEngine extends PhpEngine
     }
 
     /**
-     * Handle a view exception.
+     * Gérer une exception de vue.
      *
      * @param  \Exception  $e
      * @param  int  $obLevel
@@ -84,7 +89,7 @@ class CompilerEngine extends PhpEngine
     }
 
     /**
-     * Get the exception message for an exception.
+     * Obtenez le message d'exception pour une exception.
      *
      * @param  \Exception  $e
      * @return string
@@ -97,9 +102,9 @@ class CompilerEngine extends PhpEngine
     }
 
     /**
-     * Get the compiler implementation.
+     * Obtenez l'implémentation du compilateur.
      *
-     * @return \Two\View\Compilers\CompilerInterface
+     * @return \Two\View\Contracts\Compilers\CompilerInterface
      */
     public function getCompiler()
     {

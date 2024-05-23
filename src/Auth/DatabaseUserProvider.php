@@ -1,10 +1,17 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Auth;
 
-use Two\Database\Connection;
-use Two\Hashing\HasherInterface;
 use Two\Support\Str;
+use Two\Database\Connection;
+use Two\Auth\Contracts\UserInterface;
+use Two\Hashing\Contracts\HasherInterface;
+use Two\Auth\Contracts\UserProviderInterface;
 
 
 class DatabaseUserProvider implements UserProviderInterface
@@ -19,7 +26,7 @@ class DatabaseUserProvider implements UserProviderInterface
     /**
      * The hasher implementation.
      *
-     * @var \Two\Hashing\HasherInterface
+     * @var \Two\Hashing\Contracts\HasherInterface
      */
     protected $hasher;
 
@@ -34,7 +41,7 @@ class DatabaseUserProvider implements UserProviderInterface
      * Create a new database user provider.
      *
      * @param  \Two\Database\Connection  $conn
-     * @param  \Two\Hashing\HasherInterface  $hasher
+     * @param  \Two\Hashing\Contracts\HasherInterface  $hasher
      * @param  string  $table
      * @return void
      */
@@ -49,7 +56,7 @@ class DatabaseUserProvider implements UserProviderInterface
      * Retrieve a user by their unique identifier.
      *
      * @param  mixed  $identifier
-     * @return \Two\Auth\UserInterface|null
+     * @return \Two\Auth\Contracts\UserInterface|null
      */
     public function retrieveById($identifier)
     {
@@ -65,7 +72,7 @@ class DatabaseUserProvider implements UserProviderInterface
      *
      * @param  mixed   $identifier
      * @param  string  $token
-     * @return \Two\Auth\UserInterface|null
+     * @return \Two\Auth\Contracts\UserInterface|null
      */
     public function retrieveByToken($identifier, $token)
     {
@@ -82,7 +89,7 @@ class DatabaseUserProvider implements UserProviderInterface
     /**
      * Update the "remember me" token for the given user in storage.
      *
-     * @param  \Two\Auth\UserInterface  $user
+     * @param  \Two\Auth\Contracts\UserInterface  $user
      * @param  string  $token
      * @return void
      */
@@ -97,7 +104,7 @@ class DatabaseUserProvider implements UserProviderInterface
      * Retrieve a user by the given credentials.
      *
      * @param  array  $credentials
-     * @return \Two\Auth\UserInterface|null
+     * @return \Two\Auth\Contracts\UserInterface|null
      */
     public function retrieveByCredentials(array $credentials)
     {
@@ -125,7 +132,7 @@ class DatabaseUserProvider implements UserProviderInterface
     /**
      * Validate a user against the given credentials.
      *
-     * @param  \Two\Auth\UserInterface  $user
+     * @param  \Two\Auth\Contracts\UserInterface  $user
      * @param  array  $credentials
      * @return bool
      */

@@ -1,0 +1,33 @@
+<?php
+
+namespace {{namespace}}\Providers;
+
+use Two\Auth\Contracts\GateInterface as Gate;
+use Two\Application\Providers\AuthServiceProvider as ServiceProvider;
+
+
+class AuthServiceProvider extends ServiceProvider
+{
+    /**
+     * Les mappages de stratégie pour le {{lower_type}}.
+     *
+     * @var array
+     */
+    protected $policies = array(
+        '{{namespace}}\Models\SomeModel' => '{{namespace}}\Policies\ModelPolicy',
+    );
+
+
+    /**
+     * Enregistrez n'importe quel service d'authentification/autorisation {{lower_type}}.
+     *
+     * @param  \Two\Auth\Contracts\GateInterface  $gate
+     * @return void
+     */
+    public function boot(Gate $gate)
+    {
+        $this->registerPolicies($gate);
+
+        //
+    }
+}

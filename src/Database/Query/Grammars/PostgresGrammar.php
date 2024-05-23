@@ -1,9 +1,9 @@
 <?php
 /**
- * PostgresGrammar - A simple PostgresSQL Grammar for the QueryBuilder.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
  */
 
 namespace Two\Database\Query\Grammars;
@@ -15,7 +15,7 @@ use Two\Database\Query\Grammar;
 class PostgresGrammar extends Grammar
 {
     /**
-     * All of the available clause operators.
+     * Tous les opérateurs de clause disponibles.
      *
      * @var array
      */
@@ -27,7 +27,7 @@ class PostgresGrammar extends Grammar
 
 
     /**
-     * Compile the lock into SQL.
+     * Compilez le verrou en SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  bool|string  $value
@@ -41,7 +41,7 @@ class PostgresGrammar extends Grammar
     }
 
     /**
-     * Compile an update statement into SQL.
+     * Compilez une instruction de mise à jour en SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $values
@@ -61,7 +61,7 @@ class PostgresGrammar extends Grammar
     }
 
     /**
-     * Compile the columns for the update statement.
+     * Compilez les colonnes pour l'instruction de mise à jour.
      *
      * @param  array   $values
      * @return string
@@ -78,7 +78,7 @@ class PostgresGrammar extends Grammar
     }
 
     /**
-     * Compile the "from" clause for an update with a join.
+     * Compilez la clause "from" pour une mise à jour avec une jointure.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return string
@@ -97,7 +97,7 @@ class PostgresGrammar extends Grammar
     }
 
     /**
-     * Compile the additional where clauses for updates with joins.
+     * Compilez les clauses Where supplémentaires pour les mises à jour avec des jointures.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return string
@@ -118,7 +118,7 @@ class PostgresGrammar extends Grammar
     }
 
     /**
-     * Compile the "join" clauses for an update.
+     * Compilez les clauses "join" pour une mise à jour.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return string
@@ -137,7 +137,7 @@ class PostgresGrammar extends Grammar
     }
 
     /**
-     * Compile an insert and get ID statement into SQL.
+     * Compilez une instruction insert et get ID dans SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array   $values
@@ -152,7 +152,7 @@ class PostgresGrammar extends Grammar
     }
 
     /**
-     * Compile a truncate table statement into SQL.
+     * Compilez une instruction de table tronquée en SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return array

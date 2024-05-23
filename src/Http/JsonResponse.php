@@ -1,9 +1,14 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Http;
 
 use Two\Http\ResponseTrait;
-use Two\Contracts\JsonableInterface;
+use Two\Application\Contracts\JsonableInterface;
 
 use Symfony\Component\HttpFoundation\JsonResponse as SymfonyJsonResponse;
 
@@ -13,14 +18,14 @@ class JsonResponse extends SymfonyJsonResponse
     use ResponseTrait;
 
     /**
-     * The json encoding options.
+     * Les options d'encodage json.
      *
      * @var int
      */
     protected $jsonOptions;
 
     /**
-     * Constructor.
+     * Constructeur.
      *
      * @param  mixed  $data
      * @param  int    $status
@@ -35,7 +40,7 @@ class JsonResponse extends SymfonyJsonResponse
     }
 
     /**
-     * Get the json_decoded data from the response
+     * Récupérez les données json_decoded de la réponse
      *
      * @param  bool  $assoc
      * @param  int   $depth
@@ -61,7 +66,7 @@ class JsonResponse extends SymfonyJsonResponse
     }
 
     /**
-     * Get the JSON encoding options.
+     * Obtenez les options d'encodage JSON.
      *
      * @return int
      */
@@ -71,7 +76,7 @@ class JsonResponse extends SymfonyJsonResponse
     }
 
     /**
-     * Set the JSON encoding options.
+     * Définissez les options d'encodage JSON.
      *
      * @param  int  $options
      * @return mixed

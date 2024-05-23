@@ -1,10 +1,15 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Auth;
 
-use Two\Auth\GuardHelpersTrait;
-use Two\Auth\GuardInterface;
 use Two\Http\Request;
+use Two\Auth\Contracts\GuardInterface;
+use Two\Auth\Traits\GuardHelpersTrait;
 
 
 class RequestGuard implements GuardInterface
@@ -42,7 +47,7 @@ class RequestGuard implements GuardInterface
     /**
      * Get the currently authenticated user.
      *
-     * @return \Two\Auth\UserInterface|null
+     * @return \Two\Auth\Contracts\UserInterface|null
      */
     public function user()
     {

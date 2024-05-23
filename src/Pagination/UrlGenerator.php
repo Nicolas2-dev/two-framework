@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Pagination;
 
 use Two\Support\Str;
@@ -8,17 +13,17 @@ use Two\Support\Str;
 class UrlGenerator
 {
     /**
-     * The Paginator implementation.
+     * L’implémentation de Paginator.
      *
-     * @var \Two\Pagination\PaginatorInterface
+     * @var \Two\Pagination\Contracts\PaginatorInterface
      */
     protected $paginator;
 
 
     /**
-     * Create a new URL Generator instance.
+     * Créez une nouvelle instance de générateur d'URL.
      *
-     * @param  \Two\Pagination\PaginatorInterface  $paginator
+     * @param  \Two\Pagination\Contracts\PaginatorInterface  $paginator
      * @return void
      */
     public function __construct(AbstractPaginator $paginator)
@@ -27,7 +32,7 @@ class UrlGenerator
     }
 
     /**
-     * Resolve the URL for a given page number.
+     * Résolvez l’URL d’un numéro de page donné.
      *
      * @param  int  $page
      * @return string
@@ -49,7 +54,7 @@ class UrlGenerator
     }
 
     /**
-     * Build the full query portion of a URL.
+     * Créez la partie requête complète d’une URL.
      *
      * @param  string  $path
      * @param  array  $query
@@ -72,7 +77,7 @@ class UrlGenerator
     }
 
     /**
-     * Get the Paginator implementation.
+     * Obtenez l’implémentation de Paginator.
      *
      * @return string
      */

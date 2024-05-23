@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Redis;
 
 use Predis\Client;
@@ -8,14 +13,14 @@ use Predis\Client;
 class Database
 {
     /**
-     * The host address of the database.
+     * L'adresse hôte de la base de données.
      *
      * @var array
      */
     protected $clients;
 
     /**
-     * Create a new Redis connection instance.
+     * Créez une nouvelle instance de connexion Redis.
      *
      * @param  array  $servers
      * @return void
@@ -30,7 +35,7 @@ class Database
     }
 
     /**
-     * Create a new aggregate client supporting sharding.
+     * Créez un nouveau client agrégé prenant en charge le partitionnement.
      *
      * @param  array  $servers
      * @return array
@@ -43,7 +48,7 @@ class Database
     }
 
     /**
-     * Create an array of single connection clients.
+     * Créez un tableau de clients à connexion unique.
      *
      * @param  array  $servers
      * @return array
@@ -60,7 +65,7 @@ class Database
     }
 
     /**
-     * Get a specific Redis connection instance.
+     * Obtenez une instance de connexion Redis spécifique.
      *
      * @param  string  $name
      * @return \Predis\Connection\SingleConnectionInterface
@@ -71,7 +76,7 @@ class Database
     }
 
     /**
-     * Run a command against the Redis database.
+     * Exécutez une commande sur la base de données Redis.
      *
      * @param  string  $method
      * @param  array   $parameters
@@ -83,7 +88,7 @@ class Database
     }
 
     /**
-     * Dynamically make a Redis command.
+     * Créez dynamiquement une commande Redis.
      *
      * @param  string  $method
      * @param  array   $parameters

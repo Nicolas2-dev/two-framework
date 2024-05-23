@@ -1,56 +1,62 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM;
 
+use Closure;
+
+use Two\Support\Str;
+use Two\Pagination\Paginator;
 use Two\Database\Query\Expression;
+use Two\Pagination\SimplePaginator;
 use Two\Database\ORM\Relations\Relation;
 use Two\Database\Query\Builder as QueryBuilder;
-use Two\Pagination\Paginator;
-use Two\Pagination\SimplePaginator;
-use Two\Support\Str;
-
-use Closure;
+use Two\Database\Exception\ModelNotFoundException;
 
 
 class Builder
 {
     /**
-     * The base query builder instance.
+     * Instance du générateur de requêtes de base.
      *
      * @var \Two\Database\Query\Builder
      */
     protected $query;
 
     /**
-     * The model being queried.
+     * Le modèle interrogé.
      *
      * @var \Two\Database\ORM\Model
      */
     protected $model;
 
     /**
-     * The relationships that should be eager loaded.
+     * Les relations qui devraient être chargées avec impatience.
      *
      * @var array
      */
     protected $eagerLoad = array();
 
     /**
-     * All of the registered builder macros.
+     * Toutes les macros de constructeur enregistrées.
      *
      * @var array
      */
     protected $macros = array();
 
     /**
-     * A replacement for the typical delete function.
+     * Un remplacement pour la fonction de suppression typique.
      *
      * @var \Closure
      */
     protected $onDelete;
 
     /**
-     * The methods that should be returned from query builder.
+     * Les méthodes qui doivent être renvoyées par le générateur de requêtes.
      *
      * @var array
      */
@@ -60,7 +66,7 @@ class Builder
     );
 
     /**
-     * Create a new ORM query builder instance.
+     * Créez une nouvelle instance du générateur de requêtes ORM.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return void
@@ -71,7 +77,7 @@ class Builder
     }
 
     /**
-     * Find a model by its primary key.
+     * Recherchez un modèle par sa clé primaire.
      *
      * @param  mixed  $id
      * @param  array  $columns
@@ -91,7 +97,7 @@ class Builder
     }
 
     /**
-     * Find a model by its primary key.
+     * Recherchez un modèle par sa clé primaire.
      *
      * @param  array  $ids
      * @param  array  $columns
@@ -111,13 +117,13 @@ class Builder
     }
 
     /**
-     * Find a model by its primary key or throw an exception.
+     * Recherchez un modèle par sa clé primaire ou lancez une exception.
      *
      * @param  mixed  $id
      * @param  array  $columns
      * @return \Two\Database\ORM\Model|static
      *
-     * @throws \Two\Database\ORM\ModelNotFoundException
+     * @throws \Two\Database\Exception\ModelNotFoundException
      */
     public function findOrFail($id, $columns = array('*'))
     {
@@ -131,7 +137,7 @@ class Builder
     }
 
     /**
-     * Execute the query and get the first result.
+     * Exécutez la requête et obtenez le premier résultat.
      *
      * @param  array  $columns
      * @return \Two\Database\ORM\Model|static|null
@@ -142,12 +148,12 @@ class Builder
     }
 
     /**
-     * Execute the query and get the first result or throw an exception.
+     * Exécutez la requête et obtenez le premier résultat ou lancez une exception.
      *
      * @param  array  $columns
      * @return \Two\Database\ORM\Model|static
      *
-     * @throws \Two\Database\ORM\ModelNotFoundException
+     * @throws \Two\Database\Exception\ModelNotFoundException
      */
     public function firstOrFail($columns = array('*'))
     {
@@ -161,7 +167,7 @@ class Builder
     }
 
     /**
-     * Execute the query and get the first result or call a callback.
+     * Exécutez la requête et obtenez le premier résultat ou appelez un rappel.
      *
      * @param  \Closure|array  $columns
      * @param  \Closure|null  $callback
@@ -183,7 +189,7 @@ class Builder
     }
 
     /**
-     * Execute the query as a "select" statement.
+     * Exécutez la requête en tant qu'instruction "select".
      *
      * @param  array  $columns
      * @return \Two\Database\ORM\Collection|static[]
@@ -200,7 +206,7 @@ class Builder
     }
 
     /**
-     * Pluck a single column from the database.
+     * Extrayez une seule colonne de la base de données.
      *
      * @param  string  $column
      * @return mixed
@@ -213,7 +219,7 @@ class Builder
     }
 
     /**
-     * Chunk the results of the query.
+     * Découpez les résultats de la requête.
      *
      * @param  int  $count
      * @param  callable  $callback
@@ -233,7 +239,7 @@ class Builder
     }
 
     /**
-     * Get an array with the values of a given column.
+     * Obtenez un tableau avec les valeurs d'une colonne donnée.
      *
      * @param  string  $column
      * @param  string  $key
@@ -255,7 +261,7 @@ class Builder
     }
 
     /**
-     * Paginate the given query.
+     * Paginez la requête donnée.
      *
      * @param  int  $perPage
      * @param  array  $columns
@@ -289,7 +295,7 @@ class Builder
     }
 
     /**
-     * Paginate the given query into a simple paginator.
+     * Paginez la requête donnée dans un simple paginateur.
      *
      * @param  int  $perPage
      * @param  array  $columns
@@ -317,7 +323,7 @@ class Builder
     }
 
     /**
-     * Update a record in the database.
+     * Mettre à jour un enregistrement dans la base de données.
      *
      * @param  array  $values
      * @return int
@@ -328,7 +334,7 @@ class Builder
     }
 
     /**
-     * Increment a column's value by a given amount.
+     * Incrémentez la valeur d'une colonne d'un montant donné.
      *
      * @param  string  $column
      * @param  int     $amount
@@ -343,7 +349,7 @@ class Builder
     }
 
     /**
-     * Decrement a column's value by a given amount.
+     * Décrémenter la valeur d'une colonne d'un montant donné.
      *
      * @param  string  $column
      * @param  int     $amount
@@ -358,7 +364,7 @@ class Builder
     }
 
     /**
-     * Add the "updated at" column to an array of values.
+     * Ajoutez la colonne « mis à jour à » à un tableau de valeurs.
      *
      * @param  array  $values
      * @return array
@@ -373,7 +379,7 @@ class Builder
     }
 
     /**
-     * Delete a record from the database.
+     * Supprimer un enregistrement de la base de données.
      *
      * @return mixed
      */
@@ -387,7 +393,7 @@ class Builder
     }
 
     /**
-     * Run the default delete function on the builder.
+     * Exécutez la fonction de suppression par défaut sur le générateur.
      *
      * @return mixed
      */
@@ -397,7 +403,7 @@ class Builder
     }
 
     /**
-     * Register a replacement for the default delete function.
+     * Enregistrez un remplacement pour la fonction de suppression par défaut.
      *
      * @param  \Closure  $callback
      * @return void
@@ -408,7 +414,7 @@ class Builder
     }
 
     /**
-     * Get the hydrated models without eager loading.
+     * Obtenez les modèles hydratés sans chargement précipité.
      *
      * @param  array  $columns
      * @return \Two\Database\ORM\Model[]
@@ -431,7 +437,7 @@ class Builder
     }
 
     /**
-     * Eager load the relationships for the models.
+     * Impatient de charger les relations pour les modèles.
      *
      * @param  array  $models
      * @return array
@@ -448,7 +454,7 @@ class Builder
     }
 
     /**
-     * Eagerly load the relationship on a set of models.
+     * Chargez avec impatience la relation sur un ensemble de modèles.
      *
      * @param  array     $models
      * @param  string    $name
@@ -471,7 +477,7 @@ class Builder
     }
 
     /**
-     * Get the relation instance for the given relation name.
+     * Obtenez l'instance de relation pour le nom de relation donné.
      *
      * @param  string  $relation
      * @return \Two\Database\ORM\Relations\Relation
@@ -493,7 +499,7 @@ class Builder
     }
 
     /**
-     * Get the deeply nested relations for a given top-level relation.
+     * Obtenez les relations profondément imbriquées pour une relation de niveau supérieur donnée.
      *
      * @param  string  $relation
      * @return array
@@ -512,7 +518,7 @@ class Builder
     }
 
     /**
-     * Determine if the relationship is nested.
+     * Déterminez si la relation est imbriquée.
      *
      * @param  string  $name
      * @param  string  $relation
@@ -526,7 +532,7 @@ class Builder
     }
 
     /**
-     * Add a basic where clause to the query.
+     * Ajoutez une clause Where de base à la requête.
      *
      * @param  string  $column
      * @param  string  $operator
@@ -550,7 +556,7 @@ class Builder
     }
 
     /**
-     * Add an "or where" clause to the query.
+     * Ajoutez une clause « ou où » à la requête.
      *
      * @param  string  $column
      * @param  string  $operator
@@ -563,7 +569,7 @@ class Builder
     }
 
     /**
-     * Add a relationship count condition to the query.
+     * Ajoutez une condition de nombre de relations à la requête.
      *
      * @param  string  $relation
      * @param  string  $operator
@@ -588,7 +594,7 @@ class Builder
     }
 
     /**
-     * Add nested relationship count conditions to the query.
+     * Ajoutez des conditions de nombre de relations imbriquées à la requête.
      *
      * @param  string  $relations
      * @param  string  $operator
@@ -614,7 +620,7 @@ class Builder
     }
 
     /**
-     * Add a relationship count condition to the query.
+     * Ajoutez une condition de nombre de relations à la requête.
      *
      * @param  string  $relation
      * @param  string  $boolean
@@ -627,7 +633,7 @@ class Builder
     }
 
     /**
-     * Add a relationship count condition to the query with where clauses.
+     * Ajoutez une condition de nombre de relations à la requête avec des clauses Where.
      *
      * @param  string    $relation
      * @param  \Closure  $callback
@@ -641,7 +647,7 @@ class Builder
     }
 
     /**
-     * Add a relationship count condition to the query with where clauses.
+     * Ajoutez une condition de nombre de relations à la requête avec des clauses Where.
      *
      * @param  string  $relation
      * @param  \Closure|null  $callback
@@ -653,7 +659,7 @@ class Builder
     }
 
     /**
-     * Add a relationship count condition to the query with an "or".
+     * Ajoutez une condition de nombre de relations à la requête avec un « ou ».
      *
      * @param  string  $relation
      * @param  string  $operator
@@ -666,7 +672,7 @@ class Builder
     }
 
     /**
-     * Add a relationship count condition to the query with where clauses and an "or".
+     * Ajoutez une condition de nombre de relations à la requête avec des clauses Where et un « ou ».
      *
      * @param  string    $relation
      * @param  \Closure  $callback
@@ -680,7 +686,7 @@ class Builder
     }
 
     /**
-     * Add the "has" condition where clause to the query.
+     * Ajoutez la condition "has" où clause à la requête.
      *
      * @param  \Two\Database\ORM\Builder  $hasQuery
      * @param  \Two\Database\ORM\Relations\Relation  $relation
@@ -701,7 +707,7 @@ class Builder
     }
 
     /**
-     * Merge the "wheres" from a relation query to a has query.
+     * Fusionnez les "où" d'une requête relationnelle vers une requête has.
      *
      * @param  \Two\Database\ORM\Builder  $hasQuery
      * @param  \Two\Database\ORM\Relations\Relation  $relation
@@ -721,7 +727,7 @@ class Builder
     }
 
     /**
-     * Get the "has relation" base query instance.
+     * Obtenez l’instance de requête de base « a une relation ».
      *
      * @param  string  $relation
      * @return \Two\Database\ORM\Builder
@@ -735,7 +741,7 @@ class Builder
     }
 
     /**
-     * Set the relationships that should be eager loaded.
+     * Définissez les relations qui doivent être chargées avec impatience.
      *
      * @param  mixed  $relations
      * @return $this
@@ -752,7 +758,7 @@ class Builder
     }
 
     /**
-     * Prevent the specified relations from being eager loaded.
+     * Empêcher les relations spécifiées d'être chargées avec impatience.
      *
      * @param  mixed  $relations
      * @return $this
@@ -767,7 +773,7 @@ class Builder
     }
 
     /**
-     * Add subselect queries to count the relations.
+     * Ajoutez des requêtes de sous-sélection pour compter les relations.
      *
      * @param  mixed  $relations
      * @return $this
@@ -776,7 +782,7 @@ class Builder
     {
         if (is_string($relations)) $relations = func_get_args();
 
-        // If no columns are set, add the default * columns.
+        // Si aucune colonne n'est définie, ajoutez les colonnes * par défaut.
         if (is_null($this->query->columns)) {
             $this->query->select($this->query->from .'.*');
         }
@@ -794,9 +800,9 @@ class Builder
 
             $relation = $this->getHasRelationQuery($name);
 
-            // Here we will get the relationship count query and prepare to add it to the main query
-            // as a sub-select. First, we'll get the "has" query and use that to get the relation
-            // count query. We will normalize the relation name then append _count as the name.
+            // Ici, nous obtiendrons la requête de nombre de relations et nous préparerons à l'ajouter à la requête principale
+            // en tant que sous-sélection. Tout d'abord, nous obtiendrons la requête "has" et l'utiliserons pour obtenir la relation
+            // requête de comptage. Nous normaliserons le nom de la relation puis ajouterons _count comme nom.
             $query = $relation->getRelationCountQuery($relation->getRelated()->newQuery(), $this);
 
             call_user_func($constraints, $query);
@@ -812,7 +818,7 @@ class Builder
     }
 
     /**
-     * Parse a list of relations into individuals.
+     * Analyser une liste de relations en individus.
      *
      * @param  array  $relations
      * @return array
@@ -837,7 +843,7 @@ class Builder
     }
 
     /**
-     * Parse the nested relationships in a relation.
+     * Analyser les relations imbriquées dans une relation.
      *
      * @param  string  $name
      * @param  array   $results
@@ -859,7 +865,7 @@ class Builder
     }
 
     /**
-     * Call the given model scope on the underlying model.
+     * Appelez la portée du modèle donnée sur le modèle sous-jacent.
      *
      * @param  string  $scope
      * @param  array   $parameters
@@ -873,7 +879,7 @@ class Builder
     }
 
     /**
-     * Get the underlying query builder instance.
+     * Obtenez l'instance de générateur de requêtes sous-jacente.
      *
      * @return \Two\Database\Query\Builder|static
      */
@@ -883,7 +889,7 @@ class Builder
     }
 
     /**
-     * Set the underlying query builder instance.
+     * Définissez l'instance du générateur de requêtes sous-jacente.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return void
@@ -894,7 +900,7 @@ class Builder
     }
 
     /**
-     * Get the relationships being eagerly loaded.
+     * Obtenez des relations chargées avec impatience.
      *
      * @return array
      */
@@ -904,7 +910,7 @@ class Builder
     }
 
     /**
-     * Set the relationships being eagerly loaded.
+     * Définissez les relations chargées avec impatience.
      *
      * @param  array  $eagerLoad
      * @return void
@@ -915,7 +921,7 @@ class Builder
     }
 
     /**
-     * Get the model instance being queried.
+     * Obtenez l'instance de modèle interrogée.
      *
      * @return \Two\Database\ORM\Model
      */
@@ -925,7 +931,7 @@ class Builder
     }
 
     /**
-     * Set a model instance for the model being queried.
+     * Définissez une instance de modèle pour le modèle interrogé.
      *
      * @param  \Two\Database\ORM\Model  $model
      * @return $this
@@ -940,7 +946,7 @@ class Builder
     }
 
     /**
-     * Extend the builder with a given callback.
+     * Étendez le constructeur avec un rappel donné.
      *
      * @param  string    $name
      * @param  \Closure  $callback
@@ -952,7 +958,7 @@ class Builder
     }
 
     /**
-     * Get the given macro by name.
+     * Obtenez la macro donnée par son nom.
      *
      * @param  string  $name
      * @return \Closure
@@ -963,7 +969,7 @@ class Builder
     }
 
     /**
-     * Dynamically handle calls into the query instance.
+     * Gérez dynamiquement les appels dans l’instance de requête.
      *
      * @param  string  $method
      * @param  array   $parameters
@@ -985,7 +991,7 @@ class Builder
     }
 
     /**
-     * Force a clone of the underlying query builder when cloning.
+     * Forcer un clone du générateur de requêtes sous-jacent lors du clonage.
      *
      * @return void
      */

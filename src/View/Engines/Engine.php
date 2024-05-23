@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\View\Engines;
 
 
@@ -7,7 +12,7 @@ abstract class Engine
 {
 
     /**
-     * The view that was last to be rendered.
+     * La vue qui a été rendue en dernier lieu.
      *
      * @var string
      */
@@ -15,7 +20,7 @@ abstract class Engine
 
     
     /**
-     * Get the last view that was rendered.
+     * Obtenez la dernière vue rendue.
      *
      * @return string
      */

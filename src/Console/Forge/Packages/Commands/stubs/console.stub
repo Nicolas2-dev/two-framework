@@ -1,0 +1,71 @@
+<?php
+
+namespace {{namespace}};
+
+use Two\Console\Commands\Command;
+
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
+
+
+class {{className}} extends Command
+{
+    /**
+     * Le nom de la commande de la console.
+     *
+     * @var string
+     */
+    protected $name = '{{command}}';
+
+    /**
+     * Description de la commande de console.
+     *
+     * @var string
+     */
+    protected $description = 'Command description.';
+
+    /**
+     * Créez une nouvelle instance de commande.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Exécutez la commande de console.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        //
+    }
+
+    /**
+     * Obtenez les arguments de la commande de console.
+     *
+     * @return array
+     */
+    protected function getArguments()
+    {
+        return array(
+            array('example', InputArgument::REQUIRED, 'An example argument.'),
+        );
+    }
+
+    /**
+     * Obtenez les options de commande de la console.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return array(
+            array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
+        );
+    }
+
+}

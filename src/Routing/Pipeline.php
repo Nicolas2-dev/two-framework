@@ -1,21 +1,27 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Routing;
-
-use Two\Foundation\Exceptions\HandlerInterface as ExceptionHandler;
-use Two\Foundation\Pipeline as BasePipeline;
-use Two\Http\Request;
-use Two\Debug\Exception\FatalThrowableError;
 
 use Closure;
 use Exception;
 use Throwable;
 
+use Two\Http\Request;
+
+use Two\Application\Pipeline as BasePipeline;
+use Two\Exceptions\Exception\FatalThrowableError;
+use Two\Exceptions\Contracts\HandlerInterface as ExceptionHandler;
+
 
 class Pipeline extends BasePipeline
 {
     /**
-     * Get the final piece of the Closure onion.
+     * Obtenez le dernier morceau de l'oignon de fermeture.
      *
      * @param  \Closure  $callback
      * @return \Closure
@@ -37,7 +43,7 @@ class Pipeline extends BasePipeline
     }
 
     /**
-     * Get a Closure that represents a slice of the application onion.
+     * Obtenez une fermeture qui représente une tranche de l'oignon de l'application.
      *
      * @param  \Closure  $stack
      * @param  mixed  $pipe
@@ -60,7 +66,7 @@ class Pipeline extends BasePipeline
     }
 
     /**
-     * Handle the given exception.
+     * Gérez l’exception donnée.
      *
      * @param  mixed  $passable
      * @param  \Exception  $e
@@ -88,7 +94,7 @@ class Pipeline extends BasePipeline
     }
 
     /**
-     * Determines whether exceptions should be throw during execution.
+     * Détermine si des exceptions doivent être levées pendant l'exécution.
      *
      * @return bool
      */

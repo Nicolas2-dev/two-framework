@@ -1,11 +1,10 @@
 <?php
 /**
- * Connector - A PDO based Database Connector.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
  */
-
 namespace Two\Database;
 
 use PDO;
@@ -14,7 +13,7 @@ use PDO;
 abstract class Connector
 {
     /**
-     * The default PDO connection options.
+     * Les options de connexion PDO par défaut.
      *
      * @var array
      */
@@ -33,7 +32,7 @@ abstract class Connector
     }
 
     /**
-     * Get the PDO options based on the configuration.
+     * Obtenez les options PDO en fonction de la configuration.
      *
      * @param  array  $config
      * @return array
@@ -46,7 +45,7 @@ abstract class Connector
     }
 
     /**
-     * Create a new PDO connection.
+     * Créez une nouvelle connexion PDO.
      *
      * @param  string  $dsn
      * @param  array   $config
@@ -63,7 +62,7 @@ abstract class Connector
     }
 
     /**
-     * Get the default PDO connection options.
+     * Obtenez les options de connexion PDO par défaut.
      *
      * @return array
      */
@@ -73,7 +72,7 @@ abstract class Connector
     }
 
     /**
-     * Set the default PDO connection options.
+     * Définissez les options de connexion PDO par défaut.
      *
      * @param  array  $options
      * @return void

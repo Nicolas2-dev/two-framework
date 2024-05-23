@@ -1,19 +1,24 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications\Messages;
 
 
 class DatabaseMessage
 {
     /**
-     * The data that should be stored with the notification.
+     * Les données qui doivent être stockées avec la notification.
      *
      * @var array
      */
     public $data = array();
 
     /**
-     * Create a new database message.
+     * Créez un nouveau message de base de données.
      *
      * @param  array  $data
      * @return void

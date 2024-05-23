@@ -1,39 +1,44 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM\Relations;
 
 use Two\Database\ORM\Model;
 use Two\Database\ORM\Builder;
 use Two\Database\ORM\Collection;
-use Two\Database\ORM\ModelNotFoundException;
 use Two\Database\Query\Expression;
+use Two\Database\Exception\ModelNotFoundException;
 
 
 class HasManyThrough extends Relation
 {
     /**
-     * The distance parent model instance.
+     * Instance de modèle parent à distance.
      *
      * @var \Two\Database\ORM\Model
      */
     protected $farParent;
 
     /**
-     * The near key on the relationship.
+     * La clé la plus proche de la relation.
      *
      * @var string
      */
     protected $firstKey;
 
     /**
-     * The far key on the relationship.
+     * La clé lointaine de la relation.
      *
      * @var string
      */
     protected $secondKey;
 
     /**
-     * Create a new has many relationship instance.
+     * Créez une nouvelle instance de relation comportant plusieurs.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Model  $farParent
@@ -52,7 +57,7 @@ class HasManyThrough extends Relation
     }
 
     /**
-     * Set the base constraints on the relation query.
+     * Définissez les contraintes de base sur la requête relationnelle.
      *
      * @return void
      */
@@ -68,7 +73,7 @@ class HasManyThrough extends Relation
     }
 
     /**
-     * Add the constraints for a relationship count query.
+     * Ajoutez les contraintes pour une requête de nombre de relations.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Builder  $parent
@@ -88,7 +93,7 @@ class HasManyThrough extends Relation
     }
 
     /**
-     * Set the join clause on the query.
+     * Définissez la clause de jointure sur la requête.
      *
      * @param  \Two\Database\ORM\Builder|null  $query
      * @return void
@@ -103,7 +108,7 @@ class HasManyThrough extends Relation
     }
 
     /**
-     * Set the constraints for an eager load of the relation.
+     * Définissez les contraintes pour un chargement hâtif de la relation.
      *
      * @param  array  $models
      * @return void
@@ -116,7 +121,7 @@ class HasManyThrough extends Relation
     }
 
     /**
-     * Initialize the relation on a set of models.
+     * Initialisez la relation sur un ensemble de modèles.
      *
      * @param  array   $models
      * @param  string  $relation
@@ -132,7 +137,7 @@ class HasManyThrough extends Relation
     }
 
     /**
-     * Match the eagerly loaded results to their parents.
+     * Faites correspondre les résultats chargés avec impatience à leurs parents.
      *
      * @param  array   $models
      * @param  \Two\Database\ORM\Collection  $results
@@ -157,7 +162,7 @@ class HasManyThrough extends Relation
     }
 
     /**
-     * Build model dictionary keyed by the relation's foreign key.
+     * Construisez un dictionnaire de modèle saisi par la clé étrangère de la relation.
      *
      * @param  \Two\Database\ORM\Collection  $results
      * @return array
@@ -178,7 +183,7 @@ class HasManyThrough extends Relation
     }
 
     /**
-     * Get the results of the relationship.
+     * Obtenez les résultats de la relation.
      *
      * @return mixed
      */
@@ -188,7 +193,7 @@ class HasManyThrough extends Relation
     }
 
     /**
-     * Execute the query and get the first result.
+     * Exécutez la requête et obtenez le premier résultat.
      *
      * @param  array  $columns
      * @return \Two\Database\ORM\Model|static|null
@@ -201,12 +206,12 @@ class HasManyThrough extends Relation
     }
 
     /**
-     * Execute the query and get the first result or throw an exception.
+     * Exécutez la requête et obtenez le premier résultat ou lancez une exception.
      *
      * @param  array  $columns
      * @return \Two\Database\ORM\Model|static
      *
-     * @throws \Two\Database\ORM\ModelNotFoundException
+     * @throws \Two\Database\Exception\ModelNotFoundException
      */
     public function firstOrFail($columns = array('*'))
     {
@@ -218,7 +223,7 @@ class HasManyThrough extends Relation
     }
 
     /**
-     * Execute the query as a "select" statement.
+     * Exécutez la requête en tant qu'instruction "select".
      *
      * @param  array  $columns
      * @return \Two\Database\ORM\Collection
@@ -237,7 +242,7 @@ class HasManyThrough extends Relation
     }
 
     /**
-     * Set the select clause for the relation query.
+     * Définissez la clause select pour la requête relationnelle.
      *
      * @param  array  $columns
      * @return \Two\Database\ORM\Relations\BelongsToMany
@@ -252,7 +257,7 @@ class HasManyThrough extends Relation
     }
 
     /**
-     * Get a paginator for the "select" statement.
+     * Obtenez un paginateur pour l'instruction "select".
      *
      * @param  int    $perPage
      * @param  array  $columns
@@ -268,7 +273,7 @@ class HasManyThrough extends Relation
     }
 
     /**
-     * Get the key for comparing against the parent key in "has" query.
+     * Obtenez la clé à comparer avec la clé parent dans la requête "has".
      *
      * @return string
      */

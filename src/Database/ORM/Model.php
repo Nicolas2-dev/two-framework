@@ -1,250 +1,258 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM;
-
-use Two\Events\Dispatcher;
-use Two\Database\ORM\Relations\Pivot;
-use Two\Database\ORM\Relations\HasOne;
-use Two\Database\ORM\Relations\HasMany;
-use Two\Database\ORM\Relations\MorphTo;
-use Two\Database\ORM\Relations\Relation;
-use Two\Database\ORM\Relations\MorphOne;
-use Two\Database\ORM\Relations\MorphMany;
-use Two\Database\ORM\Relations\BelongsTo;
-use Two\Database\ORM\Relations\MorphToMany;
-use Two\Database\ORM\Relations\BelongsToMany;
-use Two\Database\ORM\Relations\HasOneThrough;
-use Two\Database\ORM\Relations\BelongsToThrough;
-use Two\Database\ORM\Relations\HasManyThrough;
-use Two\Database\Query\Builder as QueryBuilder;
-use Two\Database\ConnectionResolverInterface as Resolver;
-use Two\Queue\QueueableEntityInterface as QueueableEntity;
-use Two\Contracts\JsonableInterface;
-use Two\Contracts\ArrayableInterface;
-use Two\Support\Str;
-
-use Carbon\Carbon;
 
 use DateTime;
 use ArrayAccess;
 use LogicException;
 use JsonSerializable;
 
+use Two\Support\Str;
+use Two\Events\Dispatcher;
+use Two\Database\ORM\Relations\Pivot;
+use Two\Database\ORM\Relations\HasOne;
+use Two\Database\ORM\Relations\HasMany;
+use Two\Database\ORM\Relations\MorphTo;
+use Two\Database\ORM\Relations\MorphOne;
+use Two\Database\ORM\Relations\Relation;
+use Two\Database\ORM\Relations\BelongsTo;
+use Two\Database\ORM\Relations\MorphMany;
+use Two\Database\Contracts\ScopeInterface;
+use Two\Database\ORM\Relations\MorphToMany;
+use Two\Database\ORM\Relations\BelongsToMany;
+use Two\Database\ORM\Relations\HasOneThrough;
+use Two\Database\ORM\Relations\HasManyThrough;
+use Two\Database\Query\Builder as QueryBuilder;
+use Two\Application\Contracts\JsonableInterface;
+use Two\Database\ORM\Relations\BelongsToThrough;
+use Two\Application\Contracts\ArrayableInterface;
+use Two\Database\Exception\ModelNotFoundException;
+use Two\Database\Exception\MassAssignmentException;
+use Two\Database\Contracts\ConnectionResolverInterface as Resolver;
+use Two\Queue\Contracts\QueueableEntityInterface as QueueableEntity;
+
+use Carbon\Carbon;
+
 
 abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterface, JsonSerializable, QueueableEntity
 {
     /**
-     * The connection name for the model.
+     * Le nom de connexion pour le modèle.
      *
      * @var string
      */
     protected $connection;
 
     /**
-     * The table associated with the model.
+     * La table associée au modèle.
      *
      * @var string
      */
     protected $table;
 
     /**
-     * The primary key for the model.
+     * La clé primaire du modèle.
      *
      * @var string
      */
     protected $primaryKey = 'id';
 
     /**
-     * The number of models to return for pagination.
+     * Le nombre de modèles à renvoyer pour la pagination.
      *
      * @var int
      */
     protected $perPage = 15;
 
     /**
-     * Indicates if the IDs are auto-incrementing.
+     * Indique si les ID s’incrémentent automatiquement.
      *
      * @var bool
      */
     public $incrementing = true;
 
     /**
-     * Indicates if the model should be timestamped.
+     * Indique si le modèle doit être horodaté.
      *
      * @var bool
      */
     public $timestamps = true;
 
     /**
-     * The model's attributes.
+     * Les attributs du modèle.
      *
      * @var array
      */
     protected $attributes = array();
 
     /**
-     * The model attribute's original state.
+     * L'état d'origine de l'attribut du modèle.
      *
      * @var array
      */
     protected $original = array();
 
     /**
-     * The loaded relationships for the model.
+     * Les relations chargées pour le modèle.
      *
      * @var array
      */
     protected $relations = array();
 
     /**
-     * The attributes that should be hidden for arrays.
+     * Les attributs qui doivent être masqués pour les tableaux.
      *
      * @var array
      */
     protected $hidden = array();
 
     /**
-     * The attributes that should be visible in arrays.
+     * Les attributs qui doivent être visibles dans les tableaux.
      *
      * @var array
      */
     protected $visible = array();
 
     /**
-     * The accessors to append to the model's array form.
+     * Les accesseurs à ajouter au formulaire de tableau du modèle.
      *
      * @var array
      */
     protected $appends = array();
 
     /**
-     * The attributes that are mass assignable.
+     * Attributs attribuables en masse.
      *
      * @var array
      */
     protected $fillable = array();
 
     /**
-     * The attributes that aren't mass assignable.
+     * Les attributs qui ne sont pas attribuables en masse.
      *
      * @var array
      */
     protected $guarded = array('*');
 
     /**
-     * The attributes that should be mutated to dates.
+     * Les attributs qui doivent être mutés en dates.
      *
      * @var array
      */
     protected $dates = array();
 
     /**
-     * The relationships that should be touched on save.
+     * Les relations qui devraient être abordées sont sauvegardées.
      *
      * @var array
      */
     protected $touches = array();
 
     /**
-     * User exposed observable events
+     * Événements observables exposés par l'utilisateur
      *
      * @var array
      */
     protected $observables = array();
 
     /**
-     * The relations to eager load on every query.
+     * Les relations à charger avec impatience à chaque requête.
      *
      * @var array
      */
     protected $with = array();
 
     /**
-     * The class name to be used in polymorphic relations.
+     * Le nom de classe à utiliser dans les relations polymorphes.
      *
      * @var string
      */
     protected $morphClass;
 
     /**
-     * Indicates if the model exists.
+     * Indique si le modèle existe.
      *
      * @var bool
      */
     public $exists = false;
 
     /**
-     * Indicates whether attributes are snake cased on arrays.
+     * Indique si les attributs sont en casse serpent sur les tableaux.
      *
      * @var bool
      */
     public static $snakeAttributes = true;
 
     /**
-     * The connection resolver instance.
+     * L'instance du résolveur de connexion.
      *
-     * @var \Two\Database\ConnectionResolverInterface
+     * @var \Two\Database\Contracts\ConnectionResolverInterface
      */
     protected static $resolver;
 
     /**
-     * The event dispatcher instance.
+     * L'instance du répartiteur d'événements.
      *
      * @var \Two\Events\Dispatcher
      */
     protected static $dispatcher;
 
     /**
-     * The array of booted models.
+     * La gamme de modèles démarrés.
      *
      * @var array
      */
     protected static $booted = array();
 
     /**
-     * The array of global scopes on the model.
+     * Tableau des étendues globales sur le modèle.
      *
      * @var array
      */
     protected static $globalScopes = array();
 
     /**
-     * Indicates if all mass assignment is enabled.
+     * Indique si toutes les affectations en masse sont activées.
      *
      * @var bool
      */
     protected static $unguarded = false;
 
     /**
-     * The cache of the mutated attributes for each class.
+     * Le cache des attributs mutés pour chaque classe.
      *
      * @var array
      */
     protected static $mutatorCache = array();
 
     /**
-     * The many to many relationship methods.
+     * Les méthodes de relation plusieurs à plusieurs.
      *
      * @var array
      */
     public static $manyMethods = array('belongsToMany', 'morphToMany', 'morphedByMany');
 
     /**
-     * The name of the "created at" column.
+     * Le nom de la colonne « créé à ».
      *
      * @var string
      */
     const CREATED_AT = 'created_at';
 
     /**
-     * The name of the "updated at" column.
+     * Le nom de la colonne « mis à jour à ».
      *
      * @var string
      */
     const UPDATED_AT = 'updated_at';
 
     /**
-     * Create a new ORM model instance.
+     * Créez une nouvelle instance de modèle ORM.
      *
      * @param  array  $attributes
      * @return void
@@ -259,7 +267,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Check if the model needs to be booted and if so, do it.
+     * Vérifiez si le modèle doit être démarré et si c'est le cas, faites-le.
      *
      * @return void
      */
@@ -279,7 +287,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * The "booting" method of the model.
+     * La méthode de "booting" du modèle.
      *
      * @return void
      */
@@ -301,7 +309,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Boot all of the bootable traits on the model.
+     * Démarrez toutes les fonctionnalités de démarrage du modèle.
      *
      * @return void
      */
@@ -315,9 +323,9 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Register a new global scope on the model.
+     * Enregistrez une nouvelle portée globale sur le modèle.
      *
-     * @param  \Two\Database\ORM\ScopeInterface  $scope
+     * @param  \Two\Database\Contracts\ScopeInterface  $scope
      * @return void
      */
     public static function addGlobalScope(ScopeInterface $scope)
@@ -326,9 +334,9 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Determine if a model has a global scope.
+     * Déterminez si un modèle a une portée globale.
      *
-     * @param  \Two\Database\ORM\ScopeInterface  $scope
+     * @param  \Two\Database\Contracts\ScopeInterface  $scope
      * @return bool
      */
     public static function hasGlobalScope($scope)
@@ -337,10 +345,10 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get a global scope registered with the model.
+     * Obtenez une portée globale enregistrée avec le modèle.
      *
-     * @param  \Two\Database\ORM\ScopeInterface  $scope
-     * @return \Two\Database\ORM\ScopeInterface|null
+     * @param  \Two\Database\Contracts\ScopeInterface  $scope
+     * @return \Two\Database\Contracts\ScopeInterface|null
      */
     public static function getGlobalScope($scope)
     {
@@ -351,9 +359,9 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the global scopes for this class instance.
+     * Obtenez les étendues globales pour cette instance de classe.
      *
-     * @return \Two\Database\ORM\ScopeInterface[]
+     * @return \Two\Database\Contracts\ScopeInterface[]
      */
     public function getGlobalScopes()
     {
@@ -361,7 +369,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Register an observer with the Model.
+     * Enregistrez un observateur auprès du modèle.
      *
      * @param  object  $class
      * @return void
@@ -380,12 +388,12 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Fill the model with an array of attributes.
+     * Remplissez le modèle avec un tableau d'attributs.
      *
      * @param  array  $attributes
      * @return $this
      *
-     * @throws \Two\Database\ORM\MassAssignmentException
+     * @throws \Two\Database\Exception\MassAssignmentException
      */
     public function fill(array $attributes)
     {
@@ -405,7 +413,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Fill the model with an array of attributes. Force mass assignment.
+     * Remplissez le modèle avec un tableau d'attributs. Forcer l’affectation de masse.
      *
      * @param  array  $attributes
      * @return $this
@@ -419,7 +427,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the fillable attributes of a given array.
+     * Obtenez les attributs remplissables d’un tableau donné.
      *
      * @param  array  $attributes
      * @return array
@@ -434,7 +442,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Create a new instance of the given model.
+     * Créez une nouvelle instance du modèle donné.
      *
      * @param  array  $attributes
      * @param  bool   $exists
@@ -450,7 +458,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Create a new model instance that is existing.
+     * Créez une nouvelle instance de modèle existante.
      *
      * @param  array  $attributes
      * @return static
@@ -465,7 +473,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Create a collection of models from plain arrays.
+     * Créez une collection de modèles à partir de tableaux simples.
      *
      * @param  array  $items
      * @param  string  $connection
@@ -489,7 +497,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Create a collection of models from a raw query.
+     * Créez une collection de modèles à partir d'une requête brute.
      *
      * @param  string  $query
      * @param  array  $bindings
@@ -510,7 +518,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Save a new model and return the instance.
+     * Enregistrez un nouveau modèle et renvoyez l'instance.
      *
      * @param  array  $attributes
      * @return static
@@ -525,7 +533,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the first record matching the attributes or create it.
+     * Obtenez le premier enregistrement correspondant aux attributs ou créez-le.
      *
      * @param  array  $attributes
      * @return static
@@ -540,7 +548,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the first record matching the attributes or instantiate it.
+     * Obtenez le premier enregistrement correspondant aux attributs ou instanciez-le.
      *
      * @param  array  $attributes
      * @return static
@@ -555,7 +563,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Create or update a record matching the attributes, and fill it with values.
+     * Créez ou mettez à jour un enregistrement correspondant aux attributs et remplissez-le avec des valeurs.
      *
      * @param  array  $attributes
      * @param  array  $values
@@ -571,7 +579,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the first model for the given attributes.
+     * Obtenez le premier modèle pour les attributs donnés.
      *
      * @param  array  $attributes
      * @return static|null
@@ -582,7 +590,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Begin querying the model.
+     * Commencez à interroger le modèle.
      *
      * @return \Two\Database\ORM\Builder
      */
@@ -592,7 +600,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Begin querying the model on a given connection.
+     * Commencez à interroger le modèle sur une connexion donnée.
      *
      * @param  string  $connection
      * @return \Two\Database\ORM\Builder
@@ -607,7 +615,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Begin querying the model on the write connection.
+     * Commencez à interroger le modèle sur la connexion en écriture.
      *
      * @return \Two\Database\Query\Builder
      */
@@ -619,7 +627,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get all of the models from the database.
+     * Obtenez tous les modèles de la base de données.
      *
      * @param  array  $columns
      * @return \Two\Database\ORM\Collection|static[]
@@ -632,11 +640,11 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Find a model by its primary key.
+     * Recherchez un modèle par sa clé primaire.
      *
      * @param  mixed  $id
      * @param  array  $columns
-     * @return \Two\Support\Collection|static|null
+     * @return \Two\Collection\Collection|static|null
      */
     public static function find($id, $columns = array('*'))
     {
@@ -648,11 +656,11 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Find a model by its primary key or return new static.
+     * Recherchez un modèle par sa clé primaire ou renvoyez une nouvelle statique.
      *
      * @param  mixed  $id
      * @param  array  $columns
-     * @return \Two\Support\Collection|static
+     * @return \Two\Collection\Collection|static
      */
     public static function findOrNew($id, $columns = array('*'))
     {
@@ -662,13 +670,13 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Find a model by its primary key or throw an exception.
+     * Recherchez un modèle par sa clé primaire ou lancez une exception.
      *
      * @param  mixed  $id
      * @param  array  $columns
-     * @return \Two\Support\Collection|static
+     * @return \Two\Collection\Collection|static
      *
-     * @throws \Two\Database\ORM\ModelNotFoundException
+     * @throws \Two\Database\Exception\ModelNotFoundException
      */
     public static function findOrFail($id, $columns = array('*'))
     {
@@ -678,7 +686,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Eager load relations on the model.
+     * Relations de charge impatientes sur le modèle.
      *
      * @param  array|string  $relations
      * @return $this
@@ -695,7 +703,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Being querying a model with eager loading.
+     * Interroger un modèle avec un chargement rapide.
      *
      * @param  array|string  $relations
      * @return \Two\Database\ORM\Builder|static
@@ -710,7 +718,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Define a one-to-one relationship.
+     * Définir une relation un-à-un.
      *
      * @param  string  $related
      * @param  string  $foreignKey
@@ -729,7 +737,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Define a has-one-through relationship.
+     * Définissez une relation de type « has-one-through ».
      *
      * @param  string  $related
      * @param  string  $through
@@ -752,7 +760,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Define a polymorphic one-to-one relationship.
+     * Définir une relation polymorphe un-à-un.
      *
      * @param  string  $related
      * @param  string  $name
@@ -775,7 +783,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Define an inverse one-to-one or many relationship.
+     * Définissez une relation inverse un-à-un ou plusieurs.
      *
      * @param  string  $related
      * @param  string  $foreignKey
@@ -805,7 +813,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Define a has-one-through relationship.
+     * Définissez une relation de type « has-one-through ».
      *
      * @param  string  $related
      * @param  string  $through
@@ -828,7 +836,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Define a polymorphic, inverse one-to-one or many relationship.
+     * Définir une relation polymorphe, inverse un-à-un ou plusieurs.
      *
      * @param  string  $name
      * @param  string  $type
@@ -859,7 +867,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Define a one-to-many relationship.
+     * Définir une relation un-à-plusieurs.
      *
      * @param  string  $related
      * @param  string  $foreignKey
@@ -878,7 +886,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Define a has-many-through relationship.
+     * Définissez une relation à plusieurs.
      *
      * @param  string  $related
      * @param  string  $through
@@ -898,7 +906,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Define a polymorphic one-to-many relationship.
+     * Définir une relation polymorphe un-à-plusieurs.
      *
      * @param  string  $related
      * @param  string  $name
@@ -922,7 +930,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Define a many-to-many relationship.
+     * Définissez une relation plusieurs-à-plusieurs.
      *
      * @param  string  $related
      * @param  string  $table
@@ -953,7 +961,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Define a polymorphic many-to-many relationship.
+     * Définir une relation polymorphe plusieurs-à-plusieurs.
      *
      * @param  string  $related
      * @param  string  $name
@@ -986,7 +994,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Define a polymorphic, inverse many-to-many relationship.
+     * Définissez une relation plusieurs-à-plusieurs polymorphe et inverse.
      *
      * @param  string  $related
      * @param  string  $name
@@ -1005,7 +1013,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the relationship name of the belongs to many.
+     * Obtenez le nom de la relation appartenant à plusieurs.
      *
      * @return  string
      */
@@ -1024,7 +1032,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the joining table name for a many-to-many relation.
+     * Obtenez le nom de la table de jointure pour une relation plusieurs-à-plusieurs.
      *
      * @param  string  $related
      * @return string
@@ -1044,7 +1052,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Destroy the models for the given IDs.
+     * Détruisez les modèles pour les identifiants donnés.
      *
      * @param  array|int  $ids
      * @return int
@@ -1068,7 +1076,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Delete the model from the database.
+     * Supprimez le modèle de la base de données.
      *
      * @return bool|null
      * @throws \Exception
@@ -1095,9 +1103,9 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Force a hard delete on a soft deleted model.
+     * Forcer une suppression définitive sur un modèle supprimé de manière logicielle.
      *
-     * This method protects developers from running forceDelete when trait is missing.
+     * Cette méthode empêche les développeurs d'exécuter forceDelete lorsque le trait est manquant.
      *
      * @return void
      */
@@ -1107,7 +1115,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Perform the actual delete query on this model instance.
+     * Effectuez la requête de suppression réelle sur cette instance de modèle.
      *
      * @return void
      */
@@ -1117,7 +1125,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Register a saving model event with the dispatcher.
+     * Enregistrez un événement de modèle de sauvegarde auprès du répartiteur.
      *
      * @param  \Closure|string  $callback
      * @return void
@@ -1128,7 +1136,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Register a saved model event with the dispatcher.
+     * Enregistrez un événement de modèle enregistré auprès du répartiteur.
      *
      * @param  \Closure|string  $callback
      * @return void
@@ -1139,7 +1147,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Register an updating model event with the dispatcher.
+     * Enregistrez un événement de modèle de mise à jour auprès du répartiteur.
      *
      * @param  \Closure|string  $callback
      * @return void
@@ -1150,7 +1158,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Register an updated model event with the dispatcher.
+     * Enregistrez un événement de modèle mis à jour auprès du répartiteur.
      *
      * @param  \Closure|string  $callback
      * @return void
@@ -1161,7 +1169,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Register a creating model event with the dispatcher.
+     * Enregistrez un événement de création de modèle auprès du répartiteur.
      *
      * @param  \Closure|string  $callback
      * @return void
@@ -1172,7 +1180,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Register a created model event with the dispatcher.
+     * Enregistrez un événement de modèle créé auprès du répartiteur.
      *
      * @param  \Closure|string  $callback
      * @return void
@@ -1183,7 +1191,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Register a deleting model event with the dispatcher.
+     * Enregistrez un événement de suppression de modèle auprès du répartiteur.
      *
      * @param  \Closure|string  $callback
      * @return void
@@ -1194,7 +1202,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Register a deleted model event with the dispatcher.
+     * Enregistrez un événement de modèle supprimé auprès du répartiteur.
      *
      * @param  \Closure|string  $callback
      * @return void
@@ -1205,7 +1213,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Remove all of the event listeners for the model.
+     * Supprimez tous les écouteurs d’événements du modèle.
      *
      * @return void
      */
@@ -1221,7 +1229,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Register a model event with the dispatcher.
+     * Enregistrez un événement modèle auprès du répartiteur.
      *
      * @param  string  $event
      * @param  \Closure|string  $callback
@@ -1237,7 +1245,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the observable event names.
+     * Obtenez les noms d’événements observables.
      *
      * @return array
      */
@@ -1254,7 +1262,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the observable event names.
+     * Définissez les noms d'événements observables.
      *
      * @param  array  $observables
      * @return void
@@ -1265,7 +1273,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Add an observable event name.
+     * Ajoutez un nom d'événement observable.
      *
      * @param  mixed  $observables
      * @return void
@@ -1278,7 +1286,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Remove an observable event name.
+     * Supprimez un nom d'événement observable.
      *
      * @param  mixed  $observables
      * @return void
@@ -1291,7 +1299,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Increment a column's value by a given amount.
+     * Incrémentez la valeur d'une colonne d'un montant donné.
      *
      * @param  string  $column
      * @param  int     $amount
@@ -1303,7 +1311,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Decrement a column's value by a given amount.
+     * Décrémenter la valeur d'une colonne d'un montant donné.
      *
      * @param  string  $column
      * @param  int     $amount
@@ -1315,7 +1323,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Run the increment or decrement method on the model.
+     * Exécutez la méthode d'incrémentation ou de décrémentation sur le modèle.
      *
      * @param  string  $column
      * @param  int     $amount
@@ -1336,7 +1344,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Increment the underlying attribute value and sync with original.
+     * Incrémentez la valeur de l'attribut sous-jacent et synchronisez-la avec l'original.
      *
      * @param  string  $column
      * @param  int     $amount
@@ -1351,7 +1359,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Update the model in the database.
+     * Mettez à jour le modèle dans la base de données.
      *
      * @param  array  $attributes
      * @return bool|int
@@ -1366,7 +1374,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Save the model and all of its relationships.
+     * Enregistrez le modèle et toutes ses relations.
      *
      * @return bool
      */
@@ -1384,7 +1392,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Save the model to the database.
+     * Enregistrez le modèle dans la base de données.
      *
      * @param  array  $options
      * @return bool
@@ -1411,7 +1419,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Finish processing on a successful save operation.
+     * Terminez le traitement sur une opération de sauvegarde réussie.
      *
      * @param  array  $options
      * @return void
@@ -1428,7 +1436,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Perform a model update operation.
+     * Effectuez une opération de mise à jour du modèle.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  array  $options
@@ -1460,7 +1468,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Perform a model insert operation.
+     * Effectuez une opération d'insertion de modèle.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  array  $options
@@ -1492,7 +1500,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Insert the given attributes and set the ID on the model.
+     * Insérez les attributs donnés et définissez l'ID sur le modèle.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  array  $attributes
@@ -1506,7 +1514,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Touch the owning relations of the model.
+     * Touchez les relations de propriété du modèle.
      *
      * @return void
      */
@@ -1522,7 +1530,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Determine if the model touches a given relation.
+     * Déterminez si le modèle touche une relation donnée.
      *
      * @param  string  $relation
      * @return bool
@@ -1533,7 +1541,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Fire the given event for the model.
+     * Déclenche l'événement donné pour le modèle.
      *
      * @param  string  $event
      * @param  bool    $halt
@@ -1554,7 +1562,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the keys for a save update query.
+     * Définissez les clés pour une requête de mise à jour de sauvegarde.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @return \Two\Database\ORM\Builder
@@ -1567,7 +1575,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the primary key value for a save query.
+     * Obtenez la valeur de la clé primaire pour une requête de sauvegarde.
      *
      * @return mixed
      */
@@ -1581,7 +1589,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Update the model's update timestamp.
+     * Mettez à jour l'horodatage de mise à jour du modèle.
      *
      * @return bool
      */
@@ -1597,7 +1605,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Update the creation and update timestamps.
+     * Mettez à jour les horodatages de création et de mise à jour.
      *
      * @return void
      */
@@ -1615,7 +1623,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the value of the "created at" attribute.
+     * Définissez la valeur de l'attribut "créé à".
      *
      * @param  mixed  $value
      * @return void
@@ -1628,7 +1636,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the value of the "updated at" attribute.
+     * Définissez la valeur de l'attribut "mis à jour à".
      *
      * @param  mixed  $value
      * @return void
@@ -1641,7 +1649,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the name of the "created at" column.
+     * Obtenez le nom de la colonne "créé à".
      *
      * @return string
      */
@@ -1651,7 +1659,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the name of the "updated at" column.
+     * Obtenez le nom de la colonne « mis à jour à ».
      *
      * @return string
      */
@@ -1661,7 +1669,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get a fresh timestamp for the model.
+     * Obtenez un nouvel horodatage pour le modèle.
      *
      * @return \Carbon\Carbon
      */
@@ -1671,7 +1679,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get a fresh timestamp for the model.
+     * Obtenez un nouvel horodatage pour le modèle.
      *
      * @return string
      */
@@ -1681,7 +1689,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get a new query builder for the model's table.
+     * Obtenez un nouveau générateur de requêtes pour la table du modèle.
      *
      * @return \Two\Database\ORM\Builder
      */
@@ -1693,9 +1701,9 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get a new query instance without a given scope.
+     * Obtenez une nouvelle instance de requête sans portée donnée.
      *
-     * @param  \Two\Database\ORM\ScopeInterface  $scope
+     * @param  \Two\Database\Contracts\ScopeInterface  $scope
      * @return \Two\Database\ORM\Builder
      */
     public function newQueryWithoutScope($scope)
@@ -1706,7 +1714,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get a new query builder that doesn't have any global scopes.
+     * Obtenez un nouveau générateur de requêtes qui n’a aucune étendue globale.
      *
      * @return \Two\Database\ORM\Builder|static
      */
@@ -1720,7 +1728,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Apply all of the global scopes to an ORM builder.
+     * Appliquez toutes les portées globales à un générateur ORM.
      *
      * @param  \Two\Database\ORM\Builder  $builder
      * @return \Two\Database\ORM\Builder
@@ -1735,7 +1743,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Remove all of the global scopes from an ORM builder.
+     * Supprimez toutes les étendues globales d'un générateur ORM.
      *
      * @param  \Two\Database\ORM\Builder  $builder
      * @return \Two\Database\ORM\Builder
@@ -1750,7 +1758,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Create a new ORM query builder for the model.
+     * Créez un nouveau générateur de requêtes ORM pour le modèle.
      *
      * @param  \Two\Database\Query\Builder $query
      * @return \Two\Database\ORM\Builder|static
@@ -1761,7 +1769,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get a new query builder instance for the connection.
+     * Obtenez une nouvelle instance du générateur de requêtes pour la connexion.
      *
      * @return \Two\Database\Query\Builder
      */
@@ -1775,7 +1783,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Create a new ORM Collection instance.
+     * Créez une nouvelle instance de collection ORM.
      *
      * @param  array  $models
      * @return \Two\Database\ORM\Collection
@@ -1786,7 +1794,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Create a new pivot model instance.
+     * Créez une nouvelle instance de modèle pivot.
      *
      * @param  \Two\Database\ORM\Model  $parent
      * @param  array   $attributes
@@ -1803,7 +1811,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the table associated with the model.
+     * Récupère la table associée au modèle.
      *
      * @return string
      */
@@ -1819,7 +1827,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the table associated with the model.
+     * Définissez la table associée au modèle.
      *
      * @param  string  $table
      * @return void
@@ -1830,7 +1838,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the value of the model's primary key.
+     * Obtenez la valeur de la clé primaire du modèle.
      *
      * @return mixed
      */
@@ -1842,7 +1850,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the primary key for the model.
+     * Obtenez la clé primaire du modèle.
      *
      * @return string
      */
@@ -1852,7 +1860,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the primary key for the model.
+     * Définissez la clé primaire du modèle.
      *
      * @param  string  $key
      * @return void
@@ -1863,7 +1871,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the table qualified key name.
+     * Obtenez le nom de la clé qualifiée de la table.
      *
      * @return string
      */
@@ -1873,7 +1881,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the queueable identity for the entity.
+     * Obtenez l'identité pouvant être mise en file d'attente pour l'entité.
      *
      * @return mixed
      */
@@ -1883,7 +1891,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Determine if the model uses timestamps.
+     * Déterminez si le modèle utilise des horodatages.
      *
      * @return bool
      */
@@ -1893,7 +1901,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the polymorphic relationship columns.
+     * Obtenez les colonnes de relations polymorphes.
      *
      * @param  string  $name
      * @param  string  $type
@@ -1910,7 +1918,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the class name for polymorphic relations.
+     * Obtenez le nom de la classe pour les relations polymorphes.
      *
      * @return string
      */
@@ -1920,7 +1928,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the number of models to return per page.
+     * Obtenez le nombre de modèles à renvoyer par page.
      *
      * @return int
      */
@@ -1930,7 +1938,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the number of models to return per page.
+     * Définissez le nombre de modèles à renvoyer par page.
      *
      * @param  int   $perPage
      * @return void
@@ -1941,7 +1949,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the default foreign key name for the model.
+     * Obtenez le nom de clé étrangère par défaut pour le modèle.
      *
      * @return string
      */
@@ -1953,7 +1961,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the hidden attributes for the model.
+     * Obtenez les attributs cachés du modèle.
      *
      * @return array
      */
@@ -1963,7 +1971,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the hidden attributes for the model.
+     * Définissez les attributs masqués du modèle.
      *
      * @param  array  $hidden
      * @return void
@@ -1974,7 +1982,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the visible attributes for the model.
+     * Définissez les attributs visibles du modèle.
      *
      * @param  array  $visible
      * @return void
@@ -1985,7 +1993,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the accessors to append to model arrays.
+     * Définissez les accesseurs à ajouter aux tableaux de modèles.
      *
      * @param  array  $appends
      * @return void
@@ -1996,7 +2004,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the fillable attributes for the model.
+     * Obtenez les attributs à remplir pour le modèle.
      *
      * @return array
      */
@@ -2006,7 +2014,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the fillable attributes for the model.
+     * Définissez les attributs remplissables pour le modèle.
      *
      * @param  array  $fillable
      * @return $this
@@ -2019,7 +2027,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * get the guarded attributes for the model.
+     * obtenez les attributs gardés pour le modèle.
      *
      * @return array
      */
@@ -2029,7 +2037,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the guarded attributes for the model.
+     * Définissez les attributs gardés pour le modèle.
      *
      * @param  array  $guarded
      * @return $this
@@ -2042,7 +2050,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Disable all mass assignable restrictions.
+     * Désactivez toutes les restrictions attribuables en masse.
      *
      * @return void
      */
@@ -2052,7 +2060,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Enable the mass assignment restrictions.
+     * Activez les restrictions d’affectation en masse.
      *
      * @return void
      */
@@ -2062,7 +2070,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Run the given callable while being unguarded.
+     * Exécutez l'appelable donné sans être surveillé.
      *
      * @param  callable  $callback
      * @return mixed
@@ -2084,7 +2092,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set "unguard" to a given state.
+     * Réglez « unguard » sur un état donné.
      *
      * @param  bool  $state
      * @return void
@@ -2095,7 +2103,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Determine if the given attribute may be mass assigned.
+     * Déterminez si l’attribut donné peut être attribué en masse.
      *
      * @param  string  $key
      * @return bool
@@ -2114,7 +2122,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Determine if the given key is guarded.
+     * Déterminez si la clé donnée est gardée.
      *
      * @param  string  $key
      * @return bool
@@ -2125,7 +2133,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Determine if the model is totally guarded.
+     * Déterminez si le modèle est totalement gardé.
      *
      * @return bool
      */
@@ -2135,7 +2143,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Remove the table name from a given key.
+     * Supprime le nom de la table d'une clé donnée.
      *
      * @param  string  $key
      * @return string
@@ -2150,7 +2158,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the relationships that are touched on save.
+     * Enregistrez les relations touchées.
      *
      * @return array
      */
@@ -2160,7 +2168,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the relationships that are touched on save.
+     * Définissez les relations qui sont touchées lors de la sauvegarde.
      *
      * @param  array  $touches
      * @return void
@@ -2171,7 +2179,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the value indicating whether the IDs are incrementing.
+     * Obtenez la valeur indiquant si les ID sont incrémentés.
      *
      * @return bool
      */
@@ -2181,7 +2189,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set whether IDs are incrementing.
+     * Définissez si les ID sont incrémentés.
      *
      * @param  bool  $value
      * @return void
@@ -2192,7 +2200,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Convert the model instance to JSON.
+     * Convertissez l'instance de modèle en JSON.
      *
      * @param  int  $options
      * @return string
@@ -2203,7 +2211,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Convert the object into something JSON serializable.
+     * Convertissez l'objet en quelque chose de sérialisable JSON.
      *
      * @return array
      */
@@ -2213,7 +2221,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Convert the model instance to an array.
+     * Convertissez l'instance de modèle en tableau.
      *
      * @return array
      */
@@ -2225,7 +2233,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Convert the model's attributes to an array.
+     * Convertissez les attributs du modèle en tableau.
      *
      * @return array
      */
@@ -2257,7 +2265,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get an attribute array of all arrayable attributes.
+     * Obtenez un tableau d'attributs de tous les attributs pouvant être mis en tableau.
      *
      * @return array
      */
@@ -2267,7 +2275,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get all of the appendable values that are arrayable.
+     * Obtenez toutes les valeurs ajoutables qui peuvent être rangées.
      *
      * @return array
      */
@@ -2283,7 +2291,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the model's relationships in array form.
+     * Obtenez les relations du modèle sous forme de tableau.
      *
      * @return array
      */
@@ -2317,7 +2325,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get an attribute array of all arrayable relations.
+     * Obtenez un tableau d'attributs de toutes les relations pouvant être rangées.
      *
      * @return array
      */
@@ -2327,7 +2335,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get an attribute array of all arrayable values.
+     * Obtenez un tableau d'attributs de toutes les valeurs pouvant être rangées.
      *
      * @param  array  $values
      * @return array
@@ -2342,24 +2350,24 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get an attribute from the model.
+     * Obtenez un attribut du modèle.
      *
      * @param  string  $key
      * @return mixed
      */
     public function getAttribute($key)
     {
-        // If the key references an attribute, return its plain value from the model.
+        // Si la clé fait référence à un attribut, renvoie sa valeur simple à partir du modèle.
         if (array_key_exists($key, $this->attributes) || $this->hasGetMutator($key)) {
             return $this->getAttributeValue($key);
         }
 
-        // If the key already exists in the relationships array...
+        // Si la clé existe déjà dans le tableau des relations...
         else if (array_key_exists($key, $this->relations)) {
             return $this->relations[$key];
         }
 
-        // If the "attribute" exists as a method on the model, it is a relationship.
+        // Si « l'attribut » existe en tant que méthode sur le modèle, il s'agit d'une relation.
         $camelKey = Str::camel($key);
 
         if (method_exists($this, $camelKey)) {
@@ -2368,7 +2376,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get a plain attribute (not a relationship).
+     * Obtenez un attribut simple (pas une relation).
      *
      * @param  string  $key
      * @return mixed
@@ -2387,7 +2395,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get an attribute from the $attributes array.
+     * Récupère un attribut du tableau $attributes.
      *
      * @param  string  $key
      * @return mixed
@@ -2400,7 +2408,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get a relationship value from a method.
+     * Obtenez une valeur de relation à partir d’une méthode.
      *
      * @param  string  $key
      * @param  string  $camelKey
@@ -2420,7 +2428,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Determine if a get mutator exists for an attribute.
+     * Déterminez si un mutateur get existe pour un attribut.
      *
      * @param  string  $key
      * @return bool
@@ -2433,7 +2441,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the value of an attribute using its mutator.
+     * Obtenez la valeur d'un attribut en utilisant son mutateur.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -2447,7 +2455,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the value of an attribute using its mutator for array conversion.
+     * Obtenez la valeur d'un attribut en utilisant son mutateur pour la conversion de tableau.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -2465,7 +2473,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set a given attribute on the model.
+     * Définissez un attribut donné sur le modèle.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -2485,7 +2493,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Determine if a set mutator exists for an attribute.
+     * Déterminez si un mutateur défini existe pour un attribut.
      *
      * @param  string  $key
      * @return bool
@@ -2498,7 +2506,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the attributes that should be converted to dates.
+     * Obtenez les attributs qui doivent être convertis en dates.
      *
      * @return array
      */
@@ -2510,7 +2518,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Convert a DateTime to a storable string.
+     * Convertissez un DateTime en une chaîne stockable.
      *
      * @param  \DateTime|int  $value
      * @return string
@@ -2533,7 +2541,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Return a timestamp as DateTime object.
+     * Renvoie un horodatage en tant qu'objet DateTime.
      *
      * @param  mixed  $value
      * @return \Carbon\Carbon
@@ -2554,7 +2562,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the format for database stored dates.
+     * Obtenez le format des dates stockées dans la base de données.
      *
      * @return string
      */
@@ -2564,7 +2572,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Clone the model into a new, non-existing instance.
+     * Clonez le modèle dans une nouvelle instance inexistante.
      *
      * @param  array  $except
      * @return \Two\Database\ORM\Model
@@ -2585,7 +2593,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get all of the current attributes on the model.
+     * Obtenez tous les attributs actuels du modèle.
      *
      * @return array
      */
@@ -2595,7 +2603,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the array of model attributes. No checking is done.
+     * Définissez le tableau des attributs du modèle. Aucune vérification n'est effectuée.
      *
      * @param  array  $attributes
      * @param  bool   $sync
@@ -2609,7 +2617,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the model's original attribute values.
+     * Obtenez les valeurs d'attribut d'origine du modèle.
      *
      * @param  string  $key
      * @param  mixed   $default
@@ -2621,7 +2629,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Sync the original attributes with the current.
+     * Synchronisez les attributs d'origine avec les attributs actuels.
      *
      * @return $this
      */
@@ -2633,7 +2641,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Sync a single original attribute with its current value.
+     * Synchronisez un seul attribut d'origine avec sa valeur actuelle.
      *
      * @param  string  $attribute
      * @return $this
@@ -2646,7 +2654,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Determine if the model or given attribute(s) have been modified.
+     * Déterminez si le modèle ou les attributs donnés ont été modifiés.
      *
      * @param  array|string|null  $attributes
      * @return bool
@@ -2671,7 +2679,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the attributes that have been changed since last sync.
+     * Obtenez les attributs qui ont été modifiés depuis la dernière synchronisation.
      *
      * @return array
      */
@@ -2706,7 +2714,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get all the loaded relations for the instance.
+     * Obtenez toutes les relations chargées pour l'instance.
      *
      * @return array
      */
@@ -2716,7 +2724,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get a specified relationship.
+     * Obtenez une relation spécifiée.
      *
      * @param  string  $relation
      * @return mixed
@@ -2727,7 +2735,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the specific relationship in the model.
+     * Définissez la relation spécifique dans le modèle.
      *
      * @param  string  $relation
      * @param  mixed   $value
@@ -2741,7 +2749,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the entire relations array on the model.
+     * Définissez l'ensemble du tableau de relations sur le modèle.
      *
      * @param  array  $relations
      * @return $this
@@ -2754,7 +2762,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the database connection for the model.
+     * Obtenez la connexion à la base de données pour le modèle.
      *
      * @return \Two\Database\Connection
      */
@@ -2764,7 +2772,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the current connection name for the model.
+     * Obtenez le nom de connexion actuel pour le modèle.
      *
      * @return string
      */
@@ -2774,7 +2782,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the connection associated with the model.
+     * Définissez la connexion associée au modèle.
      *
      * @param  string  $name
      * @return $this
@@ -2787,7 +2795,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Resolve a connection instance.
+     * Résolvez une instance de connexion.
      *
      * @param  string  $connection
      * @return \Two\Database\Connection
@@ -2798,9 +2806,9 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the connection resolver instance.
+     * Obtenez l’instance du résolveur de connexion.
      *
-     * @return \Two\Database\ConnectionResolverInterface
+     * @return \Two\Database\Contracts\ConnectionResolverInterface
      */
     public static function getConnectionResolver()
     {
@@ -2808,9 +2816,9 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the connection resolver instance.
+     * Définissez l’instance du résolveur de connexion.
      *
-     * @param  \Two\Database\ConnectionResolverInterface  $resolver
+     * @param  \Two\Database\Contracts\ConnectionResolverInterface  $resolver
      * @return void
      */
     public static function setConnectionResolver(Resolver $resolver)
@@ -2819,7 +2827,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Unset the connection resolver for models.
+     * Désactivez le résolveur de connexion pour les modèles.
      *
      * @return void
      */
@@ -2829,7 +2837,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the event dispatcher instance.
+     * Obtenez l’instance du répartiteur d’événements.
      *
      * @return \Two\Events\Dispatcher
      */
@@ -2839,7 +2847,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the event dispatcher instance.
+     * Définissez l’instance du répartiteur d’événements.
      *
      * @param  \Two\Events\Dispatcher  $dispatcher
      * @return void
@@ -2850,7 +2858,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Unset the event dispatcher for models.
+     * Désactivez le répartiteur d'événements pour les modèles.
      *
      * @return void
      */
@@ -2860,7 +2868,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the mutated attributes for a given instance.
+     * Obtenez les attributs mutés pour une instance donnée.
      *
      * @return array
      */
@@ -2876,7 +2884,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Dynamically retrieve attributes on the model.
+     * Récupérez dynamiquement les attributs sur le modèle.
      *
      * @param  string  $key
      * @return mixed
@@ -2887,7 +2895,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Dynamically set attributes on the model.
+     * Définir dynamiquement les attributs sur le modèle.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -2899,7 +2907,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Determine if the given attribute exists.
+     * Déterminez si l'attribut donné existe.
      *
      * @param  mixed  $offset
      * @return bool
@@ -2910,7 +2918,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Get the value for a given offset.
+     * Obtenez la valeur pour un décalage donné.
      *
      * @param  mixed  $offset
      * @return mixed
@@ -2921,7 +2929,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Set the value for a given offset.
+     * Définissez la valeur pour un décalage donné.
      *
      * @param  mixed  $offset
      * @param  mixed  $value
@@ -2933,7 +2941,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Unset the value for a given offset.
+     * Supprimez la valeur d'un décalage donné.
      *
      * @param  mixed  $offset
      * @return void
@@ -2944,7 +2952,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Determine if an attribute exists on the model.
+     * Déterminez si un attribut existe sur le modèle.
      *
      * @param  string  $key
      * @return bool
@@ -2956,7 +2964,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Unset an attribute on the model.
+     * Désactivez un attribut sur le modèle.
      *
      * @param  string  $key
      * @return void
@@ -2967,7 +2975,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Handle dynamic method calls into the method.
+     * Gérez les appels de méthode dynamique dans la méthode.
      *
      * @param  string  $method
      * @param  array   $parameters
@@ -2985,7 +2993,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Handle dynamic static method calls into the method.
+     * Gérez les appels de méthode statique dynamique dans la méthode.
      *
      * @param  string  $method
      * @param  array   $parameters
@@ -2999,7 +3007,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Convert the model to its string representation.
+     * Convertissez le modèle en sa représentation sous forme de chaîne.
      *
      * @return string
      */
@@ -3009,7 +3017,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * When a model is being unserialized, check if it needs to be booted.
+     * Lorsqu'un modèle n'est pas sérialisé, vérifiez s'il doit être démarré.
      *
      * @return void
      */

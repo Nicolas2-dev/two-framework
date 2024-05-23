@@ -1,8 +1,14 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Auth;
 
-use Two\Contracts\ArrayableInterface;
+use Two\Auth\Contracts\UserInterface;
+use Two\Application\Contracts\ArrayableInterface;
 
 
 class GenericUser implements UserInterface, ArrayableInterface

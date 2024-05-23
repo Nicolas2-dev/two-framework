@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Routing;
 
 use Two\Support\Str;
@@ -8,14 +13,14 @@ use Two\Support\Str;
 class ResourceRegistrar
 {
     /**
-     * The router instance.
+     * L'instance du routeur.
      *
      * @var \Two\Routing\Router
      */
     protected $router;
 
     /**
-     * The default actions for a resourceful controller.
+     * Les actions par défaut pour un contrôleur ingénieux.
      *
      * @var array
      */
@@ -23,7 +28,7 @@ class ResourceRegistrar
 
 
     /**
-     * Create a new resource registrar instance.
+     * Créez une nouvelle instance de registraire de ressources.
      *
      * @param  \Two\Routing\Router  $router
      * @return void
@@ -34,7 +39,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Route a resource to a controller.
+     * Acheminer une ressource vers un contrôleur.
      *
      * @param  string  $name
      * @param  string  $controller
@@ -43,18 +48,18 @@ class ResourceRegistrar
      */
     public function register($name, $controller, array $options = array())
     {
-        // If the resource name contains a slash, we will assume the developer wishes to
-        // register these resource routes with a prefix so we will set that up out of
-        // the box so they don't have to mess with it. Otherwise, we will continue.
+        // Si le nom de la ressource contient une barre oblique, nous supposerons que le développeur souhaite
+        // enregistre ces routes de ressources avec un préfixe afin que nous puissions les configurer hors de
+        // la boîte pour qu'ils n'aient pas à s'en occuper. Sinon, nous continuerons.
         if (Str::contains($name, '/')) {
             $this->prefixedResource($name, $controller, $options);
 
             return;
         }
 
-        // We need to extract the base resource from the resource name. Nested resources
-        // are supported in the framework, but we need to know what name to use for a
-        // place-holder on the route wildcards, which should be the base resources.
+        // Nous devons extraire la ressource de base du nom de la ressource. Ressources imbriquées
+        // sont pris en charge dans le framework, mais nous devons savoir quel nom utiliser pour un
+        // espace réservé sur les caractères génériques de route, qui devraient être les ressources de base.
         $segments = explode('.', $name);
 
         $base = $this->getResourceWildcard(
@@ -71,7 +76,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Build a set of prefixed resource routes.
+     * Créez un ensemble d’itinéraires de ressources préfixés.
      *
      * @param  string  $name
      * @param  string  $controller
@@ -82,9 +87,9 @@ class ResourceRegistrar
     {
         list ($name, $prefix) = $this->getResourcePrefix($name);
 
-        // We need to extract the base resource from the resource name. Nested resources
-        // are supported in the framework, but we need to know what name to use for a
-        // place-holder on the route wildcards, which should be the base resources.
+        // Nous devons extraire la ressource de base du nom de la ressource. Ressources imbriquées
+        // sont pris en charge dans le framework, mais nous devons savoir quel nom utiliser pour un
+        // espace réservé sur les caractères génériques de route, qui devraient être les ressources de base.
 
         return $this->router->group(compact('prefix'), function ($router) use ($name, $controller, $options)
         {
@@ -93,7 +98,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Extract the resource and prefix from a resource name.
+     * Extrayez la ressource et le préfixe d'un nom de ressource.
      *
      * @param  string  $name
      * @return array
@@ -102,9 +107,9 @@ class ResourceRegistrar
     {
         $segments = explode('/', $name);
 
-        // To get the prefix, we will take all of the name segments and implode them on
-        // a slash. This will generate a proper URI prefix for us. Then we take this
-        // last segment, which will be considered the final resources name we use.
+        // Pour obtenir le préfixe, nous prendrons tous les segments de nom et les imploserons
+        // une barre oblique. Cela générera un préfixe URI approprié pour nous. Ensuite, nous prenons ceci
+        // dernier segment, qui sera considéré comme le nom final des ressources que nous utiliserons.
         $prefix = implode('/', array_slice($segments, 0, -1));
 
         return array(
@@ -113,7 +118,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Get the applicable resource methods.
+     * Obtenez les méthodes de ressources applicables.
      *
      * @param  array  $defaults
      * @param  array  $options
@@ -131,7 +136,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Get the base resource URI for a given resource.
+     * Obtenez l’URI de la ressource de base pour une ressource donnée.
      *
      * @param  string  $resource
      * @return string
@@ -142,9 +147,9 @@ class ResourceRegistrar
             return $resource;
         }
 
-        // Once we have built the base URI, we'll remove the wildcard holder for this
-        // base resource name so that the individual route adders can suffix these
-        // paths however they need to, as some do not have any wildcards at all.
+        // Une fois que nous aurons construit l'URI de base, nous supprimerons le détenteur du caractère générique pour cela.
+        // nom de la ressource de base afin que les additionneurs de routes individuels puissent les suffixer
+        // chemins comme ils le souhaitent, car certains n'ont aucun caractère générique.
         $segments = explode('.', $resource);
 
         $uri = $this->getNestedResourceUri($segments);
@@ -157,16 +162,16 @@ class ResourceRegistrar
     }
 
     /**
-     * Get the URI for a nested resource segment array.
+     * Obtenez l’URI d’un tableau de segments de ressources imbriqués.
      *
      * @param  array   $segments
      * @return string
      */
     protected function getNestedResourceUri(array $segments)
     {
-        // We will spin through the segments and create a place-holder for each of the
-        // resource segments, as well as the resource itself. Then we should get an
-        // entire string for the resource URI that contains all nested resources.
+        // Nous allons parcourir les segments et créer un espace réservé pour chacun des segments.
+        // segments de ressources, ainsi que la ressource elle-même. Alors nous devrions obtenir un
+        // chaîne entière pour l'URI de la ressource qui contient toutes les ressources imbriquées.
         return implode('/', array_map(function ($segment)
         {
             $name = $this->getResourceWildcard($segment);
@@ -177,7 +182,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Get the action array for a resource route.
+     * Obtenez le tableau d’actions pour un itinéraire de ressources.
      *
      * @param  string  $resource
      * @param  string  $controller
@@ -193,7 +198,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Get the name for a given resource.
+     * Obtenez le nom d'une ressource donnée.
      *
      * @param  string  $resource
      * @param  string  $method
@@ -206,9 +211,9 @@ class ResourceRegistrar
             return $options['names'][$method];
         }
 
-        // If a global prefix has been assigned to all names for this resource, we will
-        // grab that so we can prepend it onto the name when we create this name for
-        // the resource action. Otherwise we'll just use an empty string for here.
+        // Si un préfixe global a été attribué à tous les noms de cette ressource, nous le ferons
+        // récupère-le pour pouvoir l'ajouter au nom lorsque nous créons ce nom pour
+        // l'action de la ressource. Sinon, nous utiliserons simplement une chaîne vide ici.
         $prefix = isset($options['as']) ? $options['as'] .'.' : '';
 
         if (! $this->router->hasGroupStack()) {
@@ -219,7 +224,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Get the resource name for a grouped resource.
+     * Obtenez le nom de la ressource pour une ressource groupée.
      *
      * @param  string  $prefix
      * @param  string  $resource
@@ -240,7 +245,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Format a resource wildcard for usage.
+     * Formatez un caractère générique de ressource à utiliser.
      *
      * @param  string  $value
      * @return string
@@ -251,7 +256,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Add the index method for a resourceful route.
+     * Ajoutez la méthode index pour un itinéraire ingénieux.
      *
      * @param  string  $name
      * @param  string  $base
@@ -269,7 +274,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Add the create method for a resourceful route.
+     * Ajoutez la méthode create pour un itinéraire ingénieux.
      *
      * @param  string  $name
      * @param  string  $base
@@ -287,7 +292,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Add the store method for a resourceful route.
+     * Ajoutez la méthode store pour un itinéraire ingénieux.
      *
      * @param  string  $name
      * @param  string  $base
@@ -305,7 +310,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Add the show method for a resourceful route.
+     * Ajoutez la méthode show pour un itinéraire ingénieux.
      *
      * @param  string  $name
      * @param  string  $base
@@ -323,7 +328,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Add the edit method for a resourceful route.
+     * Ajoutez la méthode d'édition pour un itinéraire ingénieux.
      *
      * @param  string  $name
      * @param  string  $base
@@ -341,7 +346,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Add the update method for a resourceful route.
+     * Ajoutez la méthode de mise à jour pour un itinéraire ingénieux.
      *
      * @param  string  $name
      * @param  string  $base
@@ -357,7 +362,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Add the update method for a resourceful route.
+     * Ajoutez la méthode de mise à jour pour un itinéraire ingénieux.
      *
      * @param  string  $name
      * @param  string  $base
@@ -375,7 +380,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Add the update method for a resourceful route.
+     * Ajoutez la méthode de mise à jour pour un itinéraire ingénieux.
      *
      * @param  string  $name
      * @param  string  $base
@@ -390,7 +395,7 @@ class ResourceRegistrar
     }
 
     /**
-     * Add the destroy method for a resourceful route.
+     * Ajoutez la méthode destroy pour un itinéraire ingénieux.
      *
      * @param  string  $name
      * @param  string  $base

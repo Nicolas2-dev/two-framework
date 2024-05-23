@@ -1,135 +1,140 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database;
-
 
 use PDO;
 use Closure;
-
 use DateTime;
+use LogicException;
 
-use Two\Support\Str;
 use Two\Events\Dispatcher;
-use Two\Database\Query\Processors\Processor;
+use Two\Database\Query\Processor;
+use Two\Database\Contracts\ConnectionInterface;
+
 use Doctrine\DBAL\Connection as DoctrineConnection;
 
 
 class Connection implements ConnectionInterface
 {
     /**
-     * The active PDO connection.
+     * La connexion PDO active.
      *
      * @var PDO
      */
     protected $pdo;
 
     /**
-     * The active PDO connection used for reads.
+     * La connexion PDO active utilisée pour les lectures.
      *
      * @var PDO
      */
     protected $readPdo;
 
     /**
-     * The reconnector instance for the connection.
+     * Instance de reconnecteur pour la connexion.
      *
      * @var callable
      */
     protected $reconnector;
 
     /**
-     * The query grammar implementation.
+     * L'implémentation de la grammaire des requêtes.
      *
-     * @var \Two\Database\Query\Grammars\Grammar
+     * @var \Two\Database\Query\Grammar
      */
     protected $queryGrammar;
 
     /**
-     * The schema grammar implementation.
+     * L’implémentation de la grammaire du schéma.
      *
-     * @var \Two\Database\Schema\Grammars\Grammar
+     * @var \Two\Database\Schema\Grammar
      */
     protected $schemaGrammar;
 
     /**
-     * The query post processor implementation.
+     * Implémentation du post-processeur de requête.
      *
-     * @var \Two\Database\Query\Processors\Processor
+     * @var \Two\Database\Query\Processor
      */
     protected $postProcessor;
 
     /**
-     * The event dispatcher instance.
+     * L'instance du répartiteur d'événements.
      *
      * @var \Two\Events\Dispatcher
      */
     protected $events;
 
     /**
-     * The cache manager instance.
+     * L'instance du gestionnaire de cache.
      *
      * @var \Two\Cache\CacheManager
      */
     protected $cache;
 
     /**
-     * The default fetch mode of the connection.
+     * Le mode de récupération par défaut de la connexion.
      *
      * @var int
      */
     protected $fetchMode = PDO::FETCH_ASSOC;
 
     /**
-     * The number of active transactions.
+     * Le nombre de transactions actives.
      *
      * @var int
      */
     protected $transactions = 0;
 
     /**
-     * All of the queries run against the connection.
+     * Toutes les requêtes sont exécutées sur la connexion.
      *
      * @var array
      */
     protected $queryLog = array();
 
     /**
-     * Indicates whether queries are being logged.
+     * Indique si les requêtes sont enregistrées.
      *
      * @var bool
      */
     protected $loggingQueries = true;
 
     /**
-     * Indicates if the connection is in a "dry run".
+     * Indique si la connexion est en « essai à sec ».
      *
      * @var bool
      */
     protected $pretending = false;
 
     /**
-     * The name of the connected database.
+     * Le nom de la base de données connectée.
      *
      * @var string
      */
     protected $database;
 
     /**
-     * The table prefix for the connection.
+     * Le préfixe de table pour la connexion.
      *
      * @var string
      */
     protected $tablePrefix = '';
 
     /**
-     * The database connection configuration options.
+     * Les options de configuration de la connexion à la base de données.
      *
      * @var array
      */
     protected $config = array();
 
     /**
-     * Create a new database connection instance.
+     * Créez une nouvelle instance de connexion à la base de données.
      *
      * @param  \PDO     $pdo
      * @param  string   $database
@@ -155,7 +160,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Set the query grammar to the default implementation.
+     * Définissez la grammaire de la requête sur l'implémentation par défaut.
      *
      * @return void
      */
@@ -165,9 +170,9 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the default query grammar instance.
+     * Obtenez l'instance de grammaire de requête par défaut.
      *
-     * @return \Two\Database\Query\Grammars\Grammar
+     * @return \Two\Database\Query\Grammar
      */
     protected function getDefaultQueryGrammar()
     {
@@ -175,7 +180,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Set the schema grammar to the default implementation.
+     * Définissez la grammaire du schéma sur l'implémentation par défaut.
      *
      * @return void
      */
@@ -185,14 +190,14 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the default schema grammar instance.
+     * Obtenez l'instance de grammaire de schéma par défaut.
      *
-     * @return \Two\Database\Schema\Grammars\Grammar
+     * @return \Two\Database\Schema\Grammar
      */
     protected function getDefaultSchemaGrammar() {}
 
     /**
-     * Set the query post processor to the default implementation.
+     * Définissez le post-processeur de requête sur l’implémentation par défaut.
      *
      * @return void
      */
@@ -202,9 +207,9 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the default post processor instance.
+     * Obtenez l'instance de post-processeur par défaut.
      *
-     * @return \Two\Database\Query\Processors\Processor
+     * @return \Two\Database\Query\Processor
      */
     protected function getDefaultPostProcessor()
     {
@@ -212,7 +217,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get a schema builder instance for the connection.
+     * Obtenez une instance de générateur de schéma pour la connexion.
      *
      * @return \Two\Database\Schema\Builder
      */
@@ -226,7 +231,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Begin a fluent query against a database table.
+     * Commencez une requête fluide sur une table de base de données.
      *
      * @param  string  $table
      * @return \Two\Database\Query\Builder
@@ -241,7 +246,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get a new raw query expression.
+     * Obtenez une nouvelle expression de requête brute.
      *
      * @param  mixed  $value
      * @return \Two\Database\Query\Expression
@@ -252,7 +257,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Run a select statement and return a single result.
+     * Exécutez une instruction select et renvoyez un seul résultat.
      *
      * @param  string  $query
      * @param  array   $bindings
@@ -266,7 +271,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Run a select statement against the database.
+     * Exécutez une instruction select sur la base de données.
      *
      * @param  string  $query
      * @param  array   $bindings
@@ -278,7 +283,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Run a select statement against the database.
+     * Exécutez une instruction select sur la base de données.
      *
      * @param  string  $query
      * @param  array  $bindings
@@ -303,7 +308,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Parse and wrap the variables from query, then return a propared PDO Statement instance.
+     * Analysez et encapsulez les variables de la requête, puis renvoyez une instance d'instruction PDO préparée.
      *
      * @param  string  $query
      * @param  \PDO  $pdo
@@ -329,7 +334,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the PDO connection to use for a select query.
+     * Obtenez la connexion PDO à utiliser pour une requête de sélection.
      *
      * @param  bool  $useReadPdo
      * @return \PDO
@@ -340,7 +345,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Run an insert statement against the database.
+     * Exécutez une instruction insert sur la base de données.
      *
      * @param  string  $query
      * @param  array   $bindings
@@ -352,7 +357,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Run an update statement against the database.
+     * Exécutez une instruction de mise à jour sur la base de données.
      *
      * @param  string  $query
      * @param  array   $bindings
@@ -364,7 +369,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Run a delete statement against the database.
+     * Exécutez une instruction delete sur la base de données.
      *
      * @param  string  $query
      * @param  array   $bindings
@@ -376,7 +381,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Execute an SQL statement and return the boolean result.
+     * Exécutez une instruction SQL et renvoyez le résultat booléen.
      *
      * @param  string  $query
      * @param  array   $bindings
@@ -398,7 +403,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Run an SQL statement and get the number of rows affected.
+     * Exécutez une instruction SQL et obtenez le nombre de lignes affectées.
      *
      * @param  string  $query
      * @param  array   $bindings
@@ -422,7 +427,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Run a raw, unprepared query against the PDO connection.
+     * Exécutez une requête brute et non préparée sur la connexion PDO.
      *
      * @param  string  $query
      * @return bool
@@ -440,7 +445,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Prepare the query bindings for execution.
+     * Préparez les liaisons de requête pour l’exécution.
      *
      * @param  array  $bindings
      * @return array
@@ -454,7 +459,7 @@ class Connection implements ConnectionInterface
                 $bindings[$key] = $value->format($grammar->getDateFormat());
             }
 
-            // The value is not a DateTime instance.
+            // La valeur n'est pas une instance DateTime.
             else if ($value === false) {
                 $bindings[$key] = 0;
             }
@@ -464,7 +469,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Execute a Closure within a transaction.
+     * Exécuter une clôture dans une transaction.
      *
      * @param  \Closure  $callback
      * @return mixed
@@ -496,7 +501,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Start a new database transaction.
+     * Démarrez une nouvelle transaction de base de données.
      *
      * @return void
      */
@@ -512,7 +517,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Commit the active database transaction.
+     * Validez la transaction de base de données active.
      *
      * @return void
      */
@@ -526,7 +531,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Rollback the active database transaction.
+     * Annulez la transaction de base de données active.
      *
      * @return void
      */
@@ -544,7 +549,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the number of active transactions.
+     * Obtenez le nombre de transactions actives.
      *
      * @return int
      */
@@ -554,7 +559,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Execute the given callback in "dry run" mode.
+     * Exécutez le rappel donné en mode « exécution à sec ».
      *
      * @param  \Closure  $callback
      * @return array
@@ -574,7 +579,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Run a SQL statement and log its execution context.
+     * Exécutez une instruction SQL et enregistrez son contexte d'exécution.
      *
      * @param  string    $query
      * @param  array     $bindings
@@ -606,7 +611,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Run a SQL statement.
+     * Exécutez une instruction SQL.
      *
      * @param  string    $query
      * @param  array     $bindings
@@ -630,7 +635,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Handle a query exception that occurred during query execution.
+     * Gérez une exception de requête survenue lors de l’exécution de la requête.
      *
      * @param  \Two\Database\QueryException  $e
      * @param  string    $query
@@ -652,14 +657,14 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Determine if the given exception was caused by a lost connection.
+     * Déterminez si l’exception donnée a été causée par une perte de connexion.
      *
      * @param  \Two\Database\QueryException
      * @return bool
      */
     protected function causedByLostConnection(QueryException $e)
     {
-        return Str::contains($e->getMessage(), array(
+        return str_contains($e->getMessage(), array(
             'server has gone away',
             'no connection to the server',
             'Lost connection',
@@ -675,7 +680,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Disconnect from the underlying PDO connection.
+     * Déconnectez-vous de la connexion PDO sous-jacente.
      *
      * @return void
      */
@@ -685,7 +690,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Reconnect to the database.
+     * Reconnectez-vous à la base de données.
      *
      * @return void
      *
@@ -697,11 +702,11 @@ class Connection implements ConnectionInterface
             return call_user_func($this->reconnector, $this);
         }
 
-        throw new \LogicException("Lost connection and no reconnector available.");
+        throw new LogicException("Lost connection and no reconnector available.");
     }
 
     /**
-     * Reconnect to the database if a PDO connection is missing.
+     * Reconnectez-vous à la base de données si une connexion PDO est manquante.
      *
      * @return void
      */
@@ -713,7 +718,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Log a query in the connection's query log.
+     * Enregistrez une requête dans le journal des requêtes de la connexion.
      *
      * @param  string  $query
      * @param  array   $bindings
@@ -732,7 +737,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Register a database query listener with the connection.
+     * Enregistrez un écouteur de requêtes de base de données avec la connexion.
      *
      * @param  \Closure  $callback
      * @return void
@@ -745,7 +750,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Fire an event for this connection.
+     * Déclenchez un événement pour cette connexion.
      *
      * @param  string  $event
      * @return void
@@ -758,7 +763,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the elapsed time since a given starting point.
+     * Obtenez le temps écoulé depuis un point de départ donné.
      *
      * @param  int    $start
      * @return float
@@ -769,7 +774,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get a Doctrine Schema Column instance.
+     * Obtenez une instance de colonne de schéma de doctrine.
      *
      * @param  string  $table
      * @param  string  $column
@@ -783,7 +788,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the Doctrine DBAL schema manager for the connection.
+     * Obtenez le gestionnaire de schéma Doctrine DBAL pour la connexion.
      *
      * @return \Doctrine\DBAL\Schema\AbstractSchemaManager
      */
@@ -793,7 +798,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the Doctrine DBAL database connection instance.
+     * Obtenez l’instance de connexion à la base de données Doctrine DBAL.
      *
      * @return \Doctrine\DBAL\Connection
      */
@@ -807,7 +812,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the current PDO connection.
+     * Obtenez la connexion PDO actuelle.
      *
      * @return \PDO
      */
@@ -817,7 +822,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the current PDO connection used for reading.
+     * Obtenez la connexion PDO actuelle utilisée pour la lecture.
      *
      * @return \PDO
      */
@@ -829,7 +834,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Set the PDO connection.
+     * Définissez la connexion PDO.
      *
      * @param  \PDO|null  $pdo
      * @return $this
@@ -846,7 +851,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Set the PDO connection used for reading.
+     * Définissez la connexion PDO utilisée pour la lecture.
      *
      * @param  \PDO|null  $pdo
      * @return $this
@@ -859,7 +864,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Set the reconnect instance on the connection.
+     * Définissez l'instance de reconnexion sur la connexion.
      *
      * @param  callable  $reconnector
      * @return $this
@@ -872,7 +877,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the database connection name.
+     * Obtenez le nom de connexion à la base de données.
      *
      * @return string|null
      */
@@ -882,7 +887,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get an option from the configuration options.
+     * Obtenez une option parmi les options de configuration.
      *
      * @param  string  $option
      * @return mixed
@@ -893,7 +898,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the PDO driver name.
+     * Obtenez le nom du pilote PDO.
      *
      * @return string
      */
@@ -903,9 +908,9 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the query grammar used by the connection.
+     * Obtenez la grammaire de requête utilisée par la connexion.
      *
-     * @return \Two\Database\Query\Grammars\Grammar
+     * @return \Two\Database\Query\Grammar
      */
     public function getQueryGrammar()
     {
@@ -913,20 +918,20 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Set the query grammar used by the connection.
+     * Définissez la grammaire de requête utilisée par la connexion.
      *
-     * @param  \Two\Database\Query\Grammars\Grammar
+     * @param  \Two\Database\Query\Grammar
      * @return void
      */
-    public function setQueryGrammar(Query\Grammars\Grammar $grammar)
+    public function setQueryGrammar(Query\Grammar $grammar)
     {
         $this->queryGrammar = $grammar;
     }
 
     /**
-     * Get the schema grammar used by the connection.
+     * Obtenez la grammaire du schéma utilisée par la connexion.
      *
-     * @return \Two\Database\Query\Grammars\Grammar
+     * @return \Two\Database\Query\Grammar
      */
     public function getSchemaGrammar()
     {
@@ -934,20 +939,20 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Set the schema grammar used by the connection.
+     * Définissez la grammaire du schéma utilisée par la connexion.
      *
-     * @param  \Two\Database\Schema\Grammars\Grammar
+     * @param  \Two\Database\Schema\Grammar
      * @return void
      */
-    public function setSchemaGrammar(Schema\Grammars\Grammar $grammar)
+    public function setSchemaGrammar(Schema\Grammar $grammar)
     {
         $this->schemaGrammar = $grammar;
     }
 
     /**
-     * Get the query post processor used by the connection.
+     * Obtenez le post-processeur de requête utilisé par la connexion.
      *
-     * @return \Two\Database\Query\Processors\Processor
+     * @return \Two\Database\Query\Processor
      */
     public function getPostProcessor()
     {
@@ -955,9 +960,9 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Set the query post processor used by the connection.
+     * Définissez le post-processeur de requête utilisé par la connexion.
      *
-     * @param  \Two\Database\Query\Processors\Processor
+     * @param  \Two\Database\Query\Processor
      * @return void
      */
     public function setPostProcessor(Processor $processor)
@@ -966,7 +971,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the event dispatcher used by the connection.
+     * Obtenez le répartiteur d'événements utilisé par la connexion.
      *
      * @return \Two\Events\Dispatcher
      */
@@ -976,7 +981,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Set the event dispatcher instance on the connection.
+     * Définissez l’instance du répartiteur d’événements sur la connexion.
      *
      * @param  \Two\Events\Dispatcher
      * @return void
@@ -987,7 +992,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the cache manager instance.
+     * Obtenez l'instance du gestionnaire de cache.
      *
      * @return \Two\Cache\CacheManager
      */
@@ -1001,7 +1006,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Set the cache manager instance on the connection.
+     * Définissez l'instance du gestionnaire de cache sur la connexion.
      *
      * @param  \Two\Cache\CacheManager|\Closure  $cache
      * @return void
@@ -1012,7 +1017,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Determine if the connection in a "dry run".
+     * Déterminez si la connexion est en "essai à sec".
      *
      * @return bool
      */
@@ -1022,7 +1027,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the default fetch mode for the connection.
+     * Obtenez le mode de récupération par défaut pour la connexion.
      *
      * @return int
      */
@@ -1032,7 +1037,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Set the default fetch mode for the connection.
+     * Définissez le mode de récupération par défaut pour la connexion.
      *
      * @param  int  $fetchMode
      * @return int
@@ -1043,7 +1048,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the connection query log.
+     * Obtenez le journal des requêtes de connexion.
      *
      * @return array
      */
@@ -1053,7 +1058,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Clear the query log.
+     * Effacez le journal des requêtes.
      *
      * @return void
      */
@@ -1063,7 +1068,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Enable the query log on the connection.
+     * Activez le journal des requêtes sur la connexion.
      *
      * @return void
      */
@@ -1073,7 +1078,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Disable the query log on the connection.
+     * Désactivez le journal des requêtes sur la connexion.
      *
      * @return void
      */
@@ -1083,7 +1088,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Determine whether we're logging queries.
+     * Déterminez si nous enregistrons les requêtes.
      *
      * @return bool
      */
@@ -1093,7 +1098,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the name of the connected database.
+     * Obtenez le nom de la base de données connectée.
      *
      * @return string
      */
@@ -1103,7 +1108,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Set the name of the connected database.
+     * Définissez le nom de la base de données connectée.
      *
      * @param  string  $database
      * @return string
@@ -1114,7 +1119,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get the table prefix for the connection.
+     * Obtenez le préfixe de table pour la connexion.
      *
      * @return string
      */
@@ -1124,7 +1129,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Set the table prefix in use by the connection.
+     * Définissez le préfixe de table utilisé par la connexion.
      *
      * @param  string  $prefix
      * @return void
@@ -1137,7 +1142,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Set the table prefix and return the grammar.
+     * Définissez le préfixe de la table et renvoyez la grammaire.
      *
      * @param  \Two\Database\Grammar  $grammar
      * @return \Two\Database\Grammar

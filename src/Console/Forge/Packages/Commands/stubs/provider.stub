@@ -1,0 +1,37 @@
+<?php
+
+namespace {{namespace}};
+
+use Two\Support\ServiceProvider;
+
+
+class {{className}} extends ServiceProvider
+{
+    /**
+     * Indique si le chargement du Provider est différé.
+     *
+     * @var bool
+     */
+    protected $defer = true;
+
+
+    /**
+     * Amorcez les services d’application.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        //
+    }
+
+    /**
+     * Enregistrez les services d'application.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+}

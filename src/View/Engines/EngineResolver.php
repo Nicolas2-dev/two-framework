@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\View\Engines;
 
 use Closure;
@@ -9,23 +14,23 @@ class EngineResolver
 {
 
     /**
-     * The array of Engine resolvers.
+     * La gamme de résolveurs Engine.
      *
      * @var array
      */
     protected $resolvers = array();
 
     /**
-     * The resolved Engine instances.
+     * Les instances de moteur résolues.
      *
      * @var array
      */
     protected $resolved = array();
 
     /**
-     * Register a new Engine Resolver.
+     * Enregistrez un nouveau résolveur de moteur.
      *
-     * The Engine string typically corresponds to a file extension.
+     * La chaîne Engine correspond généralement à une extension de fichier.
      *
      * @param  string   $engine
      * @param  Closure  $resolver
@@ -37,10 +42,10 @@ class EngineResolver
     }
 
     /**
-     * Resolve an Engine instance by name.
+     * Résolvez une instance de moteur par son nom.
      *
      * @param  string  $engine
-     * @return \Two\View\Contracts\EngineInterface
+     * @return \Two\View\Contracts\Engines\EngineInterface
      */
     public function resolve($engine)
     {

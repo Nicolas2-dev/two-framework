@@ -1,21 +1,27 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Schema;
 
 use Two\Support\Fluent;
-use Doctrine\DBAL\Schema\Column;
-use Doctrine\DBAL\Schema\TableDiff;
 use Two\Database\Connection;
 use Two\Database\Query\Expression;
 use Two\Database\Schema\Blueprint;
 use Two\Database\Grammar as BaseGrammar;
+
+use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\Schema\AbstractSchemaManager as SchemaManager;
 
 
 abstract class Grammar extends BaseGrammar
 {
     /**
-     * Compile a rename column command.
+     * Compilez une commande de renommage de colonne.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -36,7 +42,7 @@ abstract class Grammar extends BaseGrammar
     }
 
     /**
-     * Get a new column instance with the new column name.
+     * Obtenez une nouvelle instance de colonne avec le nouveau nom de colonne.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -52,7 +58,7 @@ abstract class Grammar extends BaseGrammar
     }
 
     /**
-     * Set the renamed columns on the table diff.
+     * Définissez les colonnes renommées sur la table diff.
      *
      * @param  \Doctrine\DBAL\Schema\TableDiff  $tableDiff
      * @param  \Two\Support\Fluent  $command
@@ -69,7 +75,7 @@ abstract class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a foreign key command.
+     * Compilez une commande de clé étrangère.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -81,9 +87,9 @@ abstract class Grammar extends BaseGrammar
 
         $on = $this->wrapTable($command->on);
 
-        // We need to prepare several of the elements of the foreign key definition
-        // before we can create the SQL, such as wrapping the tables and convert
-        // an array of columns to comma-delimited strings for the SQL queries.
+        // Nous devons préparer plusieurs éléments de la définition de la clé étrangère
+        // avant de pouvoir créer le SQL, comme encapsuler les tables et convertir
+        // un tableau de colonnes en chaînes délimitées par des virgules pour les requêtes SQL.
         $columns = $this->columnize($command->columns);
 
         $onColumns = $this->columnize((array) $command->references);
@@ -92,9 +98,9 @@ abstract class Grammar extends BaseGrammar
 
         $sql .= "foreign key ({$columns}) references {$on} ({$onColumns})";
 
-        // Once we have the basic foreign key creation statement constructed we can
-        // build out the syntax for what should happen on an update or delete of
-        // the affected columns, which will get something like "cascade", etc.
+        // Une fois que nous avons construit l'instruction de base de création de clé étrangère, nous pouvons
+        // construit la syntaxe de ce qui devrait se passer lors d'une mise à jour ou d'une suppression de
+        // les colonnes affectées, qui obtiendront quelque chose comme "cascade", etc.
         if (! is_null($command->onDelete)) {
             $sql .= " on delete {$command->onDelete}";
         }
@@ -107,7 +113,7 @@ abstract class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile the blueprint's column definitions.
+     * Compilez les définitions de colonnes du plan.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @return array
@@ -117,9 +123,9 @@ abstract class Grammar extends BaseGrammar
         $columns = array();
 
         foreach ($blueprint->getColumns() as $column) {
-            // Each of the column types have their own compiler functions which are tasked
-            // with turning the column definition into its SQL format for this platform
-            // used by the connection. The column's modifiers are compiled and added.
+            // Chacun des types de colonnes possède ses propres fonctions de compilateur qui sont chargées
+            // en transformant la définition de colonne dans son format SQL pour cette plateforme
+            // utilisé par la connexion. Les modificateurs de la colonne sont compilés et ajoutés.
             $sql = $this->wrap($column).' '.$this->getType($column);
 
             $columns[] = $this->addModifiers($sql, $blueprint, $column);
@@ -129,7 +135,7 @@ abstract class Grammar extends BaseGrammar
     }
 
     /**
-     * Add the column modifiers to the definition.
+     * Ajoutez les modificateurs de colonne à la définition.
      *
      * @param  string  $sql
      * @param  \Two\Database\Schema\Blueprint  $blueprint
@@ -148,7 +154,7 @@ abstract class Grammar extends BaseGrammar
     }
 
     /**
-     * Get the primary key command if it exists on the blueprint.
+     * Obtenez la commande clé primaire si elle existe sur le plan.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  string  $name
@@ -164,7 +170,7 @@ abstract class Grammar extends BaseGrammar
     }
 
     /**
-     * Get all of the commands with a given name.
+     * Obtenez toutes les commandes avec un nom donné.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  string  $name
@@ -179,7 +185,7 @@ abstract class Grammar extends BaseGrammar
     }
 
     /**
-     * Get the SQL for the column data type.
+     * Obtenez le SQL pour le type de données de la colonne.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -190,7 +196,7 @@ abstract class Grammar extends BaseGrammar
     }
 
     /**
-     * Add a prefix to an array of values.
+     * Ajoutez un préfixe à un tableau de valeurs.
      *
      * @param  string  $prefix
      * @param  array   $values
@@ -206,7 +212,7 @@ abstract class Grammar extends BaseGrammar
     }
 
     /**
-     * Wrap a table in keyword identifiers.
+     * Enveloppez un tableau dans des identifiants de mots-clés.
      *
      * @param  mixed   $table
      * @return string
@@ -219,7 +225,7 @@ abstract class Grammar extends BaseGrammar
     }
 
     /**
-     * Wrap a value in keyword identifiers.
+     * Enveloppez une valeur dans des identifiants de mots-clés.
      *
      * @param  string  $value
      * @return string
@@ -232,7 +238,7 @@ abstract class Grammar extends BaseGrammar
     }
 
     /**
-     * Format a value so that it can be used in "default" clauses.
+     * Formatez une valeur afin qu'elle puisse être utilisée dans les clauses "par défaut".
      *
      * @param  mixed   $value
      * @return string
@@ -247,7 +253,7 @@ abstract class Grammar extends BaseGrammar
     }
 
     /**
-     * Create an empty Doctrine DBAL TableDiff from the Blueprint.
+     * Créez un Doctrine DBAL TableDiff vide à partir du Blueprint.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Doctrine\DBAL\Schema\AbstractSchemaManager  $schema

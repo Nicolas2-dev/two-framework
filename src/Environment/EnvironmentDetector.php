@@ -2,6 +2,7 @@
 
 namespace Two\Environment;
 
+
 use Closure;
 
 
@@ -34,8 +35,7 @@ class EnvironmentDetector
     {
         // Si l'environnement donné n'est qu'une fermeture, nous reporterons la vérification de 
         // l'environnement à la fermeture fournie par le développeur, ce qui lui permet d'échanger 
-        // totalement la logique de détection de l'environnement Web avec son propre code 
-        // de fermeture personnalisé.
+        // totalement la logique de détection de l'environnement Web avec son propre code de fermeture personnalisé.
         if ($environments instanceof Closure) {
             return call_user_func($environments);
         }
@@ -43,7 +43,7 @@ class EnvironmentDetector
         foreach ($environments as $environment => $hosts) {
             // Pour déterminer l'environnement actuel, nous allons simplement parcourir les
             // environnements possibles et rechercher l'hôte qui correspond à l'hôte pour cette 
-            //requête que nous traitons actuellement ici, puis renvoyer les noms de ces environnements.
+            // requête que nous traitons actuellement ici, puis renvoyer les noms de ces environnements.
             foreach ((array) $hosts as $host) {
                 if ($this->isMachine($host)) return $environment;
             }

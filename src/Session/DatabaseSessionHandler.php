@@ -1,36 +1,43 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Session;
 
+use SessionHandlerInterface;
+
 use Two\Database\Connection;
-use Two\Session\ExistenceAwareInterface;
+use Two\Session\Contracts\ExistenceAwareInterface;
 
 
-class DatabaseSessionHandler implements \SessionHandlerInterface, ExistenceAwareInterface
+class DatabaseSessionHandler implements SessionHandlerInterface, ExistenceAwareInterface
 {
     /**
-     * The database connection instance.
+     * L'instance de connexion à la base de données.
      *
      * @var \Two\Database\Connection
      */
     protected $connection;
 
     /**
-     * The name of the session table.
+     * Le nom de la table de session.
      *
      * @var string
      */
     protected $table;
 
     /**
-     * The existence state of the session.
+     * L’état d’existence de la session.
      *
      * @var bool
      */
     protected $exists;
 
     /**
-     * Create a new database session handler instance.
+     * Créez une nouvelle instance de gestionnaire de session de base de données.
      *
      * @param  \Two\Database\Connection  $connection
      * @param  string  $table
@@ -117,7 +124,7 @@ class DatabaseSessionHandler implements \SessionHandlerInterface, ExistenceAware
     }
 
     /**
-     * Get a fresh query builder instance for the table.
+     * Obtenez une nouvelle instance du générateur de requêtes pour la table.
      *
      * @return \Two\Database\Query\Builder
      */
@@ -127,7 +134,7 @@ class DatabaseSessionHandler implements \SessionHandlerInterface, ExistenceAware
     }
 
     /**
-     * Set the existence state for the session.
+     * Définissez l'état d'existence de la session.
      *
      * @param  bool  $value
      * @return $this

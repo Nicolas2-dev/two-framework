@@ -1,8 +1,13 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Session;
 
-use Two\Support\Manager;
+use Two\Application\Manager;
 
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
 
@@ -10,7 +15,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
 class SessionManager extends Manager
 {
     /**
-     * Call a custom driver creator.
+     * Appelez un créateur de pilotes personnalisés.
      *
      * @param  string  $driver
      * @return mixed
@@ -21,7 +26,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Create an instance of the "array" session driver.
+     * Créez une instance du pilote de session "array".
      *
      * @return \Two\Session\Store
      */
@@ -31,7 +36,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Create an instance of the "cookie" session driver.
+     * Créez une instance du pilote de session « cookie ».
      *
      * @return \Two\Session\Store
      */
@@ -43,7 +48,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Create an instance of the file session driver.
+     * Créez une instance du pilote de session de fichiers.
      *
      * @return \Two\Session\Store
      */
@@ -53,7 +58,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Create an instance of the file session driver.
+     * Créez une instance du pilote de session de fichiers.
      *
      * @return \Two\Session\Store
      */
@@ -67,7 +72,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Create an instance of the database session driver.
+     * Créez une instance du pilote de session de base de données.
      *
      * @return \Two\Session\Store
      */
@@ -81,7 +86,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Get the database connection for the database driver.
+     * Obtenez la connexion à la base de données pour le pilote de base de données.
      *
      * @return \Two\Database\Connection
      */
@@ -93,7 +98,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Create an instance of the APC session driver.
+     * Créez une instance du pilote de session APC.
      *
      * @return \Two\Session\Store
      */
@@ -103,7 +108,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Create an instance of the Memcached session driver.
+     * Créez une instance du pilote de session Memcached.
      *
      * @return \Two\Session\Store
      */
@@ -113,7 +118,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Create an instance of the Wincache session driver.
+     * Créez une instance du pilote de session Wincache.
      *
      * @return \Two\Session\Store
      */
@@ -123,7 +128,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Create an instance of the Redis session driver.
+     * Créez une instance du pilote de session Redis.
      *
      * @return \Two\Session\Store
      */
@@ -137,7 +142,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Create an instance of a cache driven driver.
+     * Créez une instance d'un pilote piloté par cache.
      *
      * @param  string  $driver
      * @return \Two\Session\Store
@@ -148,7 +153,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Create the cache based session handler instance.
+     * Créez l'instance de gestionnaire de session basée sur le cache.
      *
      * @param  string  $driver
      * @return \Two\Session\CacheBasedSessionHandler
@@ -161,7 +166,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Build the session instance.
+     * Créez l'instance de session.
      *
      * @param  \SessionHandlerInterface  $handler
      * @return \Two\Session\Store
@@ -172,7 +177,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Get the session configuration.
+     * Obtenez la configuration de la session.
      *
      * @return array
      */
@@ -182,7 +187,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Get the default session driver name.
+     * Obtenez le nom du pilote de session par défaut.
      *
      * @return string
      */
@@ -192,7 +197,7 @@ class SessionManager extends Manager
     }
 
     /**
-     * Set the default session driver name.
+     * Définissez le nom du pilote de session par défaut.
      *
      * @param  string  $name
      * @return void

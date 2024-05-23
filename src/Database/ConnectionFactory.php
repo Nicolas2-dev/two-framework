@@ -1,33 +1,36 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database;
 
-use Two\Container\Container;
+use PDO;
 
+use Two\Container\Container;
 use Two\Database\Connections\MySqlConnection;
 use Two\Database\Connections\SQLiteConnection;
 use Two\Database\Connections\PostgresConnection;
 use Two\Database\Connections\SqlServerConnection;
-
 use Two\Database\Connectors\MySqlConnector;
 use Two\Database\Connectors\SQLiteConnector;
 use Two\Database\Connectors\PostgresConnector;
 use Two\Database\Connectors\SqlServerConnector;
 
-use PDO;
-
 
 class ConnectionFactory
 {
     /**
-     * The IoC container instance.
+     * L'instance de conteneur IoC.
      *
      * @var \Two\Container\Container
      */
     protected $container;
 
     /**
-     * Create a new connection factory instance.
+     * Créez une nouvelle instance de fabrique de connexions.
      *
      * @param  \Two\Container\Container  $container
      * @return void
@@ -38,7 +41,7 @@ class ConnectionFactory
     }
 
     /**
-     * Establish a PDO connection based on the configuration.
+     * Établissez une connexion PDO basée sur la configuration.
      *
      * @param  array   $config
      * @param  string  $name
@@ -56,7 +59,7 @@ class ConnectionFactory
     }
 
     /**
-     * Create a single database connection instance.
+     * Créez une seule instance de connexion à la base de données.
      *
      * @param  array  $config
      * @return \Two\Database\Connection
@@ -69,7 +72,7 @@ class ConnectionFactory
     }
 
     /**
-     * Create a single database connection instance.
+     * Créez une seule instance de connexion à la base de données.
      *
      * @param  array  $config
      * @return \Two\Database\Connection
@@ -82,7 +85,7 @@ class ConnectionFactory
     }
 
     /**
-     * Create a new PDO instance for reading.
+     * Créez une nouvelle instance PDO pour la lecture.
      *
      * @param  array  $config
      * @return \PDO
@@ -95,7 +98,7 @@ class ConnectionFactory
     }
 
     /**
-     * Get the read configuration for a read / write connection.
+     * Obtenez la configuration de lecture pour une connexion en lecture/écriture.
      *
      * @param  array  $config
      * @return array
@@ -108,7 +111,7 @@ class ConnectionFactory
     }
 
     /**
-     * Get the read configuration for a read / write connection.
+     * Obtenez la configuration de lecture pour une connexion en lecture/écriture.
      *
      * @param  array  $config
      * @return array
@@ -121,7 +124,7 @@ class ConnectionFactory
     }
 
     /**
-     * Get a read / write level configuration.
+     * Obtenez une configuration de niveau lecture/écriture.
      *
      * @param  array   $config
      * @param  string  $type
@@ -137,7 +140,7 @@ class ConnectionFactory
     }
 
     /**
-     * Merge a configuration for a read / write connection.
+     * Fusionner une configuration pour une connexion en lecture/écriture.
      *
      * @param  array  $config
      * @param  array  $merge
@@ -149,7 +152,7 @@ class ConnectionFactory
     }
 
     /**
-     * Parse and prepare the database configuration.
+     * Analyser et préparer la configuration de la base de données.
      *
      * @param  array   $config
      * @param  string  $name
@@ -161,10 +164,10 @@ class ConnectionFactory
     }
 
     /**
-     * Create a connector instance based on the configuration.
+     * Créez une instance de connecteur basée sur la configuration.
      *
      * @param  array  $config
-     * @return \Two\Database\Connectors\ConnectorInterface
+     * @return \Two\Database\Contracts\ConnectorInterface
      *
      * @throws \InvalidArgumentException
      */
@@ -197,7 +200,7 @@ class ConnectionFactory
     }
 
     /**
-     * Create a new connection instance.
+     * Créez une nouvelle instance de connexion.
      *
      * @param  string   $driver
      * @param  \PDO     $connection

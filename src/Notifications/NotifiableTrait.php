@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications;
 
 use Two\Support\Facades\Config;
@@ -10,7 +15,7 @@ use Two\Support\Str;
 trait NotifiableTrait
 {
     /**
-     * Get the entity's notifications.
+     * Recevez les notifications de l'entité.
      */
     public function notifications()
     {
@@ -19,7 +24,7 @@ trait NotifiableTrait
     }
 
     /**
-     * Get the entity's read notifications.
+     * Recevez les notifications de lecture de l'entité.
      */
     public function readNotifications()
     {
@@ -27,7 +32,7 @@ trait NotifiableTrait
     }
 
     /**
-     * Get the entity's unread notifications.
+     * Recevez les notifications non lues de l'entité.
      */
     public function unreadNotifications()
     {
@@ -35,7 +40,7 @@ trait NotifiableTrait
     }
 
     /**
-     * Send the given notification.
+     * Envoyez la notification donnée.
      *
      * @param  mixed  $instance
      * @return void
@@ -46,7 +51,7 @@ trait NotifiableTrait
     }
 
     /**
-     * Send the given notification immediately.
+     * Envoyez immédiatement la notification donnée.
      *
      * @param  mixed  $instance
      * @param  array|null  $channels
@@ -58,7 +63,7 @@ trait NotifiableTrait
     }
 
     /**
-     * Get the notification routing information for the given driver.
+     * Obtenez les informations de routage des notifications pour le pilote donné.
      *
      * @param  string  $driver
      * @return mixed
@@ -71,17 +76,17 @@ trait NotifiableTrait
             return call_user_func(array($this, $method));
         }
 
-        // No custom method for routing the notifications.
+        // Aucune méthode personnalisée pour acheminer les notifications.
         else if ($driver == 'database') {
             return $this->notifications();
         }
 
-        // Finally, we will accept only the mail driver.
+        // Enfin, nous n'accepterons que le pilote de messagerie.
         else if ($driver != 'mail') {
             return null;
         }
 
-        // If the email field is like: admin@Twoframework.local
+        // Si le champ email ressemble à : admin@Twoframework.local
         if (preg_match('/^\w+@\w+\.local$/s', $this->email) === 1) {
             return Config::get('mail.from.address');
         }

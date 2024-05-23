@@ -1,14 +1,19 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\View\Engines;
 
-use Two\View\Engines\EngineInterface;
+use Two\View\Contracts\Engines\EngineInterface;
 
 
 class FileEngine implements EngineInterface
 {
     /**
-     * Get the evaluated contents of the view.
+     * Obtenez le contenu évalué de la vue.
      *
      * @param  string  $path
      * @param  array   $data

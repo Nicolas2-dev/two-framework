@@ -1,0 +1,69 @@
+<?php
+
+namespace {{namespace}}\Providers;
+
+use Two\Routing\Router;
+use Two\Packages\Providers\RouteServiceProvider as ServiceProvider;
+
+
+class RouteServiceProvider extends ServiceProvider
+{
+    /**
+     * L'espace de noms du contrôleur pour le {{lower_type}}.
+     *
+     * @var string|null
+     */
+    protected $namespace = '{{namespace}}\Controllers';
+
+
+    /**
+     * Définissez vos liaisons de modèle d'itinéraire, vos filtres de modèles, etc.
+     *
+     * @param  \Two\Routing\Router  $router
+     * @return void
+     */
+    public function boot(Router $router)
+    {
+        parent::boot($router);
+
+        //
+        $this->registerAssetRoutes();
+    }
+
+    /**
+     * Définissez les routes Admin pour le module.
+     *
+     * @param  \Two\Routing\Router $router
+     * @return void
+     */
+    public function map(Router $router)
+    {
+        $router->group(array('namespace' => $this->namespace), function ($router)
+        {
+            $basePath = $this->guessPackageRoutesPath();
+
+            if (is_readable($path = $basePath .DS .'Admin.php')) {
+                $router->group(array('middleware' => 'auth:admin', 'prefix' => 'admin', 'namespace' => 'Admin'), function ($router) use ($path)
+                {
+                    require $path;
+                });
+            }
+        });
+
+        parent::map($router);
+    }
+
+    /**
+     * Définissez les routes d'actifs pour l'application.
+     *
+     * @return void
+     */
+    protected function registerAssetRoutes()
+    {
+        $dispatcher = $this->app['assets.dispatcher'];
+
+        $path = realpath(__DIR__ .'/../');
+
+        require $path .DS .'Routes' .DS .'Assets.php';
+    }    
+}

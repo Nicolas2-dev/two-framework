@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications\Channels;
 
 use Two\Mail\Mailer;
@@ -10,7 +15,7 @@ use Two\Notifications\Notification;
 class MailChannel
 {
     /**
-     * The mailer implementation.
+     * L’implémentation du mailer.
      *
      * @var \Two\Mail\Mailer
      */
@@ -18,7 +23,7 @@ class MailChannel
 
 
     /**
-     * Create a new Mail Channel instance.
+     * Créez une nouvelle instance de canal de messagerie.
      *
      * @param  \Two\Mail\Mailer  $mailer
      * @return void
@@ -29,7 +34,7 @@ class MailChannel
     }
 
     /**
-     * Send the given notification.
+     * Envoyez la notification donnée.
      *
      * @param  mixed  $notifiable
      * @param  \Two\Notifications\Notification  $notification

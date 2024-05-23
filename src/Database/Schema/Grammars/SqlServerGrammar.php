@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Schema\Grammars;
 
 use Two\Support\Fluent;
@@ -10,21 +15,21 @@ use Two\Database\Schema\Grammar;
 class SqlServerGrammar extends Grammar
 {
     /**
-     * The possible column modifiers.
+     * Les modificateurs de colonnes possibles.
      *
      * @var array
      */
     protected $modifiers = array('Increment', 'Nullable', 'Default');
 
     /**
-     * The columns available as serials.
+     * Les colonnes disponibles en série.
      *
      * @var array
      */
     protected $serials = array('bigInteger', 'integer');
 
     /**
-     * Compile the query to determine if a table exists.
+     * Compilez la requête pour déterminer si une table existe.
      *
      * @return string
      */
@@ -34,7 +39,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile the query to determine the list of columns.
+     * Compilez la requête pour déterminer la liste des colonnes.
      *
      * @param  string  $table
      * @return string
@@ -47,7 +52,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile a create table command.
+     * Compilez une commande de création de table.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -61,7 +66,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile a create table command.
+     * Compilez une commande de création de table.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -77,7 +82,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile a primary key command.
+     * Compilez une commande clé primaire.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -93,7 +98,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile a unique key command.
+     * Compilez un raccourci clavier unique.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -109,7 +114,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile a plain index key command.
+     * Compilez une commande de touche d'index simple.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -125,7 +130,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile a drop table command.
+     * Compilez une commande drop table.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -137,7 +142,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile a drop column command.
+     * Compilez une commande de suppression de colonne.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -153,7 +158,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile a drop primary key command.
+     * Compilez une commande de clé primaire drop.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -167,7 +172,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile a drop unique key command.
+     * Compilez un raccourci clavier unique.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -181,7 +186,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile a drop index command.
+     * Compilez une commande drop index.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -195,7 +200,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile a drop foreign key command.
+     * Compilez une commande de clé étrangère drop.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -209,7 +214,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile a rename table command.
+     * Compilez une commande de renommage de table.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $command
@@ -223,7 +228,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a char type.
+     * Créez la définition de colonne pour un type char.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -234,7 +239,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a string type.
+     * Créez la définition de colonne pour un type de chaîne.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -245,7 +250,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a text type.
+     * Créez la définition de colonne pour un type de texte.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -256,7 +261,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a medium text type.
+     * Créez la définition de colonne pour un type de texte moyen.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -267,7 +272,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a long text type.
+     * Créez la définition de colonne pour un type de texte long.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -278,7 +283,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a integer type.
+     * Créez la définition de colonne pour un type entier.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -289,7 +294,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a big integer type.
+     * Créez la définition de colonne pour un type grand entier.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -300,7 +305,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a medium integer type.
+     * Créez la définition de colonne pour un type entier moyen.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -311,7 +316,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a tiny integer type.
+     * Créez la définition de colonne pour un type entier minuscule.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -322,7 +327,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a small integer type.
+     * Créez la définition de colonne pour un petit type entier.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -333,7 +338,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a float type.
+     * Créez la définition de colonne pour un type float.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -344,7 +349,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a double type.
+     * Créez la définition de colonne pour un type double.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -355,7 +360,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a decimal type.
+     * Créez la définition de colonne pour un type décimal.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -366,7 +371,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a boolean type.
+     * Créez la définition de colonne pour un type booléen.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -377,7 +382,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for an enum type.
+     * Créez la définition de colonne pour un type enum.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -388,7 +393,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a date type.
+     * Créez la définition de colonne pour un type de date.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -399,7 +404,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a date-time type.
+     * Créez la définition de colonne pour un type date-heure.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -410,7 +415,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a time type.
+     * Créez la définition de colonne pour un type d'heure.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -421,7 +426,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a timestamp type.
+     * Créez la définition de colonne pour un type d'horodatage.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -432,7 +437,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a binary type.
+     * Créez la définition de colonne pour un type binaire.
      *
      * @param  \Two\Support\Fluent  $column
      * @return string
@@ -443,7 +448,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Get the SQL for a nullable column modifier.
+     * Obtenez le SQL pour un modificateur de colonne nullable.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $column
@@ -455,7 +460,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Get the SQL for a default column modifier.
+     * Obtenez le SQL pour un modificateur de colonne par défaut.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $column
@@ -469,7 +474,7 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Get the SQL for an auto-increment column modifier.
+     * Obtenez le SQL pour un modificateur de colonne à incrémentation automatique.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @param  \Two\Support\Fluent  $column

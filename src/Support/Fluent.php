@@ -1,24 +1,29 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support;
 
-use Two\Contracts\JsonableInterface;
-use Two\Contracts\ArrayableInterface;
-
 use ArrayAccess;
+
+use Two\Application\Contracts\JsonableInterface;
+use Two\Application\Contracts\ArrayableInterface;
 
 
 class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
 
     /**
-     * All of the attributes set on the container.
+     * Tous les attributs définis sur le conteneur.
      *
      * @var array
      */
     protected $attributes = array();
 
     /**
-     * Create a new fluent container instance.
+     * Créez une nouvelle instance de conteneur fluide.
      *
      * @param  array  $attributes
      * @return void
@@ -32,7 +37,7 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
     }
 
     /**
-     * Get an attribute from the container.
+     * Obtenez un attribut du conteneur.
      *
      * @param  string  $key
      * @param  mixed   $default
@@ -49,7 +54,7 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
     }
 
     /**
-     * Get the attributes from the container.
+     * Récupérez les attributs du conteneur.
      *
      * @return array
      */
@@ -59,7 +64,7 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
     }
 
     /**
-     * Convert the Fluent instance to an array.
+     * Convertissez l'instance Fluent en tableau.
      *
      * @return array
      */
@@ -69,7 +74,7 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
     }
 
     /**
-     * Convert the Fluent instance to JSON.
+     * Convertissez l'instance Fluent en JSON.
      *
      * @param  int  $options
      * @return string
@@ -80,7 +85,7 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
     }
 
     /**
-     * Determine if the given offset exists.
+     * Déterminez si le décalage donné existe.
      *
      * @param  string  $offset
      * @return bool
@@ -91,7 +96,7 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
     }
 
     /**
-     * Get the value for a given offset.
+     * Obtenez la valeur pour un décalage donné.
      *
      * @param  string  $offset
      * @return mixed
@@ -102,7 +107,7 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
     }
 
     /**
-     * Set the value at the given offset.
+     * Définissez la valeur au décalage donné.
      *
      * @param  string  $offset
      * @param  mixed   $value
@@ -114,7 +119,7 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
     }
 
     /**
-     * Unset the value at the given offset.
+     * Supprimez la valeur au décalage donné.
      *
      * @param  string  $offset
      * @return void
@@ -125,7 +130,7 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
     }
 
     /**
-     * Handle dynamic calls to the container to set attributes.
+     * Gérez les appels dynamiques au conteneur pour définir les attributs.
      *
      * @param  string  $method
      * @param  array   $parameters
@@ -139,7 +144,7 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
     }
 
     /**
-     * Dynamically retrieve the value of an attribute.
+     * Récupérer dynamiquement la valeur d'un attribut.
      *
      * @param  string  $key
      * @return mixed
@@ -150,7 +155,7 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
     }
 
     /**
-     * Dynamically set the value of an attribute.
+     * Définissez dynamiquement la valeur d'un attribut.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -162,7 +167,7 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
     }
 
     /**
-     * Dynamically check if an attribute is set.
+     * Vérifiez dynamiquement si un attribut est défini.
      *
      * @param  string  $key
      * @return void
@@ -173,7 +178,7 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
     }
 
     /**
-     * Dynamically unset an attribute.
+     * Désactivez dynamiquement un attribut.
      *
      * @param  string  $key
      * @return void

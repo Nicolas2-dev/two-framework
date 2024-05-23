@@ -1,14 +1,19 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\View;
 
-use Two\Contracts\HtmlableInterface;
+use Two\Application\Contracts\HtmlableInterface;
 
 
 class Expression implements HtmlableInterface
 {
     /**
-     * The HTML string.
+     * La chaîne HTML.
      *
      * @var string
      */
@@ -16,7 +21,7 @@ class Expression implements HtmlableInterface
 
 
     /**
-     * Create a new HTML string instance.
+     * Créez une nouvelle instance de chaîne HTML.
      *
      * @param  string  $html
      * @return void
@@ -27,7 +32,7 @@ class Expression implements HtmlableInterface
     }
 
     /**
-     * Get the the HTML string.
+     * Obtenez la chaîne HTML.
      *
      * @return string
      */
@@ -37,7 +42,7 @@ class Expression implements HtmlableInterface
     }
 
     /**
-     * Get the the HTML string.
+     * Obtenez la chaîne HTML.
      *
      * @return string
      */

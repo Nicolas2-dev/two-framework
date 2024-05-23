@@ -1,24 +1,25 @@
 <?php
 /**
- * DatabaseServiceProvider - Implements a Service Provider for Database.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
  */
-
 namespace Two\Database;
 
 use Two\Database\ORM\Model;
-use Two\Database\ConnectionFactory;
+
 use Two\Database\DatabaseManager;
-use Two\Support\ServiceProvider;
+use Two\Database\ConnectionFactory;
+
+use Two\Application\Providers\ServiceProvider;
 
 
 class DatabaseServiceProvider extends ServiceProvider
 {
 
     /**
-     * Bootstrap the Application events.
+     * Amorcez les événements de l'application.
      *
      * @return void
      */
@@ -28,14 +29,14 @@ class DatabaseServiceProvider extends ServiceProvider
 
         $events = $this->app['events'];
 
-        // Setup the ORM Model.
+        // Configurez le modèle ORM.
         Model::setConnectionResolver($db);
 
         Model::setEventDispatcher($events);
     }
 
     /**
-     * Register the Service Provider.
+     * Enregistrez le fournisseur de services.
      *
      * @return void
      */

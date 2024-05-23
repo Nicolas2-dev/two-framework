@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Http;
 
 use Two\Support\Traits\MacroableTrait;
@@ -12,7 +17,7 @@ class UploadedFile extends SymfonyUploadedFile
     use MacroableTrait;
 
     /**
-     * Get the fully qualified path to the file.
+     * Obtenez le chemin complet du fichier.
      *
      * @return string
      */
@@ -22,7 +27,7 @@ class UploadedFile extends SymfonyUploadedFile
     }
 
     /**
-     * Get the file's extension.
+     * Obtenez l'extension du fichier.
      *
      * @return string
      */
@@ -32,7 +37,7 @@ class UploadedFile extends SymfonyUploadedFile
     }
 
     /**
-     * Get the file's extension supplied by the client.
+     * Obtenez l'extension du fichier fournie par le client.
      *
      * @return string
      */
@@ -42,7 +47,7 @@ class UploadedFile extends SymfonyUploadedFile
     }
 
     /**
-     * Get a filename for the file that is the MD5 hash of the contents.
+     * Obtenez un nom de fichier pour le fichier qui est le hachage MD5 du contenu.
      *
      * @param  string  $path
      * @return string
@@ -57,7 +62,7 @@ class UploadedFile extends SymfonyUploadedFile
     }
 
     /**
-     * Create a new file instance from a base instance.
+     * Créez une nouvelle instance de fichier à partir d'une instance de base.
      *
      * @param  \Symfony\Component\HttpFoundation\File\UploadedFile  $file
      * @param  bool $test

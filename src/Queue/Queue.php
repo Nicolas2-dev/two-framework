@@ -1,21 +1,27 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue;
-
-use Two\Container\Container;
-use Two\Encryption\Encrypter;
-use Two\Queue\QueueableEntityInterface;
-
-use SuperClosure\Serializer;
 
 use Closure;
 use DateTime;
+use RuntimeException;
+
+use Two\Container\Container;
+use Two\Encryption\Encrypter;
+use Two\Queue\Contracts\QueueableEntityInterface;
+
+use SuperClosure\Serializer;
 
 
 abstract class Queue
 {
     /**
-     * The IoC container instance.
+     * L'instance de conteneur IoC.
      *
      * @var \Two\Container\Container
      */
@@ -27,7 +33,7 @@ abstract class Queue
     protected $crypt;
 
     /**
-     * Push a new job onto the queue.
+     * Placez un nouveau travail dans la file d'attente.
      *
      * @param  string  $queue
      * @param  string  $job
@@ -40,7 +46,7 @@ abstract class Queue
     }
 
     /**
-     * Push a new job onto the queue after a delay.
+     * Placez une nouvelle tâche dans la file d'attente après un certain délai.
      *
      * @param  string  $queue
      * @param  \DateTime|int  $delay
@@ -54,17 +60,17 @@ abstract class Queue
     }
 
     /**
-     * Marshal a push queue request and fire the job.
+     * Organisez une demande de file d’attente push et lancez la tâche.
      *
      * @throws \RuntimeException
      */
     public function marshal()
     {
-        throw new \RuntimeException("Push queues only supported by Iron.");
+        throw new RuntimeException("Push queues only supported by Iron.");
     }
 
     /**
-     * Push an array of jobs onto the queue.
+     * Placez un ensemble de tâches dans la file d'attente.
      *
      * @param  array   $jobs
      * @param  mixed   $data
@@ -79,7 +85,7 @@ abstract class Queue
     }
 
     /**
-     * Create a payload string from the given job and data.
+     * Créez une chaîne de charge utile à partir de la tâche et des données données.
      *
      * @param  string  $job
      * @param  mixed   $data
@@ -103,7 +109,7 @@ abstract class Queue
     }
 
     /**
-     * Prepare any queueable entities for storage in the queue.
+     * Préparez toutes les entités pouvant être placées en file d'attente pour le stockage dans la file d'attente.
      *
      * @param  mixed  $data
      * @return mixed
@@ -130,7 +136,7 @@ abstract class Queue
     }
 
     /**
-     * Prepare a single queueable entity for storage on the queue.
+     * Préparez une seule entité pouvant être stockée dans la file d'attente.
      *
      * @param  mixed  $value
      * @return mixed
@@ -145,7 +151,7 @@ abstract class Queue
     }
 
     /**
-     * Create a payload string for the given Closure job.
+     * Créez une chaîne de charge utile pour la tâche de fermeture donnée.
      *
      * @param  object  $job
      * @param  mixed   $data
@@ -165,7 +171,7 @@ abstract class Queue
     }
 
     /**
-     * Create a payload string for the given Closure job.
+     * Créez une chaîne de charge utile pour la tâche de fermeture donnée.
      *
      * @param  \Closure  $job
      * @param  mixed     $data
@@ -185,7 +191,7 @@ abstract class Queue
     }
 
     /**
-     * Set additional meta on a payload string.
+     * Définissez des méta supplémentaires sur une chaîne de charge utile.
      *
      * @param  string  $payload
      * @param  string  $key
@@ -200,7 +206,7 @@ abstract class Queue
     }
 
     /**
-     * Calculate the number of seconds with the given delay.
+     * Calculez le nombre de secondes avec le délai donné.
      *
      * @param  \DateTime|int  $delay
      * @return int
@@ -215,7 +221,7 @@ abstract class Queue
     }
 
     /**
-     * Get the current UNIX timestamp.
+     * Obtenez l'horodatage UNIX actuel.
      *
      * @return int
      */
@@ -225,7 +231,7 @@ abstract class Queue
     }
 
     /**
-     * Set the IoC container instance.
+     * Définissez l'instance de conteneur IoC.
      *
      * @param  \Two\Container\Container  $container
      * @return void
@@ -236,7 +242,7 @@ abstract class Queue
     }
 
     /**
-     * Set the encrypter instance.
+     * Définissez l'instance de chiffrement.
      *
      * @param  \Two\Encryption\Encrypter  $crypt
      * @return void

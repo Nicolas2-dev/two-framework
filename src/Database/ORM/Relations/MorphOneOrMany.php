@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM\Relations;
 
 use Two\Database\ORM\Model;
@@ -9,21 +14,21 @@ use Two\Database\ORM\Builder;
 abstract class MorphOneOrMany extends HasOneOrMany
 {
     /**
-     * The foreign key type for the relationship.
+     * Type de clé étrangère pour la relation.
      *
      * @var string
      */
     protected $morphType;
 
     /**
-     * The class name of the parent model.
+     * Le nom de classe du modèle parent.
      *
      * @var string
      */
     protected $morphClass;
 
     /**
-     * Create a new has many relationship instance.
+     * Créez une nouvelle instance de relation comportant plusieurs.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Model  $parent
@@ -42,7 +47,7 @@ abstract class MorphOneOrMany extends HasOneOrMany
     }
 
     /**
-     * Set the base constraints on the relation query.
+     * Définissez les contraintes de base sur la requête relationnelle.
      *
      * @return void
      */
@@ -56,7 +61,7 @@ abstract class MorphOneOrMany extends HasOneOrMany
     }
 
     /**
-     * Get the relationship count query.
+     * Obtenez la requête de nombre de relations.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Builder  $parent
@@ -70,7 +75,7 @@ abstract class MorphOneOrMany extends HasOneOrMany
     }
 
     /**
-     * Set the constraints for an eager load of the relation.
+     * Définissez les contraintes pour un chargement hâtif de la relation.
      *
      * @param  array  $models
      * @return void
@@ -83,7 +88,7 @@ abstract class MorphOneOrMany extends HasOneOrMany
     }
 
     /**
-     * Attach a model instance to the parent model.
+     * Attachez une instance de modèle au modèle parent.
      *
      * @param  \Two\Database\ORM\Model  $model
      * @return \Two\Database\ORM\Model
@@ -96,7 +101,7 @@ abstract class MorphOneOrMany extends HasOneOrMany
     }
 
     /**
-     * Create a new instance of the related model.
+     * Créez une nouvelle instance du modèle associé.
      *
      * @param  array  $attributes
      * @return \Two\Database\ORM\Model
@@ -113,7 +118,7 @@ abstract class MorphOneOrMany extends HasOneOrMany
     }
 
     /**
-     * Set the foreign ID and type for creating a related model.
+     * Définissez l'ID étranger et le type pour créer un modèle associé.
      *
      * @param  \Two\Database\ORM\Model  $model
      * @return void
@@ -131,7 +136,7 @@ abstract class MorphOneOrMany extends HasOneOrMany
     }
 
     /**
-     * Get the foreign key "type" name.
+     * Obtenez le nom du « type » de clé étrangère.
      *
      * @return string
      */
@@ -141,7 +146,7 @@ abstract class MorphOneOrMany extends HasOneOrMany
     }
 
     /**
-     * Get the plain morph type name without the table.
+     * Obtenez le nom du type de morphing simple sans le tableau.
      *
      * @return string
      */
@@ -151,7 +156,7 @@ abstract class MorphOneOrMany extends HasOneOrMany
     }
 
     /**
-     * Get the class name of the parent model.
+     * Obtenez le nom de classe du modèle parent.
      *
      * @return string
      */

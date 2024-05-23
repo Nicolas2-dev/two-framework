@@ -1,15 +1,21 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Auth;
 
-use Two\Auth\GuardHelpersTrait;
-use Two\Auth\GuardInterface;
-use Two\Auth\UserInterface;
 use Two\Cookie\CookieJar;
 use Two\Events\Dispatcher;
+use Two\Auth\Contracts\UserInterface;
+use Two\Auth\Contracts\GuardInterface;
+use Two\Auth\Traits\GuardHelpersTrait;
 use Two\Session\Store as SessionStore;
 
 use Symfony\Component\HttpFoundation\Request;
+use Two\Auth\Contracts\UserProviderInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -29,7 +35,7 @@ class SessionGuard implements GuardInterface
     /**
      * The user we last attempted to retrieve.
      *
-     * @var \Two\Auth\UserInterface
+     * @var \Two\Auth\Contracts\UserInterface
      */
     protected $lastAttempted;
 
@@ -86,7 +92,7 @@ class SessionGuard implements GuardInterface
     /**
      * Create a new authentication guard.
      *
-     * @param  \Two\Auth\UserProviderInterface  $provider
+     * @param  \Two\Auth\Contracts\UserProviderInterface  $provider
      * @param  \Two\Session\Store  $session
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @return void
@@ -106,7 +112,7 @@ class SessionGuard implements GuardInterface
     /**
      * Get the currently authenticated user.
      *
-     * @return \Two\Auth\UserInterface|null
+     * @return \Two\Auth\Contracts\UserInterface|null
      */
     public function user()
     {
@@ -408,7 +414,7 @@ class SessionGuard implements GuardInterface
     /**
      * Log a user into the application.
      *
-     * @param  \Two\Auth\UserInterface  $user
+     * @param  \Two\Auth\Contracts\UserInterface  $user
      * @param  bool  $remember
      * @return void
      */
@@ -453,7 +459,7 @@ class SessionGuard implements GuardInterface
      *
      * @param  mixed  $id
      * @param  bool   $remember
-     * @return \Two\Auth\UserInterface
+     * @return \Two\Auth\Contracts\UserInterface
      */
     public function loginUsingId($id, $remember = false)
     {
@@ -484,7 +490,7 @@ class SessionGuard implements GuardInterface
     /**
      * Queue the recaller cookie into the cookie jar.
      *
-     * @param  \Two\Auth\UserInterface  $user
+     * @param  \Two\Auth\Contracts\UserInterface  $user
      * @return void
      */
     protected function queueRecallerCookie(UserInterface $user)
@@ -556,7 +562,7 @@ class SessionGuard implements GuardInterface
     /**
      * Refresh the remember token for the user.
      *
-     * @param  \Two\Auth\UserInterface  $user
+     * @param  \Two\Auth\Contracts\UserInterface  $user
      * @return void
      */
     protected function refreshRememberToken(UserInterface $user)
@@ -569,7 +575,7 @@ class SessionGuard implements GuardInterface
     /**
      * Create a new remember token for the user if one doesn't already exist.
      *
-     * @param  \Two\Auth\UserInterface  $user
+     * @param  \Two\Auth\Contracts\UserInterface  $user
      * @return void
      */
     protected function createRememberTokenIfDoesntExist(UserInterface $user)
@@ -642,7 +648,7 @@ class SessionGuard implements GuardInterface
     /**
      * Get the user provider used by the guard.
      *
-     * @return \Two\Auth\UserProviderInterface
+     * @return \Two\Auth\Contracts\UserProviderInterface
      */
     public function getProvider()
     {
@@ -652,7 +658,7 @@ class SessionGuard implements GuardInterface
     /**
      * Set the user provider used by the guard.
      *
-     * @param  \Two\Auth\UserProviderInterface  $provider
+     * @param  \Two\Auth\Contracts\UserProviderInterface  $provider
      * @return void
      */
     public function setProvider(UserProviderInterface $provider)
@@ -663,7 +669,7 @@ class SessionGuard implements GuardInterface
     /**
      * Return the currently cached user of the application.
      *
-     * @return \Two\Auth\UserInterface|null
+     * @return \Two\Auth\Contracts\UserInterface|null
      */
     public function getUser()
     {
@@ -673,7 +679,7 @@ class SessionGuard implements GuardInterface
     /**
      * Set the current user of the application.
      *
-     * @param  \Two\Auth\UserInterface  $user
+     * @param  \Two\Auth\Contracts\UserInterface  $user
      * @return void
      */
     public function setUser(UserInterface $user)
@@ -711,7 +717,7 @@ class SessionGuard implements GuardInterface
     /**
      * Get the last user we attempted to authenticate.
      *
-     * @return \Two\Auth\UserInterface
+     * @return \Two\Auth\Contracts\UserInterface
      */
     public function getLastAttempted()
     {

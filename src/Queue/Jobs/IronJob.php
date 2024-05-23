@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Jobs;
 
 use Two\Container\Container;
@@ -11,28 +16,28 @@ class IronJob extends Job
 {
 
     /**
-     * The Iron queue instance.
+     * L'instance de file d'attente Iron.
      *
      * @var \Two\Queue\IronQueue
      */
     protected $iron;
 
     /**
-     * The IronMQ message instance.
+     * L'instance de message IronMQ.
      *
      * @var object
      */
     protected $job;
 
     /**
-     * Indicates if the message was a push message.
+     * Indique si le message était un message push.
      *
      * @var bool
      */
     protected $pushed = false;
 
     /**
-     * Create a new job instance.
+     * Créez une nouvelle instance de travail.
      *
      * @param  \Two\Container\Container  $container
      * @param  \Two\Queue\IronQueue  $iron
@@ -52,7 +57,7 @@ class IronJob extends Job
     }
 
     /**
-     * Fire the job.
+     * Licenciez le travail.
      *
      * @return void
      */
@@ -64,7 +69,7 @@ class IronJob extends Job
     }
 
     /**
-     * Get the raw body string for the job.
+     * Obtenez la chaîne de corps brute pour le travail.
      *
      * @return string
      */
@@ -74,7 +79,7 @@ class IronJob extends Job
     }
 
     /**
-     * Delete the job from the queue.
+     * Supprimez le travail de la file d'attente.
      *
      * @return void
      */
@@ -88,7 +93,7 @@ class IronJob extends Job
     }
 
     /**
-     * Release the job back into the queue.
+     * Remettez le travail dans la file d'attente.
      *
      * @param  int   $delay
      * @return void
@@ -101,7 +106,7 @@ class IronJob extends Job
     }
 
     /**
-     * Release a pushed job back onto the queue.
+     * Remettez une tâche repoussée dans la file d'attente.
      *
      * @param  int  $delay
      * @return void
@@ -116,7 +121,7 @@ class IronJob extends Job
     }
 
     /**
-     * Get the number of times the job has been attempted.
+     * Obtenez le nombre de tentatives de travail.
      *
      * @return int
      */
@@ -126,7 +131,7 @@ class IronJob extends Job
     }
 
     /**
-     * Get the job identifier.
+     * Obtenez l'identifiant du travail.
      *
      * @return string
      */
@@ -136,7 +141,7 @@ class IronJob extends Job
     }
 
     /**
-     * Get the IoC container instance.
+     * Obtenez l'instance de conteneur IoC.
      *
      * @return \Two\Container\Container
      */
@@ -146,7 +151,7 @@ class IronJob extends Job
     }
 
     /**
-     * Get the underlying Iron queue instance.
+     * Obtenez l’instance de file d’attente Iron sous-jacente.
      *
      * @return \Two\Queue\IronQueue
      */
@@ -156,7 +161,7 @@ class IronJob extends Job
     }
 
     /**
-     * Get the underlying IronMQ job.
+     * Obtenez le travail IronMQ sous-jacent.
      *
      * @return array
      */
@@ -166,7 +171,7 @@ class IronJob extends Job
     }
 
     /**
-     * Get the name of the queue the job belongs to.
+     * Obtenez le nom de la file d'attente à laquelle appartient le travail.
      *
      * @return string
      */

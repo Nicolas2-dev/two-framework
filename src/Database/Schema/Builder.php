@@ -1,42 +1,49 @@
-<?php namespace Two\Database\Schema;
-
-use Two\Database\Connection;
+<?php 
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
+namespace Two\Database\Schema;
 
 use Closure;
+
+use Two\Database\Connection;
 
 
 class Builder
 {
     /**
-     * The database connection instance.
+     * L'instance de connexion à la base de données.
      *
      * @var \Two\Database\Connection
      */
     protected $connection;
 
     /**
-     * The schema grammar instance.
+     * L’instance de grammaire de schéma.
      *
-     * @var \Two\Database\Schema\Grammars\Grammar
+     * @var \Two\Database\Schema\Grammar
      */
     protected $grammar;
 
     /**
-     * The Blueprint resolver callback.
+     * Le rappel du résolveur Blueprint.
      *
      * @var \Closure
      */
     protected $resolver;
 
     /**
-     * The default string length for migrations.
+     * La longueur de chaîne par défaut pour les migrations.
      *
      * @var int|null
      */
     public static $defaultStringLength = 255;
 
     /**
-     * Create a new database Schema manager.
+     * Créez un nouveau gestionnaire de schéma de base de données.
      *
      * @param  \Two\Database\Connection  $connection
      * @return void
@@ -49,7 +56,7 @@ class Builder
     }
 
     /**
-     * Set the default string length for migrations.
+     * Définissez la longueur de chaîne par défaut pour les migrations.
      *
      * @param  int  $length
      * @return void
@@ -60,7 +67,7 @@ class Builder
     }
 
     /**
-     * Determine if the given table exists.
+     * Déterminez si la table donnée existe.
      *
      * @param  string  $table
      * @return bool
@@ -75,7 +82,7 @@ class Builder
     }
 
     /**
-     * Determine if the given table has a given column.
+     * Déterminez si le tableau donné a une colonne donnée.
      *
      * @param  string  $table
      * @param  string  $column
@@ -89,7 +96,7 @@ class Builder
     }
 
     /**
-     * Get the column listing for a given table.
+     * Obtenez la liste des colonnes pour une table donnée.
      *
      * @param  string  $table
      * @return array
@@ -104,7 +111,7 @@ class Builder
     }
 
     /**
-     * Modify a table on the schema.
+     * Modifier une table sur le schéma.
      *
      * @param  string    $table
      * @param  \Closure  $callback
@@ -116,7 +123,7 @@ class Builder
     }
 
     /**
-     * Create a new table on the schema.
+     * Créez une nouvelle table sur le schéma.
      *
      * @param  string    $table
      * @param  \Closure  $callback
@@ -134,7 +141,7 @@ class Builder
     }
 
     /**
-     * Drop a table from the schema.
+     * Supprimez une table du schéma.
      *
      * @param  string  $table
      * @return \Two\Database\Schema\Blueprint
@@ -149,7 +156,7 @@ class Builder
     }
 
     /**
-     * Drop a table from the schema if it exists.
+     * Supprimez une table du schéma si elle existe.
      *
      * @param  string  $table
      * @return \Two\Database\Schema\Blueprint
@@ -164,7 +171,7 @@ class Builder
     }
 
     /**
-     * Rename a table on the schema.
+     * Renommez une table sur le schéma.
      *
      * @param  string  $from
      * @param  string  $to
@@ -180,7 +187,7 @@ class Builder
     }
 
     /**
-     * Execute the blueprint to build / modify the table.
+     * Exécutez le plan pour créer/modifier la table.
      *
      * @param  \Two\Database\Schema\Blueprint  $blueprint
      * @return void
@@ -191,7 +198,7 @@ class Builder
     }
 
     /**
-     * Create a new command set with a Closure.
+     * Créez un nouveau jeu de commandes avec une fermeture.
      *
      * @param  string    $table
      * @param  \Closure  $callback
@@ -208,7 +215,7 @@ class Builder
     }
 
     /**
-     * Get the database connection instance.
+     * Obtenez l'instance de connexion à la base de données.
      *
      * @return \Two\Database\Connection
      */
@@ -218,7 +225,7 @@ class Builder
     }
 
     /**
-     * Set the database connection instance.
+     * Définissez l'instance de connexion à la base de données.
      *
      * @param  \Two\Database\Connection
      * @return $this
@@ -231,7 +238,7 @@ class Builder
     }
 
     /**
-     * Set the Schema Blueprint resolver callback.
+     * Définissez le rappel du résolveur Schema Blueprint.
      *
      * @param  \Closure  $resolver
      * @return void

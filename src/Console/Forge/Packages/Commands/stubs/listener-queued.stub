@@ -1,0 +1,36 @@
+<?php
+
+namespace {{namespace}};
+
+use Two\Queue\Contracts\ShouldQueueInterface;
+use Two\Queue\Traits\InteractsWithQueueTrait;
+
+use {{fullEvent}};
+
+
+class {{className}} implements ShouldQueueInterface
+{
+    use InteractsWithQueueTrait;
+
+
+    /**
+     * Créez l'écouteur d'événement.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Gérer l'événement.
+     *
+     * @param  {{fullEvent}}  $event
+     * @return void
+     */
+    public function handle({{event}} $event)
+    {
+        //
+    }
+}

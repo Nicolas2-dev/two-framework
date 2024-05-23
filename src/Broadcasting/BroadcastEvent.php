@@ -1,31 +1,34 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Broadcasting;
-
-use Two\Broadcasting\BroadcasterInterface;
-
-use Two\Queue\Job;
-
-use Two\Contracts\ArrayableInterface;
 
 use ReflectionClass;
 use ReflectionProperty;
+
+use Two\Queue\Job;
+use Two\Application\Contracts\ArrayableInterface;
+use Two\Broadcasting\Contracts\BroadcasterInterface;
 
 
 class BroadcastEvent
 {
     /**
-     * The broadcaster implementation.
+     * La mise en œuvre du diffuseur.
      *
-     * @var \Two\Broadcasting\BroadcasterInterface
+     * @var \Two\Broadcasting\Contracts\BroadcasterInterface
      */
     protected $broadcaster;
 
 
     /**
-     * Create a new job handler instance.
+     * Créez une nouvelle instance de gestionnaire de tâches.
      *
-     * @param  \Two\Broadcasting\BroadcasterInterface  $broadcaster
+     * @param  \Two\Broadcasting\Contracts\BroadcasterInterface  $broadcaster
      * @return void
      */
     public function __construct(BroadcasterInterface $broadcaster)
@@ -34,7 +37,7 @@ class BroadcastEvent
     }
 
     /**
-     * Handle the queued job.
+     * Gérez le travail en file d'attente.
      *
      * @param  \Two\Queue\Job  $job
      * @param  array  $data
@@ -62,7 +65,7 @@ class BroadcastEvent
     }
 
     /**
-     * Get the payload for the given event.
+     * Obtenez la charge utile pour l'événement donné.
      *
      * @param  mixed  $event
      * @return array
@@ -90,7 +93,7 @@ class BroadcastEvent
     }
 
     /**
-     * Format the given value for a property.
+     * Formatez la valeur donnée pour une propriété.
      *
      * @param  mixed  $value
      * @return mixed

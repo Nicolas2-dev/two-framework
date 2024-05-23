@@ -1,25 +1,30 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Mail\Transport;
-
-use GuzzleHttp\Client;
 
 use Swift_Transport;
 use Swift_Mime_Message;
 use Swift_Events_EventListener;
 
+use GuzzleHttp\Client;
+
 
 class MandrillTransport implements Swift_Transport
 {
     /**
-     * The Mandrill API key.
+     * La clé API Mandrill.
      *
      * @var string
      */
     protected $key;
 
     /**
-     * Create a new Mandrill transport instance.
+     * Créez une nouvelle instance de transport Mandrill.
      *
      * @param  string  $key
      * @return void
@@ -78,7 +83,7 @@ class MandrillTransport implements Swift_Transport
     }
 
     /**
-     * Get a new HTTP client instance.
+     * Obtenez une nouvelle instance de client HTTP.
      *
      * @return \GuzzleHttp\Client
      */
@@ -88,7 +93,7 @@ class MandrillTransport implements Swift_Transport
     }
 
     /**
-     * Get the API key being used by the transport.
+     * Obtenez la clé API utilisée par le transport.
      *
      * @return string
      */
@@ -98,7 +103,7 @@ class MandrillTransport implements Swift_Transport
     }
 
     /**
-     * Set the API key being used by the transport.
+     * Définissez la clé API utilisée par le transport.
      *
      * @param  string  $key
      * @return void

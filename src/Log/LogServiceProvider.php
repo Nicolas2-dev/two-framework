@@ -1,9 +1,16 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Log;
 
 use Two\Log\Writer;
-use Two\Support\ServiceProvider;
+
+use Two\Application\Providers\ServiceProvider;
+
 
 use Monolog\Logger as Monolog;
 
@@ -11,7 +18,7 @@ use Monolog\Logger as Monolog;
 class LogServiceProvider extends ServiceProvider
 {
     /**
-     * Register the service provider.
+     * Enregistrez le fournisseur de services.
      *
      * @return void
      */
@@ -24,7 +31,7 @@ class LogServiceProvider extends ServiceProvider
     }
 
     /**
-     * Create the logger.
+     * Créez l'enregistreur.
      *
      * @return \Two\Log\Writer
      */
@@ -40,9 +47,9 @@ class LogServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the Monolog handlers for the application.
+     * Configurez les gestionnaires Monolog pour l'application.
      *
-     * @param  \Two\Foundation\Application  $app
+     * @param  \Two\Application\Two  $app
      * @param  \Two\Log\Writer  $log
      * @return void
      */
@@ -56,9 +63,9 @@ class LogServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the Monolog handlers for the application.
+     * Configurez les gestionnaires Monolog pour l'application.
      *
-     * @param  \Two\Foundation\Application  $app
+     * @param  \Two\Application\Two  $app
      * @param  \Two\Log\Writer  $log
      * @return void
      */
@@ -68,7 +75,7 @@ class LogServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the Monolog handlers for the application.
+     * Configurez les gestionnaires Monolog pour l'application.
      *
      * @param  \Two\Log\Writer  $log
      * @return void
@@ -82,7 +89,7 @@ class LogServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the Monolog handlers for the application.
+     * Configurez les gestionnaires Monolog pour l'application.
      *
      * @param  \Two\Log\Writer  $log
      * @return void
@@ -93,7 +100,7 @@ class LogServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the Monolog handlers for the application.
+     * Configurez les gestionnaires Monolog pour l'application.
      *
      * @param  \Two\Log\Writer  $log
      * @return void

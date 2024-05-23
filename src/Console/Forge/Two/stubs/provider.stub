@@ -1,0 +1,29 @@
+<?php
+
+namespace {{namespace}};
+
+use Two\Support\ServiceProvider;
+
+
+class {{className}} extends ServiceProvider
+{
+    /**
+     * Amorcez les services d’application.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        //
+    }
+
+    /**
+     * Enregistrez les services d'application.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+}

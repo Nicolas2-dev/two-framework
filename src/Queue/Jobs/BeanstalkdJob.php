@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Jobs;
 
 use Two\Container\Container;
@@ -13,21 +18,21 @@ class BeanstalkdJob extends Job
 {
 
     /**
-     * The Pheanstalk instance.
+     * L'instance Pheanstalk.
      *
      * @var \Pheanstalk_Pheanstalk
      */
     protected $pheanstalk;
 
     /**
-     * The Pheanstalk job instance.
+     * L'instance de travail Pheanstalk.
      *
      * @var \Pheanstalk_Job
      */
     protected $job;
 
     /**
-     * Create a new job instance.
+     * Créez une nouvelle instance de travail.
      *
      * @param  \Two\Container\Container  $container
      * @param  \Pheanstalk_Pheanstalk  $pheanstalk
@@ -47,7 +52,7 @@ class BeanstalkdJob extends Job
     }
 
     /**
-     * Fire the job.
+     * Licenciez le travail.
      *
      * @return void
      */
@@ -59,7 +64,7 @@ class BeanstalkdJob extends Job
     }
 
     /**
-     * Get the raw body string for the job.
+     * Obtenez la corde de corps brute pour le travail.
      *
      * @return string
      */
@@ -69,7 +74,7 @@ class BeanstalkdJob extends Job
     }
 
     /**
-     * Delete the job from the queue.
+     * Supprimez le travail de la file d'attente.
      *
      * @return void
      */
@@ -81,7 +86,7 @@ class BeanstalkdJob extends Job
     }
 
     /**
-     * Release the job back into the queue.
+     * Remettez le travail dans la file d'attente.
      *
      * @param  int   $delay
      * @return void
@@ -94,7 +99,7 @@ class BeanstalkdJob extends Job
     }
 
     /**
-     * Bury the job in the queue.
+     * Enterrez le travail dans la file d’attente.
      *
      * @return void
      */
@@ -104,7 +109,7 @@ class BeanstalkdJob extends Job
     }
 
     /**
-     * Get the number of times the job has been attempted.
+     * Obtenez le nombre de tentatives de travail.
      *
      * @return int
      */
@@ -116,7 +121,7 @@ class BeanstalkdJob extends Job
     }
 
     /**
-     * Get the job identifier.
+     * Obtenez l'identifiant du travail.
      *
      * @return string
      */
@@ -126,7 +131,7 @@ class BeanstalkdJob extends Job
     }
 
     /**
-     * Get the IoC container instance.
+     * Obtenez l'instance de conteneur IoC.
      *
      * @return \Two\Container\Container
      */
@@ -136,7 +141,7 @@ class BeanstalkdJob extends Job
     }
 
     /**
-     * Get the underlying Pheanstalk instance.
+     * Obtenez l'instance Pheanstalk sous-jacente.
      *
      * @return \Pheanstalk_Pheanstalk
      */
@@ -146,7 +151,7 @@ class BeanstalkdJob extends Job
     }
 
     /**
-     * Get the underlying Pheanstalk job.
+     * Obtenez le travail Pheanstalk sous-jacent.
      *
      * @return \Pheanstalk_Job
      */

@@ -1,26 +1,33 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database;
+
+use Two\Database\Contracts\ConnectionResolverInterface;
 
 
 class ConnectionResolver implements ConnectionResolverInterface
 {
     /**
-     * All of the registered connections.
+     * Toutes les connexions enregistrées.
      *
      * @var array
      */
     protected $connections = array();
 
     /**
-     * The default connection name.
+     * Le nom de connexion par défaut.
      *
      * @var string
      */
     protected $default;
 
     /**
-     * Create a new connection resolver instance.
+     * Créez une nouvelle instance de résolveur de connexion.
      *
      * @param  array  $connections
      * @return void
@@ -33,7 +40,7 @@ class ConnectionResolver implements ConnectionResolverInterface
     }
 
     /**
-     * Get a database connection instance.
+     * Obtenez une instance de connexion à la base de données.
      *
      * @param  string  $name
      * @return \Two\Database\Connection
@@ -46,7 +53,7 @@ class ConnectionResolver implements ConnectionResolverInterface
     }
 
     /**
-     * Add a connection to the resolver.
+     * Ajoutez une connexion au résolveur.
      *
      * @param  string  $name
      * @param  \Two\Database\Connection  $connection
@@ -58,7 +65,7 @@ class ConnectionResolver implements ConnectionResolverInterface
     }
 
     /**
-     * Check if a connection has been registered.
+     * Vérifiez si une connexion a été enregistrée.
      *
      * @param  string  $name
      * @return bool
@@ -69,7 +76,7 @@ class ConnectionResolver implements ConnectionResolverInterface
     }
 
     /**
-     * Get the default connection name.
+     * Obtenez le nom de connexion par défaut.
      *
      * @return string
      */
@@ -79,7 +86,7 @@ class ConnectionResolver implements ConnectionResolverInterface
     }
 
     /**
-     * Set the default connection name.
+     * Définissez le nom de connexion par défaut.
      *
      * @param  string  $name
      * @return void

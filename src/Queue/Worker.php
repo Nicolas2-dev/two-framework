@@ -1,58 +1,62 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue;
-
-use Two\Cache\Repository as CacheRepository;
-use Two\Events\Dispatcher;
-use Two\Queue\Failed\FailedJobProviderInterface;
-use Two\Queue\Job;
-use Two\Support\Str;
-
-use Two\Debug\Exception\FatalThrowableError;
 
 use Exception;
 use Throwable;
+
+use Two\Queue\Job;
+use Two\Support\Str;
+use Two\Events\Dispatcher;
+use Two\Cache\Repository as CacheRepository;
+use Two\Exceptions\Exception\FatalThrowableError;
+use Two\Queue\Contracts\Failed\FailedJobProviderInterface;
 
 
 class Worker
 {
     /**
-     * The queue manager instance.
+     * Instance du gestionnaire de files d'attente.
      *
      * @var \Two\Queue\QueueManager
      */
     protected $manager;
 
     /**
-     * The failed job provider implementation.
+     * L’échec de la mise en œuvre du fournisseur de travaux.
      *
-     * @var \Two\Queue\Failed\FailedJobProviderInterface
+     * @var \Two\Queue\Contracts\Failed\FailedJobProviderInterface
      */
     protected $failer;
 
     /**
-     * The event dispatcher instance.
+     * Instance du répartiteur d’événements.
      *
      * @var \Two\Events\Dispatcher
      */
     protected $events;
 
     /**
-     * The cache repository implementation.
+     * L'implémentation du référentiel de cache.
      *
      * @var \Two\Cache\Repository
      */
     protected $cache;
 
     /**
-     * The exception handler instance.
+     * Instance du gestionnaire d’exceptions.
      *
-     * @var \Two\Foundation\Exceptions\Handler
+     * @var \Two\Exceptions\TwoHandler
      */
     protected $exceptions;
 
     /**
-     * Indicates if the worker should exit.
+     * Indique si le travailleur doit quitter.
      *
      * @var bool
      */
@@ -60,10 +64,10 @@ class Worker
 
 
     /**
-     * Create a new queue worker.
+     * Créez un nouveau gestionnaire de file d'attente.
      *
      * @param  \Two\Queue\QueueManager  $manager
-     * @param  \Two\Queue\Contracts\FailedJobProviderInterface  $failer
+     * @param  \Two\Queue\Contracts\Failed\FailedJobProviderInterface  $failer
      * @param  \Two\Events\Dispatcher  $events
      * @return void
      */
@@ -75,7 +79,7 @@ class Worker
     }
 
     /**
-     * Listen to the given queue in a loop.
+     * Écoutez la file d'attente donnée en boucle.
      *
      * @param  string  $connection
      * @param  string  $queue
@@ -100,7 +104,7 @@ class Worker
                 $this->kill();
             }
 
-            // Check if the daemon should be stopped.
+            // Vérifiez si le démon doit être arrêté.
             else if ($this->memoryExceeded($memory) || $this->queueShouldRestart($lastRestart)) {
                 $this->stop();
             }
@@ -108,7 +112,7 @@ class Worker
     }
 
     /**
-     * Determine if the daemon should process on this iteration.
+     * Déterminez si le démon doit traiter cette itération.
      *
      * @param  string  $connection
      * @param  string  $queue
@@ -126,7 +130,7 @@ class Worker
     }
 
     /**
-     * Returns true if the daemon should quit.
+     * Renvoie vrai si le démon doit se fermer.
      *
      * @return bool
      */
@@ -136,7 +140,7 @@ class Worker
     }
 
     /**
-     * Listen to the given queue.
+     * Écoutez la file d'attente donnée.
      *
      * @param  string  $connection
      * @param  string  $queue
@@ -151,9 +155,9 @@ class Worker
             $this->manager->connection($connection), $queue
         );
 
-        // If we're able to pull a job off of the stack, we will process it and
-        // then immediately return back out. If there is no job on the queue
-        // we will "sleep" the worker for the specified number of seconds.
+        // Si nous parvenons à extraire une tâche de la pile, nous la traiterons et
+        // puis revient immédiatement. S'il n'y a aucun travail dans la file d'attente
+        // nous allons "dormir" le travailleur pendant le nombre de secondes spécifié.
 
         if (! is_null($job)) {
             return $this->runJob($job, $connection, $maxTries, $delay);
@@ -165,7 +169,7 @@ class Worker
     }
 
     /**
-     * Get the next job from the queue connection.
+     * Obtenez le travail suivant à partir de la connexion à la file d'attente.
      *
      * @param  \Two\Queue\Queue  $connection
      * @param  string  $queue
@@ -193,7 +197,7 @@ class Worker
     }
 
     /**
-     * Process the given job.
+     * Traitez le travail donné.
      *
      * @param  \Two\Queue\Job  $job
      * @param  string  $connection
@@ -214,7 +218,7 @@ class Worker
     }
 
     /**
-     * Handle an exception that occurred while handling a job.
+     * Gérez une exception survenue lors du traitement d’une tâche.
      *
      * @param  \Exception  $e
      * @return void
@@ -231,7 +235,7 @@ class Worker
     }
 
     /**
-     * Determine if the given exception was caused by a lost connection.
+     * Déterminez si l’exception donnée a été causée par une perte de connexion.
      *
      * @param  \Exception
      * @return bool
@@ -255,7 +259,7 @@ class Worker
     }
 
     /**
-     * Process a given job from the queue.
+     * Traitez un travail donné à partir de la file d'attente.
      *
      * @param  string  $connection
      * @param  \Two\Queue\Job  $job
@@ -271,9 +275,10 @@ class Worker
             return $this->logFailedJob($connection, $job);
         }
 
-        // First we will raise the before job event and fire off the job. Once it is done
-        // we will see if it will be auto-deleted after processing and if so we will go
-        // ahead and run the delete method on the job. Otherwise we will just keep moving.
+        // Nous allons d'abord déclencher l'événement avant le travail et lancer le travail. Une fois que c'est fait
+        // nous verrons s'il sera automatiquement supprimé après traitement et si c'est le cas nous irons
+        // avance et exécute la méthode delete sur le travail. Sinon, nous continuerons à avancer.
+
 
         try {
             $this->raiseBeforeJobEvent($connection, $job);
@@ -289,9 +294,9 @@ class Worker
             return array('job' => $job, 'failed' => false);
         }
 
-        // If we catch an exception, we will attempt to release the job back onto
-        // the queue so it is not lost. This will let is be retried at a later
-        // time by another listener (or the same one). We will do that here.
+        // Si nous captons une exception, nous tenterons de relâcher le travail sur
+        // la file d'attente pour qu'elle ne soit pas perdue. Cela sera réessayé plus tard
+        // heure par un autre auditeur (ou le même). Nous le ferons ici.
 
         catch (Exception $e) {
             if (! $job->isDeleted()) {
@@ -310,7 +315,7 @@ class Worker
     }
 
     /**
-     * Log a failed job into storage.
+     * Enregistrez une tâche ayant échoué dans le stockage.
      *
      * @param  string  $connection
      * @param  \Two\Queue\Job  $job
@@ -332,7 +337,7 @@ class Worker
     }
 
     /**
-     * Raise the before queue job event.
+     * Déclenchez l'événement de travail avant la file d'attente.
      *
      * @param  string  $connection
      * @param  \Two\Queue\Job  $job
@@ -346,7 +351,7 @@ class Worker
     }
 
     /**
-     * Raise the after queue job event.
+     * Déclenchez l'événement de travail après la file d'attente.
      *
      * @param  string  $connection
      * @param  \Two\Queue\Job  $job
@@ -360,7 +365,7 @@ class Worker
     }
 
     /**
-     * Raise the failed queue job event.
+     * Déclenche l'événement de travail de file d'attente ayant échoué.
      *
      * @param  string  $connection
      * @param  \Two\Queue\Job  $job
@@ -374,7 +379,7 @@ class Worker
     }
 
     /**
-     * Determine if the memory limit has been exceeded.
+     * Déterminez si la limite de mémoire a été dépassée.
      *
      * @param  int   $memoryLimit
      * @return bool
@@ -387,7 +392,7 @@ class Worker
     }
 
     /**
-     * Stop listening and bail out of the script.
+     * Arrêtez d'écouter et sortez du script.
      *
      * @param  int  $status
      * @return void
@@ -400,7 +405,7 @@ class Worker
     }
 
     /**
-     * Kill the process.
+     * Tuez le processus.
      *
      * @param  int  $status
      * @return void
@@ -415,7 +420,7 @@ class Worker
     }
 
     /**
-     * Sleep the script for a given number of seconds.
+     * Mettez le script en veille pendant un nombre de secondes donné.
      *
      * @param  int   $seconds
      * @return void
@@ -426,7 +431,7 @@ class Worker
     }
 
     /**
-     * Get the last queue restart timestamp, or null.
+     * Obtenez l’horodatage du dernier redémarrage de la file d’attente ou null.
      *
      * @return int|null
      */
@@ -438,7 +443,7 @@ class Worker
     }
 
     /**
-     * Determine if the queue worker should restart.
+     * Déterminez si le gestionnaire de file d'attente doit redémarrer.
      *
      * @param  int|null  $lastRestart
      * @return bool
@@ -449,9 +454,9 @@ class Worker
     }
 
     /**
-     * Set the exception handler to use in Daemon mode.
+     * Définissez le gestionnaire d'exceptions à utiliser en mode démon.
      *
-     * @param  \Two\Exception\Handler  $handler
+     * @param  \Two\Exceptions\ExceptionHandler  $handler
      * @return void
      */
     public function setDaemonExceptionHandler($handler)
@@ -460,7 +465,7 @@ class Worker
     }
 
     /**
-     * Set the cache repository implementation.
+     * Définissez l'implémentation du référentiel de cache.
      *
      * @param  \Two\Cache\Repository  $cache
      * @return void
@@ -471,7 +476,7 @@ class Worker
     }
 
     /**
-     * Get the queue manager instance.
+     * Obtenez l'instance du gestionnaire de files d'attente.
      *
      * @return \Two\Queue\QueueManager
      */
@@ -481,7 +486,7 @@ class Worker
     }
 
     /**
-     * Set the queue manager instance.
+     * Définissez l'instance du gestionnaire de files d'attente.
      *
      * @param  \Two\Queue\QueueManager  $manager
      * @return void

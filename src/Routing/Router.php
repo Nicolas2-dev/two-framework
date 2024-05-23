@@ -1,6 +1,14 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Routing;
+
+use Closure;
+use BadMethodCallException;
 
 use Two\Http\RedirectResponse;
 use Two\Http\Request;
@@ -14,105 +22,102 @@ use Two\Support\Str;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-use Closure;
-use BadMethodCallException;
-
 
 class Router
 {
     /**
-     * The event dispatcher instance.
+     * Instance du répartiteur d’événements.
      *
      * @var \Two\Events\Dispatcher
      */
     protected $events;
 
     /**
-     * The IoC container instance.
+     * L'instance de conteneur IoC.
      *
      * @var \Two\Container\Container
      */
     protected $container;
 
     /**
-     * The Router instance used by the route.
+     * L'instance de routeur utilisée par la route.
      *
      * @var \Two\Routing\Router  $router
      */
     protected $router;
 
     /**
-     * The route collection instance.
+     * L'instance de collection de routes.
      *
      * @var \Two\Routing\RouteCollection
      */
     protected $routes;
 
     /**
-     * The currently dispatched route instance.
+     * Instance de route actuellement distribuée.
      *
      * @var \Two\Routing\Route
      */
     protected $current;
 
     /**
-     * The request currently being dispatched.
+     * La demande est en cours d'envoi.
      *
      * @var \Two\Http\Request
      */
     protected $currentRequest;
 
     /**
-     * All of the short-hand keys for middlewares.
+     * Toutes les touches raccourcies pour les middlewares.
      *
      * @var array
      */
     protected $middleware = array();
 
     /**
-     * All of the middleware groups.
+     * Tous les groupes middleware.
      *
      * @var array
      */
     protected $middlewareGroups = array();
 
     /**
-     * The registered route value binders.
+     * Les classeurs de valeurs d'itinéraire enregistrés.
      *
      * @var array
      */
     protected $binders = array();
 
     /**
-     * The globally available parameter patterns.
+     * Les modèles de paramètres disponibles globalement.
      *
      * @var array
      */
     protected $patterns = array();
 
     /**
-     * The route group attribute stack.
+     * La pile d'attributs du groupe de routes.
      *
      * @var array
      */
     protected $groupStack = array();
 
     /**
-     * All of the verbs supported by the router.
+     * Tous les verbes pris en charge par le routeur.
      *
      * @var array
      */
     public static $verbs = array('GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS');
 
     /**
-     * The resource registrar instance.
+     * Instance du registraire de ressources.
      *
      * @var \Two\Routing\ResourceRegistrar
      */
     protected $registrar;
 
     /**
-     * The registered string macros.
+     * Les macros de chaîne enregistrées.
      *
      * @var array
      */
@@ -120,7 +125,7 @@ class Router
 
 
     /**
-     * Create a new Router instance.
+     * Créez une nouvelle instance de routeur.
      *
      * @param  \Two\Events\Dispatcher  $events
      * @param  \Two\Container\Container  $container
@@ -141,7 +146,7 @@ class Router
     }
 
     /**
-     * Register a new GET route with the router.
+     * Enregistrez une nouvelle route GET avec le routeur.
      *
      * @param  string  $uri
      * @param  \Closure|array|string  $action
@@ -153,7 +158,7 @@ class Router
     }
 
     /**
-     * Register a new POST route with the router.
+     * Enregistrez une nouvelle route POST avec le routeur.
      *
      * @param  string  $uri
      * @param  \Closure|array|string  $action
@@ -165,7 +170,7 @@ class Router
     }
 
     /**
-     * Register a new PUT route with the router.
+     * Enregistrez une nouvelle route PUT avec le routeur.
      *
      * @param  string  $uri
      * @param  \Closure|array|string  $action
@@ -177,7 +182,7 @@ class Router
     }
 
     /**
-     * Register a new PATCH route with the router.
+     * Enregistrez une nouvelle route PATCH avec le routeur.
      *
      * @param  string  $uri
      * @param  \Closure|array|string  $action
@@ -189,7 +194,7 @@ class Router
     }
 
     /**
-     * Register a new DELETE route with the router.
+     * Enregistrez une nouvelle route DELETE avec le routeur.
      *
      * @param  string  $uri
      * @param  \Closure|array|string  $action
@@ -201,7 +206,7 @@ class Router
     }
 
     /**
-     * Register a new OPTIONS route with the router.
+     * Enregistrez un nouvel itinéraire OPTIONS avec le routeur.
      *
      * @param  string  $uri
      * @param  \Closure|array|string  $action
@@ -213,7 +218,7 @@ class Router
     }
 
     /**
-     * Register a new route responding to all verbs.
+     * Enregistrez un nouvel itinéraire répondant à tous les verbes.
      *
      * @param  string  $uri
      * @param  \Closure|array|string  $action
@@ -227,7 +232,7 @@ class Router
     }
 
     /**
-     * Register a new route with the given verbs.
+     * Enregistrez un nouvel itinéraire avec les verbes donnés.
      *
      * @param  array|string  $methods
      * @param  string  $uri
@@ -242,7 +247,7 @@ class Router
     }
 
     /**
-     * Register a new fallback route.
+     * Enregistrez un nouvel itinéraire de secours.
      *
      * @param  \Closure|array|string  $action
      * @return \Two\Routing\Route
@@ -255,7 +260,7 @@ class Router
     }
 
     /**
-     * Create a redirect from one URI to another.
+     * Créez une redirection d'un URI vers un autre.
      *
      * @param  string  $uri
      * @param  string  $destination
@@ -271,7 +276,7 @@ class Router
     }
 
     /**
-     * Register an array of resource controllers.
+     * Enregistrez un tableau de contrôleurs de ressources.
      *
      * @param  array  $resources
      * @return void
@@ -284,7 +289,7 @@ class Router
     }
 
     /**
-     * Route a resource to a controller.
+     * Acheminer une ressource vers un contrôleur.
      *
      * @param  string  $name
      * @param  string  $controller
@@ -299,7 +304,7 @@ class Router
     }
 
     /**
-     * Create a route group with shared attributes.
+     * Créez un groupe de routes avec des attributs partagés.
      *
      * @param  array     $attributes
      * @param  \Closure  $callback
@@ -313,16 +318,16 @@ class Router
 
         $this->updateGroupStack($attributes);
 
-        // Once we have updated the group stack, we will execute the user Closure and
-        // merge in the groups attributes when the route is created. After we have
-        // run the callback, we will pop the attributes off of this group stack.
+        // Une fois que nous aurons mis à jour la pile de groupes, nous exécuterons l'utilisateur Closure et
+        // fusionne les attributs des groupes lors de la création de la route. Après avoir
+        // exécute le rappel, nous supprimerons les attributs de cette pile de groupe.
         call_user_func($callback, $this);
 
         array_pop($this->groupStack);
     }
 
     /**
-     * Update the group stack with the given attributes.
+     * Mettez à jour la pile de groupes avec les attributs donnés.
      *
      * @param  array  $attributes
      * @return void
@@ -339,7 +344,7 @@ class Router
     }
 
     /**
-     * Merge the given group attributes.
+     * Fusionnez les attributs de groupe donnés.
      *
      * @param  array  $new
      * @param  array  $old
@@ -370,7 +375,7 @@ class Router
     }
 
     /**
-     * Format the uses prefix for the new group attributes.
+     * Formatez le préfixe utilise pour les nouveaux attributs de groupe.
      *
      * @param  array  $new
      * @param  array  $old
@@ -392,7 +397,7 @@ class Router
     }
 
     /**
-     * Format the prefix for the new group attributes.
+     * Formatez le préfixe des nouveaux attributs de groupe.
      *
      * @param  array  $new
      * @param  array  $old
@@ -410,7 +415,7 @@ class Router
     }
 
     /**
-     * Get the prefix from the last group on the stack.
+     * Obtenez le préfixe du dernier groupe de la pile.
      *
      * @return string
      */
@@ -426,7 +431,7 @@ class Router
     }
 
     /**
-     * Add a route to the underlying route collection.
+     * Ajoutez une route à la collection de routes sous-jacente.
      *
      * @param  array|string  $methods
      * @param  string  $uri
@@ -439,7 +444,7 @@ class Router
     }
 
     /**
-     * Create a new route instance.
+     * Créez une nouvelle instance de route.
      *
      * @param  array|string  $methods
      * @param  string  $uri
@@ -452,16 +457,16 @@ class Router
             $action = array('uses' => $action);
         }
 
-        // If the route is routing to a controller we will parse the route action into
-        // an acceptable array format before registering it and creating this route
-        // instance itself. We need to build the Closure that will call this out.
+        // Si la route est acheminée vers un contrôleur, nous analyserons l'action de la route en
+        // un format de tableau acceptable avant de l'enregistrer et de créer cette route
+        // instance elle-même. Nous devons construire la clôture qui mettra cela en évidence.
         else if ($this->actionReferencesController($action)) {
             $action = $this->convertToControllerAction($action);
         }
 
-        // If no "uses" property has been set, we will dig through the array to find a
-        // Closure instance within this list. We will set the first Closure we come
-        // across into the "uses" property that will get fired off by this route.
+        // Si aucune propriété "uses" n'a été définie, nous fouillerons dans le tableau pour trouver un
+        // Instance de fermeture dans cette liste. Nous fixerons la première fermeture à laquelle nous viendrons
+        // dans la propriété "uses" qui sera déclenchée par cette route.
         else if (! isset($action['uses'])) {
             $action['uses'] = $this->findActionClosure($action);
         }
@@ -474,9 +479,9 @@ class Router
             $methods, $uri = $this->prefix($uri), $action
         );
 
-        // If we have groups that need to be merged, we will merge them now after this
-        // route has already been created and is ready to go. After we're done with
-        // the merge we will be ready to return the route back out to the caller.
+        // Si nous avons des groupes qui doivent être fusionnés, nous les fusionnerons maintenant après cela
+        // la route a déjà été créée et est prête à fonctionner. Après que nous en ayons fini avec
+        // la fusion, nous serons prêts à renvoyer la route à l'appelant.
         if (! empty($this->groupStack)) {
             $this->mergeGroupAttributesIntoRoute($route);
         }
@@ -487,7 +492,7 @@ class Router
     }
 
     /**
-     * Find the Closure in an action array.
+     * Recherchez la fermeture dans un tableau d'actions.
      *
      * @param  array  $action
      * @return \Closure
@@ -501,7 +506,7 @@ class Router
     }
 
     /**
-     * Create a new Route object.
+     * Créez un nouvel objet Route.
      *
      * @param  array|string  $methods
      * @param  string  $uri
@@ -516,7 +521,7 @@ class Router
     }
 
     /**
-     * Prefix the given URI with the last prefix.
+     * Préfixez l’URI donné avec le dernier préfixe.
      *
      * @param  string  $uri
      * @return string
@@ -527,7 +532,7 @@ class Router
     }
 
     /**
-     * Add the necessary where clauses to the route based on its initial registration.
+     * Ajoutez les clauses Where nécessaires à l'itinéraire en fonction de son enregistrement initial.
      *
      * @param  \Two\Routing\Route  $route
      * @return \Two\Routing\Route
@@ -542,7 +547,7 @@ class Router
     }
 
     /**
-     * Merge the group stack with the controller action.
+     * Fusionnez la pile de groupes avec l'action du contrôleur.
      *
      * @param  \Two\Routing\Route  $route
      * @return void
@@ -561,7 +566,7 @@ class Router
     }
 
     /**
-     * Determine if the action is routing to a controller.
+     * Déterminez si l’action est acheminée vers un contrôleur.
      *
      * @param  array  $action
      * @return bool
@@ -576,7 +581,7 @@ class Router
     }
 
     /**
-     * Add a controller based route action to the action array.
+     * Ajoutez une action de route basée sur un contrôleur au tableau d'actions.
      *
      * @param  array|string  $action
      * @return array
@@ -587,23 +592,23 @@ class Router
             $action = array('uses' => $action);
         }
 
-        // Here we'll get an instance of this controller dispatcher and hand it off to
-        // the Closure so it will be used to resolve the class instances out of our
-        // IoC container instance and call the appropriate methods on the class.
+        // Ici, nous obtiendrons une instance de ce répartiteur de contrôleur et la transmettrons à
+        // la fermeture donc elle sera utilisée pour résoudre les instances de classe hors de notre
+        // Instance de conteneur IoC et appelez les méthodes appropriées sur la classe.
         if (! empty($this->groupStack)) {
             $action['uses'] = $this->prependGroupUses($action['uses']);
         }
 
-        // Here we'll get an instance of this controller dispatcher and hand it off to
-        // the Closure so it will be used to resolve the class instances out of our
-        // IoC container instance and call the appropriate methods on the class.
+        // Ici, nous obtiendrons une instance de ce répartiteur de contrôleur et la transmettrons à
+        // la fermeture donc elle sera utilisée pour résoudre les instances de classe hors de notre
+        // Instance de conteneur IoC et appelez les méthodes appropriées sur la classe.
         $action['controller'] = $action['uses'];
 
         return $action;
     }
 
     /**
-     * Prepend the last group uses onto the use clause.
+     * Ajoutez le dernier groupe use à la clause use.
      *
      * @param  string  $uses
      * @return string
@@ -616,7 +621,7 @@ class Router
     }
 
     /**
-     * Dispatch the request to the application.
+     * Envoyez la demande à l’application.
      *
      * @param  \Two\Http\Request  $request
      * @return \Two\Http\Response
@@ -631,16 +636,16 @@ class Router
     }
 
     /**
-     * Dispatch the request to a route and return the response.
+     * Envoyez la demande vers une route et renvoyez la réponse.
      *
      * @param  \Two\Http\Request  $request
      * @return mixed
      */
     public function dispatchToRoute(Request $request)
     {
-        // First we will find a route that matches this request. We will also set the
-        // route resolver on the request so middlewares assigned to the route will
-        // receive access to this route instance for checking of the parameters.
+        // Nous allons d’abord trouver un itinéraire qui correspond à cette demande. Nous fixerons également le
+        // résolveur de route sur la requête afin que les middlewares affectés à la route le fassent
+        // reçoit l'accès à cette instance de route pour vérifier les paramètres.
         $route = $this->findRoute($request);
 
         $request->setRouteResolver(function () use ($route)
@@ -656,7 +661,7 @@ class Router
     }
 
     /**
-     * Run the given route within a Stack "onion" instance.
+     * Exécutez la route donnée dans une instance Stack "onion".
      *
      * @param  \Two\Routing\Route  $route
      * @param  \Two\Http\Request  $request
@@ -667,7 +672,7 @@ class Router
         $skipMiddleware = $this->container->bound('middleware.disable') &&
                           ($this->container->make('middleware.disable') === true);
 
-        // Create a Pipeline instance.
+        // Créez une instance de pipeline.
         $pipeline = new Pipeline(
             $this->container, $skipMiddleware ? array() : $this->gatherRouteMiddleware($route)
         );
@@ -681,7 +686,7 @@ class Router
     }
 
     /**
-     * Gather the middleware for the given route.
+     * Rassemblez le middleware pour l’itinéraire donné.
      *
      * @param  \Two\Routing\Route  $route
      * @return array
@@ -698,7 +703,7 @@ class Router
     }
 
     /**
-     * Resolve the middleware name to class name preserving passed parameters.
+     * Résolvez le nom du middleware en nom de classe en préservant les paramètres transmis.
      *
      * @param  string $name
      * @return array
@@ -713,7 +718,7 @@ class Router
     }
 
     /**
-     * Parse the middleware and format it for usage.
+     * Analysez le middleware et formatez-le pour l'utiliser.
      *
      * @param  string  $name
      * @return array
@@ -729,12 +734,12 @@ class Router
             return $callable;
         }
 
-        // When the callable is a string, we will add back the parameters before returning.
+        // Lorsque l'appelable est une chaîne, nous rajouterons les paramètres avant de revenir.
         else if (is_string($callable)) {
             return $callable .':' .$parameters;
         }
 
-        // A callback with parameters; we should create a proper middleware closure for it.
+        // Un rappel avec des paramètres ; nous devrions créer une fermeture middleware appropriée pour cela.
         $parameters = explode(',', $parameters);
 
         return function ($passable, $stack) use ($callable, $parameters)
@@ -746,7 +751,7 @@ class Router
     }
 
     /**
-     * Parse the middleware group and format it for usage.
+     * Analysez le groupe de middleware et formatez-le pour l'utiliser.
      *
      * @param  string  $name
      * @return array
@@ -762,7 +767,7 @@ class Router
                 continue;
             }
 
-            // The middleware refer a middleware group.
+            // Le middleware fait référence à un groupe de middleware.
             $results = array_merge(
                 $results, $this->parseMiddlewareGroup($middleware)
             );
@@ -772,7 +777,7 @@ class Router
     }
 
     /**
-     * Find the route matching a given request.
+     * Trouver l'itinéraire correspondant à une demande donnée.
      *
      * @param  \Two\Http\Request  $request
      * @return \Two\Routing\Route
@@ -785,7 +790,7 @@ class Router
     }
 
     /**
-     * Substitute the route bindings onto the route.
+     * Remplacez les liaisons d'itinéraire par l'itinéraire.
      *
      * @param  \Two\Routing\Route  $route
      * @return \Two\Routing\Route
@@ -802,7 +807,7 @@ class Router
     }
 
     /**
-     * Call the binding callback for the given key.
+     * Appelez le rappel de liaison pour la clé donnée.
      *
      * @param  string  $key
      * @param  string  $value
@@ -817,7 +822,7 @@ class Router
     }
 
     /**
-     * Register a route matched event listener.
+     * Enregistrez un écouteur d’événement correspondant à un itinéraire.
      *
      * @param  string|callable  $callback
      * @return void
@@ -828,7 +833,7 @@ class Router
     }
 
     /**
-     * Get all of the defined middleware short-hand names.
+     * Obtenez tous les noms abrégés du middleware définis.
      *
      * @return array
      */
@@ -838,7 +843,7 @@ class Router
     }
 
     /**
-     * Register a short-hand name for a middleware.
+     * Enregistrez un nom abrégé pour un middleware.
      *
      * @param  string  $name
      * @param  string|\Closure  $middleware
@@ -852,7 +857,7 @@ class Router
     }
 
     /**
-     * Register a group of middleware.
+     * Enregistrez un groupe de middleware.
      *
      * @param  string  $name
      * @param  array  $middleware
@@ -866,9 +871,9 @@ class Router
     }
 
     /**
-     * Add a middleware to the beginning of a middleware group.
+     * Ajoutez un middleware au début d'un groupe de middleware.
      *
-     * If the middleware is already in the group, it will not be added again.
+     * Si le middleware est déjà dans le groupe, il ne sera pas ajouté à nouveau.
      *
      * @param  string  $group
      * @param  string  $middleware
@@ -884,9 +889,9 @@ class Router
     }
 
     /**
-     * Add a middleware to the end of a middleware group.
+     * Ajoutez un middleware à la fin d'un groupe de middleware.
      *
-     * If the middleware is already in the group, it will not be added again.
+     * Si le middleware est déjà dans le groupe, il ne sera pas ajouté à nouveau.
      *
      * @param  string  $group
      * @param  string  $middleware
@@ -906,7 +911,7 @@ class Router
     }
 
     /**
-     * Add a new route parameter binder.
+     * Ajoutez un nouveau classeur de paramètres d'itinéraire.
      *
      * @param  string  $key
      * @param  string|callable  $binder
@@ -924,7 +929,7 @@ class Router
     }
 
     /**
-     * Register a model binder for a wildcard.
+     * Enregistrez un classeur de modèles pour un caractère générique.
      *
      * @param  string  $key
      * @param  string  $className
@@ -941,16 +946,16 @@ class Router
                 return;
             }
 
-            // For model binders, we will attempt to retrieve the models using the find
-            // method on the model instance. If we cannot retrieve the models we'll
-            // throw a not found exception otherwise we will return the instance.
+            // Pour les classeurs de modèles, nous tenterons de récupérer les modèles à l'aide de la fonction find
+            // méthode sur l'instance du modèle. Si nous ne pouvons pas récupérer les modèles, nous le ferons
+            // lève une exception non trouvée sinon nous renverrons l'instance.
             if (! is_null($model = with(new $className)->find($value))) {
                 return $model;
             }
 
-            // If a callback was supplied to the method we will call that to determine
-            // what we should do when the model is not found. This just gives these
-            // developer a little greater flexibility to decide what will happen.
+            // Si un rappel a été fourni à la méthode, nous l'appellerons pour déterminer
+            // ce que nous devons faire lorsque le modèle n'est pas trouvé. Cela donne juste ces
+            // Développeur un peu plus de flexibilité pour décider de ce qui va se passer.
             if ($callback instanceof Closure) {
                 return call_user_func($callback, $value);
             }
@@ -960,7 +965,7 @@ class Router
     }
 
     /**
-     * Get the binding callback for a given binding.
+     * Obtenez le rappel de liaison pour une liaison donnée.
      *
      * @param  string  $key
      * @return \Closure|null
@@ -975,7 +980,7 @@ class Router
     }
 
     /**
-     * Create a class based binding using the IoC container.
+     * Créez une liaison basée sur une classe à l'aide du conteneur IoC.
      *
      * @param  string    $binding
      * @return \Closure
@@ -984,9 +989,9 @@ class Router
     {
         return function ($value, $route) use ($binding)
         {
-            // If the binding has an @ sign, we will assume it's being used to delimit
-            // the class name from the bind method name. This allows for bindings
-            // to run multiple bind methods in a single class for convenience.
+            // Si la liaison comporte un signe @, nous supposerons qu'elle est utilisée pour délimiter
+            // le nom de la classe à partir du nom de la méthode de liaison. Cela permet des liaisons
+            // pour exécuter plusieurs méthodes de liaison dans une seule classe pour plus de commodité.
             list($className, $method) = array_pad(explode('@', $binding, 2), 2, 'bind');
 
             $instance = $this->container->make($className);
@@ -996,7 +1001,7 @@ class Router
     }
 
     /**
-     * Set a global where pattern on all routes
+     * Définir un modèle Where global sur toutes les routes
      *
      * @param  string  $key
      * @param  string  $pattern
@@ -1008,7 +1013,7 @@ class Router
     }
 
     /**
-     * Set a group of global where patterns on all routes
+     * Définir un groupe de modèles Where globaux sur toutes les routes
      *
      * @param  array  $patterns
      * @return void
@@ -1021,7 +1026,7 @@ class Router
     }
 
     /**
-     * Create a response instance from the given value.
+     * Créez une instance de réponse à partir de la valeur donnée.
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @param  mixed  $response
@@ -1037,7 +1042,7 @@ class Router
     }
 
     /**
-     * Determine if the router currently has a group stack.
+     * Déterminez si le routeur dispose actuellement d'une pile de groupe.
      *
      * @return bool
      */
@@ -1047,7 +1052,7 @@ class Router
     }
 
     /**
-     * Get the current group stack for the router.
+     * Obtenez la pile de groupes actuelle pour le routeur.
      *
      * @return array
      */
@@ -1057,7 +1062,7 @@ class Router
     }
 
     /**
-     * Get a route parameter for the current route.
+     * Obtenez un paramètre d'itinéraire pour l'itinéraire actuel.
      *
      * @param  string  $key
      * @param  string  $default
@@ -1069,7 +1074,7 @@ class Router
     }
 
     /**
-     * Get the currently dispatched route instance.
+     * Obtenez l'instance de route actuellement distribuée.
      *
      * @return \Two\Routing\Route
      */
@@ -1079,7 +1084,7 @@ class Router
     }
 
     /**
-     * Get the currently dispatched route instance.
+     * Obtenez l'instance de route actuellement distribuée.
      *
      * @return \Two\Routing\Route
      */
@@ -1089,7 +1094,7 @@ class Router
     }
 
     /**
-     * Check if a route with the given name exists.
+     * Vérifiez si une route portant le nom donné existe.
      *
      * @param  string  $name
      * @return bool
@@ -1100,7 +1105,7 @@ class Router
     }
 
     /**
-     * Get the current route name.
+     * Obtenez le nom de l'itinéraire actuel.
      *
      * @return string|null
      */
@@ -1112,7 +1117,7 @@ class Router
     }
 
     /**
-     * Alias for the "currentRouteNamed" method.
+     * Alias ​​pour la méthode "currentRouteNamed".
      *
      * @param  mixed  string
      * @return bool
@@ -1133,7 +1138,7 @@ class Router
     }
 
     /**
-     * Determine if the current route matches a given name.
+     * Déterminez si l’itinéraire actuel correspond à un nom donné.
      *
      * @param  string  $name
      * @return bool
@@ -1148,7 +1153,7 @@ class Router
     }
 
     /**
-     * Get the current route action.
+     * Obtenez l'action d'itinéraire actuelle.
      *
      * @return string|null
      */
@@ -1162,7 +1167,7 @@ class Router
     }
 
     /**
-     * Alias for the "currentRouteUses" method.
+     * Alias ​​pour la méthode "currentRouteUses".
      *
      * @param  mixed  string
      * @return bool
@@ -1183,7 +1188,7 @@ class Router
     }
 
     /**
-     * Determine if the current route action matches a given action.
+     * Déterminez si l’action d’itinéraire actuelle correspond à une action donnée.
      *
      * @param  string  $action
      * @return bool
@@ -1194,7 +1199,7 @@ class Router
     }
 
     /**
-     * Get the request currently being dispatched.
+     * Récupérez la demande en cours d'envoi.
      *
      * @return \Two\Http\Request
      */
@@ -1204,7 +1209,7 @@ class Router
     }
 
     /**
-     * Get the underlying route collection.
+     * Obtenez la collection de routes sous-jacente.
      *
      * @return \Two\Routing\RouteCollection
      */
@@ -1214,7 +1219,7 @@ class Router
     }
 
     /**
-     * Get a Resource Registrar instance.
+     * Obtenez une instance de Resource Registrar.
      *
      * @return \Two\Routing\ResourceRegistrar
      */
@@ -1228,7 +1233,7 @@ class Router
     }
 
     /**
-     * Get the global "where" patterns.
+     * Obtenez les modèles globaux « où ».
      *
      * @return array
      */
@@ -1238,7 +1243,7 @@ class Router
     }
 
     /**
-     * Register a custom macro.
+     * Enregistrez une macro personnalisée.
      *
      * @param  string    $name
      * @param  callable  $callback
@@ -1250,7 +1255,7 @@ class Router
     }
 
     /**
-     * Checks if macro is registered
+     * Vérifie si la macro est enregistrée
      *
      * @param  string    $name
      * @return boolean
@@ -1261,7 +1266,7 @@ class Router
     }
 
     /**
-     * Dynamically handle calls to the class.
+     * Gérer dynamiquement les appels à la classe.
      *
      * @param  string  $method
      * @param  array   $parameters

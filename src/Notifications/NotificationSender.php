@@ -1,13 +1,15 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications;
 
-use Ramsey\Uuid\Uuid;
-
-use Two\Database\ORM\Model; // note
-
-use Two\Support\Collection;
-use Two\Queue\ShouldQueueInterface;
+use Two\Database\ORM\Model;
+use Two\collection\Collection;
+use Two\Queue\Contracts\ShouldQueueInterface;
 use Two\Notifications\ChannelManager;
 use Two\Bus\Dispatcher as BusDispatcher;
 use Two\Events\Dispatcher as EventDispatcher;
@@ -16,25 +18,27 @@ use Two\Notifications\SendQueuedNotifications;
 use Two\Notifications\Events\NotificationSending;
 use Two\Database\ORM\Collection as ModelCollection;
 
+use Ramsey\Uuid\Uuid;
+
 
 class NotificationSender
 {
     /**
-     * The notification manager instance.
+     * L'instance du gestionnaire de notifications.
      *
      * @var \Two\Notifications\ChannelManager
      */
     protected $manager;
 
     /**
-     * The events dispatcher instance.
+     * Instance du répartiteur d’événements.
      *
      * @var \Two\Events\Dispatcher
      */
     protected $events;
 
     /**
-     * The command bus dispatcher instance.
+     * Instance du répartiteur de bus de commande.
      *
      * @var \Two\Bus\Dispatcher
      */
@@ -42,7 +46,7 @@ class NotificationSender
 
 
     /**
-     * Create a new notification sender instance.
+     * Créez une nouvelle instance d'expéditeur de notification.
      *
      * @param  \Two\Events\Dispatcher  $events
      * @param  \Two\Bus\Dispatcher  $bus
@@ -58,7 +62,7 @@ class NotificationSender
     }
 
     /**
-     * Send the given notification to the given notifiable entities.
+     * Envoyez la notification donnée aux entités notifiables indiquées.
      *
      * @param  \Two\Support\Collection|array|mixed  $notifiables
      * @param  mixed  $notification
@@ -82,7 +86,7 @@ class NotificationSender
     }
 
     /**
-     * Send the given notification to the given notifiable entities.
+     * Envoyez la notification donnée aux entités notifiables indiquées.
      *
      * @param  \Two\Support\Collection|array|mixed  $notifiables
      * @param  mixed  $notification
@@ -109,7 +113,7 @@ class NotificationSender
     }
 
     /**
-     * Send the given notification to the given notifiable via a channel.
+     * Envoyez la notification donnée au notifiable donné via un canal.
      *
      * @param  mixed  $notifiable
      * @param  string  $id
@@ -133,7 +137,7 @@ class NotificationSender
     }
 
     /**
-     * Determines if the notification can be sent.
+     * Détermine si la notification peut être envoyée.
      *
      * @param  mixed  $notifiable
      * @param  mixed  $notification
@@ -150,7 +154,7 @@ class NotificationSender
     }
 
     /**
-     * Queue the given notification to the given notifiable via a channel.
+     * Mettez en file d'attente la notification donnée vers le notifiable donné via un canal.
      *
      * @param  mixed  $notifiable
      * @param  string  $id
@@ -171,7 +175,7 @@ class NotificationSender
     }
 
     /**
-     * Format the notifiables into a Collection / array if necessary.
+     * Formatez les notifiables dans une collection/un tableau si nécessaire.
      *
      * @param  mixed  $notifiables
      * @return ModelCollection|array

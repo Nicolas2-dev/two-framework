@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Query;
 
 use Two\Database\Query\Builder;
@@ -9,7 +14,7 @@ class Processor
 {
 
     /**
-     * Process the results of a "select" query.
+     * Traitez les résultats d'une requête "select".
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $results
@@ -21,7 +26,7 @@ class Processor
     }
 
     /**
-     * Process an  "insert get ID" query.
+     * Traitez une requête « insérer obtenir un ID ».
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  string  $sql

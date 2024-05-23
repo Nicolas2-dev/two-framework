@@ -1,14 +1,20 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Queues;
 
-use Two\Queue\QueueInterface;
+use Two\Queue\Contracts\QueueInterface;
 use Two\Queue\Queue;
+
 
 class NullQueue extends Queue implements QueueInterface
 {
     /**
-     * Push a new job onto the queue.
+     * Placez un nouveau travail dans la file d'attente.
      *
      * @param  string  $job
      * @param  mixed   $data
@@ -21,7 +27,7 @@ class NullQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a raw payload onto the queue.
+     * Insérez une charge utile brute dans la file d'attente.
      *
      * @param  string  $payload
      * @param  string  $queue
@@ -34,7 +40,7 @@ class NullQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a new job onto the queue after a delay.
+     * Placez une nouvelle tâche dans la file d'attente après un certain délai.
      *
      * @param  \DateTime|int  $delay
      * @param  string  $job
@@ -48,7 +54,7 @@ class NullQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Pop the next job off of the queue.
+     * Retirez le travail suivant de la file d'attente.
      *
      * @param  string  $queue
      * @return \Two\Queue\Jobs\Job|null

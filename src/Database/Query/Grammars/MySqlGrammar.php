@@ -1,9 +1,9 @@
 <?php
 /**
- * MySqlGrammar - A simple MySQL Grammar for the QueryBuilder.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
  */
 
 namespace Two\Database\Query\Grammars;
@@ -15,7 +15,7 @@ use Two\Database\Query\Grammar;
 class MySqlGrammar extends Grammar
 {
     /**
-     * The components that make up a select clause.
+     * Les composants qui composent une clause select.
      *
      * @var array
      */
@@ -35,7 +35,7 @@ class MySqlGrammar extends Grammar
 
 
     /**
-     * Compile a select query into SQL.
+     * Compilez une requête de sélection en SQL.
      *
      * @param  \Two\Database\Query\Builder
      * @return string
@@ -52,7 +52,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a single union statement.
+     * Compilez une seule déclaration syndicale.
      *
      * @param  array  $union
      * @return string
@@ -65,7 +65,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile the lock into SQL.
+     * Compilez le verrou en SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  bool|string  $value
@@ -79,7 +79,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile an update statement into SQL.
+     * Compilez une instruction de mise à jour en SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @param  array  $values
@@ -101,7 +101,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a delete statement into SQL.
+     * Compilez une instruction de suppression en SQL.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return string
@@ -122,7 +122,7 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Wrap a single string in keyword identifiers.
+     * Enveloppez une seule chaîne dans des identifiants de mots clés.
      *
      * @param  string  $value
      * @return string

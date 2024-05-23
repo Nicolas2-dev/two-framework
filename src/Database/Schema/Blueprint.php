@@ -1,46 +1,51 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Schema;
+
+use Closure;
 
 use Two\Support\Fluent;
 use Two\Database\Connection;
 use Two\Database\Schema\Grammar;
 
-use Closure;
-
 
 class Blueprint
 {
     /**
-     * The table the blueprint describes.
+     * Le tableau décrit par le plan.
      *
      * @var string
      */
     protected $table;
 
     /**
-     * The columns that should be added to the table.
+     * Les colonnes qui doivent être ajoutées au tableau.
      *
      * @var array
      */
     protected $columns = array();
 
     /**
-     * The commands that should be run for the table.
+     * Les commandes qui doivent être exécutées pour la table.
      *
      * @var array
      */
     protected $commands = array();
 
     /**
-     * The storage engine that should be used for the table.
+     * Le moteur de stockage qui doit être utilisé pour la table.
      *
      * @var string
      */
     public $engine;
 
     /**
-     * Create a new schema blueprint.
+     * Créez un nouveau plan de schéma.
      *
      * @param  string   $table
      * @param  \Closure  $callback
@@ -54,10 +59,10 @@ class Blueprint
     }
 
     /**
-     * Execute the blueprint against the database.
+     * Exécutez le plan sur la base de données.
      *
      * @param  \Two\Database\Connection  $connection
-     * @param  \Two\Database\Schema\Grammars\Grammar $grammar
+     * @param  \Two\Database\Schema\Grammar $grammar
      * @return void
      */
     public function build(Connection $connection, Grammar $grammar)
@@ -69,10 +74,10 @@ class Blueprint
     }
 
     /**
-     * Get the raw SQL statements for the blueprint.
+     * Obtenez les instructions SQL brutes pour le plan.
      *
      * @param  \Two\Database\Connection  $connection
-     * @param  \Two\Database\Schema\Grammars\Grammar  $grammar
+     * @param  \Two\Database\Schema\Grammar  $grammar
      * @return array
      */
     public function toSql(Connection $connection, Grammar $grammar)
@@ -81,9 +86,9 @@ class Blueprint
 
         $statements = array();
 
-        // Each type of command has a corresponding compiler function on the schema
-        // grammar which is used to build the necessary SQL statements to build
-        // the blueprint element, so we'll just call that compilers function.
+        // Chaque type de commande a une fonction de compilateur correspondante sur le schéma
+        // grammaire utilisée pour construire les instructions SQL nécessaires à la construction
+        // l'élément blueprint, nous appellerons donc simplement cette fonction du compilateur.
         foreach ($this->commands as $command) {
             $method = 'compile'.ucfirst($command->name);
 
@@ -98,7 +103,7 @@ class Blueprint
     }
 
     /**
-     * Add the commands that are implied by the blueprint.
+     * Ajoutez les commandes impliquées par le plan.
      *
      * @return void
      */
@@ -112,7 +117,7 @@ class Blueprint
     }
 
     /**
-     * Add the index commands fluently specified on columns.
+     * Ajoutez les commandes d'index couramment spécifiées sur les colonnes.
      *
      * @return void
      */
@@ -121,18 +126,18 @@ class Blueprint
         foreach ($this->columns as $column)
         {
             foreach (array('primary', 'unique', 'index') as $index) {
-                // If the index has been specified on the given column, but is simply
-                // equal to "true" (boolean), no name has been specified for this
-                // index, so we will simply call the index methods without one.
+                // Si l'index a été spécifié sur la colonne donnée, mais est simplement
+                // égal à "true" (booléen), aucun nom n'a été spécifié pour cela
+                // index, nous appellerons donc simplement les méthodes d'index sans une.
                 if ($column->$index === true) {
                     $this->$index($column->name);
 
                     continue 2;
                 }
 
-                // If the index has been specified on the column and it is something
-                // other than boolean true, we will assume a name was provided on
-                // the index specification, and pass in the name to the method.
+                // Si l'index a été spécifié sur la colonne et que c'est quelque chose
+                // autre que boolean true, nous supposerons qu'un nom a été fourni sur
+                // la spécification de l'index et transmet le nom à la méthode.
                 else if (isset($column->$index)) {
                     $this->$index($column->name, $column->$index);
 
@@ -143,7 +148,7 @@ class Blueprint
     }
 
     /**
-     * Determine if the blueprint has a create command.
+     * Déterminez si le plan a une commande de création.
      *
      * @return bool
      */
@@ -157,7 +162,7 @@ class Blueprint
     }
 
     /**
-     * Indicate that the table needs to be created.
+     * Indiquez que la table doit être créée.
      *
      * @return \Two\Support\Fluent
      */
@@ -167,7 +172,7 @@ class Blueprint
     }
 
     /**
-     * Indicate that the table should be dropped.
+     * Indiquez que la table doit être supprimée.
      *
      * @return \Two\Support\Fluent
      */
@@ -177,7 +182,7 @@ class Blueprint
     }
 
     /**
-     * Indicate that the table should be dropped if it exists.
+     * Indiquez que la table doit être supprimée si elle existe.
      *
      * @return \Two\Support\Fluent
      */
@@ -187,7 +192,7 @@ class Blueprint
     }
 
     /**
-     * Indicate that the given columns should be dropped.
+     * Indiquez que les colonnes données doivent être supprimées.
      *
      * @param  string|array  $columns
      * @return \Two\Support\Fluent
@@ -200,7 +205,7 @@ class Blueprint
     }
 
     /**
-     * Indicate that the given columns should be renamed.
+     * Indiquez que les colonnes données doivent être renommées.
      *
      * @param  string  $from
      * @param  string  $to
@@ -212,7 +217,7 @@ class Blueprint
     }
 
     /**
-     * Indicate that the given primary key should be dropped.
+     * Indiquez que la clé primaire donnée doit être supprimée.
      *
      * @param  string|array  $index
      * @return \Two\Support\Fluent
@@ -223,7 +228,7 @@ class Blueprint
     }
 
     /**
-     * Indicate that the given unique key should be dropped.
+     * Indiquez que la clé unique donnée doit être supprimée.
      *
      * @param  string|array  $index
      * @return \Two\Support\Fluent
@@ -234,7 +239,7 @@ class Blueprint
     }
 
     /**
-     * Indicate that the given index should be dropped.
+     * Indiquez que l'index donné doit être supprimé.
      *
      * @param  string|array  $index
      * @return \Two\Support\Fluent
@@ -245,7 +250,7 @@ class Blueprint
     }
 
     /**
-     * Indicate that the given foreign key should be dropped.
+     * Indique que la clé étrangère donnée doit être supprimée.
      *
      * @param  string  $index
      * @return \Two\Support\Fluent
@@ -256,7 +261,7 @@ class Blueprint
     }
 
     /**
-     * Indicate that the timestamp columns should be dropped.
+     * Indiquez que les colonnes d'horodatage doivent être supprimées.
      *
      * @return void
      */
@@ -266,7 +271,7 @@ class Blueprint
     }
 
     /**
-    * Indicate that the soft delete column should be dropped.
+    * Indiquez que la colonne de suppression logicielle doit être supprimée.
     *
     * @return void
     */
@@ -276,7 +281,7 @@ class Blueprint
     }
 
     /**
-     * Rename the table to a given name.
+     * Renommez la table en un nom donné.
      *
      * @param  string  $to
      * @return \Two\Support\Fluent
@@ -287,7 +292,7 @@ class Blueprint
     }
 
     /**
-     * Specify the primary key(s) for the table.
+     * Spécifiez la ou les clés primaires de la table.
      *
      * @param  string|array  $columns
      * @param  string  $name
@@ -299,7 +304,7 @@ class Blueprint
     }
 
     /**
-     * Specify a unique index for the table.
+     * Spécifiez un index unique pour la table.
      *
      * @param  string|array  $columns
      * @param  string  $name
@@ -311,7 +316,7 @@ class Blueprint
     }
 
     /**
-     * Specify an index for the table.
+     * Spécifiez un index pour la table.
      *
      * @param  string|array  $columns
      * @param  string  $name
@@ -323,7 +328,7 @@ class Blueprint
     }
 
     /**
-     * Specify a foreign key for the table.
+     * Spécifiez une clé étrangère pour la table.
      *
      * @param  string|array  $columns
      * @param  string  $name
@@ -335,7 +340,7 @@ class Blueprint
     }
 
     /**
-     * Create a new auto-incrementing integer column on the table.
+     * Créez une nouvelle colonne entière à incrémentation automatique sur la table.
      *
      * @param  string  $column
      * @return \Two\Support\Fluent
@@ -346,7 +351,7 @@ class Blueprint
     }
 
     /**
-     * Create a new auto-incrementing big integer column on the table.
+     * Créez une nouvelle colonne de grands entiers à incrémentation automatique sur la table.
      *
      * @param  string  $column
      * @return \Two\Support\Fluent
@@ -357,7 +362,7 @@ class Blueprint
     }
 
     /**
-     * Create a new char column on the table.
+     * Créez une nouvelle colonne de caractères sur la table.
      *
      * @param  string  $column
      * @param  int|null  $length
@@ -371,7 +376,7 @@ class Blueprint
     }
 
     /**
-     * Create a new string column on the table.
+     * Créez une nouvelle colonne de chaîne sur la table.
      *
      * @param  string  $column
      * @param  int|null  $length
@@ -385,7 +390,7 @@ class Blueprint
     }
 
     /**
-     * Create a new text column on the table.
+     * Créez une nouvelle colonne de texte sur le tableau.
      *
      * @param  string  $column
      * @return \Two\Support\Fluent
@@ -396,7 +401,7 @@ class Blueprint
     }
 
     /**
-     * Create a new medium text column on the table.
+     * Créez une nouvelle colonne de texte moyenne sur le tableau.
      *
      * @param  string  $column
      * @return \Two\Support\Fluent
@@ -407,7 +412,7 @@ class Blueprint
     }
 
     /**
-     * Create a new long text column on the table.
+     * Créez une nouvelle colonne de texte long sur le tableau.
      *
      * @param  string  $column
      * @return \Two\Support\Fluent
@@ -418,7 +423,7 @@ class Blueprint
     }
 
     /**
-     * Create a new integer column on the table.
+     * Créez une nouvelle colonne entière sur la table.
      *
      * @param  string  $column
      * @param  bool  $autoIncrement
@@ -431,7 +436,7 @@ class Blueprint
     }
 
     /**
-     * Create a new big integer column on the table.
+     * Créez une nouvelle grande colonne entière sur la table.
      *
      * @param  string  $column
      * @param  bool  $autoIncrement
@@ -444,7 +449,7 @@ class Blueprint
     }
 
     /**
-     * Create a new medium integer column on the table.
+     * Créez une nouvelle colonne entière moyenne sur la table.
      *
      * @param  string  $column
      * @param  bool  $autoIncrement
@@ -457,7 +462,7 @@ class Blueprint
     }
 
     /**
-     * Create a new tiny integer column on the table.
+     * Créez une nouvelle petite colonne entière sur la table.
      *
      * @param  string  $column
      * @param  bool  $autoIncrement
@@ -470,7 +475,7 @@ class Blueprint
     }
 
     /**
-     * Create a new small integer column on the table.
+     * Créez une nouvelle petite colonne entière sur la table.
      *
      * @param  string  $column
      * @param  bool  $autoIncrement
@@ -483,7 +488,7 @@ class Blueprint
     }
 
     /**
-     * Create a new unsigned integer column on the table.
+     * Créez une nouvelle colonne entière non signée sur la table.
      *
      * @param  string  $column
      * @param  bool  $autoIncrement
@@ -495,7 +500,7 @@ class Blueprint
     }
 
     /**
-     * Create a new unsigned big integer column on the table.
+     * Créez une nouvelle colonne de grands entiers non signés sur la table.
      *
      * @param  string  $column
      * @param  bool  $autoIncrement
@@ -507,7 +512,7 @@ class Blueprint
     }
 
     /**
-     * Create a new float column on the table.
+     * Créez une nouvelle colonne flottante sur la table.
      *
      * @param  string  $column
      * @param  int     $total
@@ -520,7 +525,7 @@ class Blueprint
     }
 
     /**
-     * Create a new double column on the table.
+     * Créez une nouvelle double colonne sur le tableau.
      *
      * @param  string   $column
      * @param  int|null    $total
@@ -533,7 +538,7 @@ class Blueprint
     }
 
     /**
-     * Create a new decimal column on the table.
+     * Créez une nouvelle colonne décimale sur le tableau.
      *
      * @param  string  $column
      * @param  int     $total
@@ -546,7 +551,7 @@ class Blueprint
     }
 
     /**
-     * Create a new boolean column on the table.
+     * Créez une nouvelle colonne booléenne sur la table.
      *
      * @param  string  $column
      * @return \Two\Support\Fluent
@@ -557,7 +562,7 @@ class Blueprint
     }
 
     /**
-     * Create a new enum column on the table.
+     * Créez une nouvelle colonne d'énumération sur la table.
      *
      * @param  string  $column
      * @param  array   $allowed
@@ -569,7 +574,7 @@ class Blueprint
     }
 
     /**
-     * Create a new date column on the table.
+     * Créez une nouvelle colonne de date sur la table.
      *
      * @param  string  $column
      * @return \Two\Support\Fluent
@@ -580,7 +585,7 @@ class Blueprint
     }
 
     /**
-     * Create a new date-time column on the table.
+     * Créez une nouvelle colonne date-heure sur la table.
      *
      * @param  string  $column
      * @return \Two\Support\Fluent
@@ -591,7 +596,7 @@ class Blueprint
     }
 
     /**
-     * Create a new time column on the table.
+     * Créez une nouvelle colonne de temps sur la table.
      *
      * @param  string  $column
      * @return \Two\Support\Fluent
@@ -602,7 +607,7 @@ class Blueprint
     }
 
     /**
-     * Create a new timestamp column on the table.
+     * Créez une nouvelle colonne d'horodatage sur la table.
      *
      * @param  string  $column
      * @return \Two\Support\Fluent
@@ -613,7 +618,7 @@ class Blueprint
     }
 
     /**
-     * Add nullable creation and update timestamps to the table.
+     * Ajoutez des horodatages de création et de mise à jour nullables à la table.
      *
      * @return void
      */
@@ -625,7 +630,7 @@ class Blueprint
     }
 
     /**
-     * Add creation and update timestamps to the table.
+     * Ajoutez des horodatages de création et de mise à jour au tableau.
      *
      * @return void
      */
@@ -637,7 +642,7 @@ class Blueprint
     }
 
     /**
-     * Add a "deleted at" timestamp for the table.
+     * Ajoutez un horodatage « supprimé à » pour la table.
      *
      * @return \Two\Support\Fluent
      */
@@ -647,7 +652,7 @@ class Blueprint
     }
 
     /**
-     * Create a new binary column on the table.
+     * Créez une nouvelle colonne binaire sur la table.
      *
      * @param  string  $column
      * @return \Two\Support\Fluent
@@ -658,7 +663,7 @@ class Blueprint
     }
 
     /**
-     * Add the proper columns for a polymorphic table.
+     * Ajoutez les colonnes appropriées pour une table polymorphe.
      *
      * @param  string  $name
      * @param  string|null  $indexName
@@ -674,7 +679,7 @@ class Blueprint
     }
 
     /**
-     * Adds the `remember_token` column to the table.
+     * Ajoute la colonne `remember_token` au tableau.
      *
      * @return \Two\Support\Fluent
      */
@@ -684,7 +689,7 @@ class Blueprint
     }
 
     /**
-     * Create a new drop index command on the blueprint.
+     * Créez une nouvelle commande drop index sur le plan.
      *
      * @param  string  $command
      * @param  string  $type
@@ -695,9 +700,9 @@ class Blueprint
     {
         $columns = array();
 
-        // If the given "index" is actually an array of columns, the developer means
-        // to drop an index merely by specifying the columns involved without the
-        // conventional name, so we will build the index name from the columns.
+        // Si "l'index" donné est en réalité un tableau de colonnes, le développeur veut dire
+        // pour supprimer un index simplement en spécifiant les colonnes impliquées sans le
+        // nom conventionnel, nous allons donc construire le nom de l'index à partir des colonnes.
         if (is_array($index)) {
             $columns = $index;
 
@@ -708,7 +713,7 @@ class Blueprint
     }
 
     /**
-     * Add a new index command to the blueprint.
+     * Ajoutez une nouvelle commande d'index au plan.
      *
      * @param  string        $type
      * @param  string|array  $columns
@@ -719,9 +724,9 @@ class Blueprint
     {
         $columns = (array) $columns;
 
-        // If no name was specified for this index, we will create one using a basic
-        // convention of the table name, followed by the columns, followed by an
-        // index type, such as primary or index, which makes the index unique.
+        // Si aucun nom n'a été spécifié pour cet index, nous en créerons un en utilisant un fichier de base
+        // convention du nom de la table, suivi des colonnes, suivi d'un
+        // Type d'index, tel que primaire ou index, qui rend l'index unique.
         if (is_null($index)) {
             $index = $this->createIndexName($type, $columns);
         }
@@ -730,7 +735,7 @@ class Blueprint
     }
 
     /**
-     * Create a default index name for the table.
+     * Créez un nom d'index par défaut pour la table.
      *
      * @param  string  $type
      * @param  array   $columns
@@ -744,7 +749,7 @@ class Blueprint
     }
 
     /**
-     * Add a new column to the blueprint.
+     * Ajoutez une nouvelle colonne au plan.
      *
      * @param  string  $type
      * @param  string  $name
@@ -761,7 +766,7 @@ class Blueprint
     }
 
     /**
-     * Remove a column from the schema blueprint.
+     * Supprimez une colonne du plan de schéma.
      *
      * @param  string  $name
      * @return $this
@@ -777,7 +782,7 @@ class Blueprint
     }
 
     /**
-     * Add a new command to the blueprint.
+     * Ajoutez une nouvelle commande au plan.
      *
      * @param  string  $name
      * @param  array  $parameters
@@ -791,7 +796,7 @@ class Blueprint
     }
 
     /**
-     * Create a new Fluent command.
+     * Créez une nouvelle commande Fluent.
      *
      * @param  string  $name
      * @param  array   $parameters
@@ -803,7 +808,7 @@ class Blueprint
     }
 
     /**
-     * Get the table the blueprint describes.
+     * Obtenez le tableau décrit par le plan.
      *
      * @return string
      */
@@ -813,7 +818,7 @@ class Blueprint
     }
 
     /**
-     * Get the columns that should be added.
+     * Obtenez les colonnes qui doivent être ajoutées.
      *
      * @return array
      */
@@ -823,7 +828,7 @@ class Blueprint
     }
 
     /**
-     * Get the commands on the blueprint.
+     * Obtenez les commandes sur le plan.
      *
      * @return array
      */

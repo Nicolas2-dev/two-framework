@@ -1,11 +1,17 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Config;
-
-use Two\Support\NamespacedItemResolver;
 
 use Closure;
 use ArrayAccess;
+
+use Two\Container\NamespacedItemResolver;
+use Two\Config\Contracts\LoaderInterface;
 
 
 class Repository extends NamespacedItemResolver implements ArrayAccess
@@ -14,7 +20,7 @@ class Repository extends NamespacedItemResolver implements ArrayAccess
     /**
      * L'implémentation du chargeur.
      *
-     * @var \Two\Config\LoaderInterface
+     * @var \Two\Config\Contracts\LoaderInterface
      */
     protected $loader;
 
@@ -50,7 +56,7 @@ class Repository extends NamespacedItemResolver implements ArrayAccess
     /**
      * Créer un nouveau référentiel de configuration.
      *
-     * @param  \Two\Config\LoaderInterface  $loader
+     * @param  \Two\Config\Contracts\LoaderInterface  $loader
      * @param  string  $environment
      * @return void
      */
@@ -321,7 +327,7 @@ class Repository extends NamespacedItemResolver implements ArrayAccess
     /**
      * Obtenez l'implémentation du chargeur.
      *
-     * @return \Two\Config\LoaderInterface
+     * @return \Two\Config\Contracts\LoaderInterface
      */
     public function getLoader()
     {
@@ -331,7 +337,7 @@ class Repository extends NamespacedItemResolver implements ArrayAccess
     /**
      * Définir l'implémentation du chargeur.
      *
-     * @param  \Two\Config\LoaderInterface  $loader
+     * @param  \Two\Config\Contracts\LoaderInterface  $loader
      * @return void
      */
     public function setLoader(LoaderInterface $loader)

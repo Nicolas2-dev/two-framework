@@ -1,15 +1,20 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Failed;
 
-use Two\Queue\Failed\FailedJobProviderInterface;
+use Two\Queue\Contracts\Failed\FailedJobProviderInterface;
 
 
 
 class NullFailedJobProvider implements FailedJobProviderInterface
 {
     /**
-     * Log a failed job into storage.
+     * Enregistrez une tâche ayant échoué dans le stockage.
      *
      * @param  string  $connection
      * @param  string  $queue
@@ -22,7 +27,7 @@ class NullFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Get a list of all of the failed jobs.
+     * Obtenez une liste de toutes les tâches ayant échoué.
      *
      * @return array
      */
@@ -32,7 +37,7 @@ class NullFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Get a single failed job.
+     * Obtenez un seul travail échoué.
      *
      * @param  mixed  $id
      * @return array
@@ -43,7 +48,7 @@ class NullFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Delete a single failed job from storage.
+     * Supprimez une seule tâche ayant échoué du stockage.
      *
      * @param  mixed  $id
      * @return bool
@@ -54,7 +59,7 @@ class NullFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Flush all of the failed jobs from storage.
+     * Videz toutes les tâches ayant échoué du stockage.
      *
      * @return void
      */

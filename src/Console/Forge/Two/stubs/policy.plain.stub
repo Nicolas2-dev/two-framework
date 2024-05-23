@@ -1,0 +1,22 @@
+<?php
+
+namespace {{namespace}};
+
+use Two\Auth\Access\Traits\HandlesAuthorizationTrait;
+
+
+class {{className}}
+{
+    use HandlesAuthorizationTrait;
+
+
+    /**
+     * Créez une nouvelle instance {{className}}.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+}

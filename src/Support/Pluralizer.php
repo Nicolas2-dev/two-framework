@@ -1,7 +1,11 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support;
-
 
 use Doctrine\Inflector\InflectorFactory;
 
@@ -9,14 +13,14 @@ use Doctrine\Inflector\InflectorFactory;
 class Pluralizer
 {
     /**
-     * The cached inflector instance.
+     * L'instance d'inflecteur mise en cache.
      *
      * @var static
      */
     protected static $inflector;
     
     /**
-     * The language that should be used by the inflector.
+     * La langue qui doit être utilisée par l'inflecteur.
      *
      * @var string
      */
@@ -121,7 +125,7 @@ class Pluralizer
     }
 
     /**
-     * Get the inflector instance.
+     * Obtenez l’instance d’inflecteur.
      *
      * @return \Doctrine\Inflector\Inflector
      */

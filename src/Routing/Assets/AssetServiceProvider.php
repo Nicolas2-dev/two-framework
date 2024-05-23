@@ -1,17 +1,23 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Routing\Assets;
 
-use Two\Routing\Assets\AssetDispatcher;
 use Two\Routing\Assets\AssetManager;
-use Two\Support\ServiceProvider;
+use Two\Routing\Assets\AssetDispatcher;
+
+use Two\Application\Providers\ServiceProvider;
 
 
 class AssetServiceProvider extends ServiceProvider
 {
 
     /**
-     * Register the Service Provider.
+     * Enregistrez le fournisseur de services.
      *
      * @return void
      */
@@ -23,7 +29,7 @@ class AssetServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Asset Manager instance.
+     * Enregistrez l'instance Asset Manager.
      *
      * @return void
      */
@@ -36,7 +42,7 @@ class AssetServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Assets Dispatcher instance.
+     * Enregistrez l’instance Assets Dispatcher.
      *
      * @return void
      */

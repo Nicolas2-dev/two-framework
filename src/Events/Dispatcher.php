@@ -1,18 +1,20 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Events;
-
-use Two\Broadcasting\ShouldBroadcastInterface;
-use Two\Broadcasting\ShouldBroadcastNowInterface;
-
-use Two\Container\Container;
-
-use Two\Events\DispatcherInterface;
-
-use Two\Support\Str;
 
 use Exception;
 use ReflectionClass;
+
+use Two\Support\Str;
+use Two\Container\Container;
+use Two\Events\Contracts\DispatcherInterface;
+use Two\Broadcasting\Contracts\ShouldBroadcastInterface;
+use Two\Broadcasting\Contracts\ShouldBroadcastNowInterface;
 
 
 class Dispatcher implements DispatcherInterface
@@ -257,7 +259,7 @@ class Dispatcher implements DispatcherInterface
     /**
      * Diffusez la classe d'événement donnée.
      *
-     * @param  \Two\Broadcasting\ShouldBroadcastInterface  $event
+     * @param  \Two\Broadcasting\Contracts\ShouldBroadcastInterface  $event
      * @return void
      */
     protected function broadcastEvent($event)
@@ -409,7 +411,7 @@ class Dispatcher implements DispatcherInterface
     protected function handlerShouldBeQueued($className)
     {
         try {
-            return with(new ReflectionClass($className))->implementsInterface('Two\Queue\ShouldQueueInterface');
+            return with(new ReflectionClass($className))->implementsInterface('Two\Queue\Contracts\ShouldQueueInterface');
         }
         catch (Exception $e) {
             return false;

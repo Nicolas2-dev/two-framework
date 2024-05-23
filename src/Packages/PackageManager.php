@@ -1,21 +1,26 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Packages;
-
-use Two\Foundation\Application;
-use Two\Packages\Exception\ProviderMissingException;
-use Two\Packages\Repository;
-use Two\Support\Arr;
-use Two\Support\Str;
 
 use Exception;
 use LogicException;
+
+use Two\Support\Arr;
+use Two\Support\Str;
+use Two\Application\Two;
+use Two\Packages\Repository;
+use Two\Packages\Exception\ProviderMissingException;
 
 
 class PackageManager
 {
     /**
-     * @var \Two\Foundation\Application
+     * @var \Two\Application\Two
      */
     protected $app;
 
@@ -26,11 +31,11 @@ class PackageManager
 
 
     /**
-     * Create a new Package Manager instance.
+     * Créez une nouvelle instance du gestionnaire de packages.
      *
-     * @param Application $app
+     * @param \Two\Application\Two $app
      */
-    public function __construct(Application $app, Repository $repository)
+    public function __construct(Two $app, Repository $repository)
     {
         $this->app = $app;
 
@@ -38,7 +43,7 @@ class PackageManager
     }
 
     /**
-     * Register the Package service provider file from all Packages.
+     * Enregistrez le fichier du fournisseur de services de package de tous les packages.
      *
      * @return mixed
      */
@@ -54,13 +59,13 @@ class PackageManager
                 $this->app->register($provider);
             }
             catch (Exception $e) {
-                // Do nothing.
+                // Ne fais rien.
             }
         });
     }
 
     /**
-     * Resolve the class name of a Package Service Provider.
+     * Résolvez le nom de classe d’un fournisseur de services de package.
      *
      * @param array $properties
      *
@@ -75,7 +80,7 @@ class PackageManager
 
         $namespace = Arr::get($properties, 'namespace', str_replace('/', '\\', $name));
 
-        // The default service provider from a package should be named like:
+        // Le fournisseur de services par défaut d'un package doit être nommé comme :
         // AcmeCorp\Pages\Providers\PackageServiceProvider
 
         $type = Arr::get($properties, 'type', 'package');
@@ -86,7 +91,7 @@ class PackageManager
             return $provider;
         }
 
-        // The alternate service provider from a package should be named like:
+        // Le fournisseur de services alternatif d'un package doit être nommé comme :
         // AcmeCorp\Pages\PageServiceProvider
 
         $basename = Arr::get($properties, 'basename', basename($name));
@@ -101,7 +106,7 @@ class PackageManager
     }
 
     /**
-     * Resolve the correct Package files path.
+     * Résolvez le chemin correct des fichiers du package.
      *
      * @param array $properties
      *
@@ -119,7 +124,7 @@ class PackageManager
     }
 
     /**
-     * Dynamically pass methods to the repository.
+     * Transmettez dynamiquement les méthodes au référentiel.
      *
      * @param string $method
      * @param mixed  $arguments

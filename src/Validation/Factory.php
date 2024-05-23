@@ -1,60 +1,65 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Validation;
+
+use Closure;
 
 use Two\Config\Repository as Config;
 use Two\Support\Str;
 use Two\Validation\DatabasePresenceVerifier;
 
-use Closure;
-
 
 class Factory
 {
     /**
-     * The Config instance.
+     * L'instance de configuration.
      *
      * @var \Two\Config\Repository
      */
     protected $config;
 
     /**
-     * The Database Presence Verifier instance.
+     * Instance du vérificateur de présence de base de données.
      *
      * @var \Two\Validation\DatabasePresenceVerifier
      */
     protected $verifier;
 
     /**
-     * All of the custom validator extensions.
+     * Toutes les extensions de validateur personnalisées.
      *
      * @var array
      */
     protected $extensions = array();
 
     /**
-     * All of the custom implicit validator extensions.
+     * Toutes les extensions de validateur implicites personnalisées.
      *
      * @var array
      */
     protected $implicitExtensions = array();
 
     /**
-     * All of the custom validator message replacers.
+     * Tous les remplaçants de messages du validateur personnalisé.
      *
      * @var array
      */
     protected $replacers = array();
 
     /**
-     * All of the fallback messages for custom rules.
+     * Tous les messages de secours pour les règles personnalisées.
      *
      * @var array
      */
     protected $fallbackMessages = array();
 
     /**
-     * The Validator resolver instance.
+     * L'instance du résolveur Validator.
      *
      * @var Closure
      */
@@ -62,7 +67,7 @@ class Factory
 
 
     /**
-     * Create a new Validator Factory instance.
+     * Créez une nouvelle instance de Validator Factory.
      *
      * @param  \Two\Validation\Translator  $translator
      * @return void
@@ -73,7 +78,7 @@ class Factory
     }
 
     /**
-     * Create a new Validator instance.
+     * Créez une nouvelle instance de validateur.
      *
      * @param  array  $data
      * @param  array  $rules
@@ -94,7 +99,7 @@ class Factory
     }
 
     /**
-     * Add the extensions to a validator instance.
+     * Ajoutez les extensions à une instance de validateur.
      *
      * @param  \Two\Validation\Validator  $validator
      * @return void
@@ -113,7 +118,7 @@ class Factory
     }
 
     /**
-     * Resolve a new Validator instance.
+     * Résolvez une nouvelle instance de Validator.
      *
      * @param  array  $data
      * @param  array  $rules
@@ -130,7 +135,7 @@ class Factory
     }
 
     /**
-     * Register a custom Validator extension.
+     * Enregistrez une extension de validateur personnalisée.
      *
      * @param  string  $rule
      * @param  \Closure|string  $extension
@@ -149,7 +154,7 @@ class Factory
     }
 
     /**
-     * Register a custom implicit Validator extension.
+     * Enregistrez une extension Validator implicite personnalisée.
      *
      * @param  string   $rule
      * @param  \Closure|string  $extension
@@ -168,7 +173,7 @@ class Factory
     }
 
     /**
-     * Register a custom implicit Validator message replacer.
+     * Enregistrez un remplacement de message de validation implicite personnalisé.
      *
      * @param  string   $rule
      * @param  \Closure|string  $replacer
@@ -180,7 +185,7 @@ class Factory
     }
 
     /**
-     * Set the Validator instance resolver.
+     * Définissez le résolveur d'instance Validator.
      *
      * @param  Closure  $resolver
      * @return void
@@ -191,7 +196,7 @@ class Factory
     }
 
     /**
-     * Get the Config instance.
+     * Obtenez l'instance de configuration.
      *
      * @return \Two\Config\Repository
      */
@@ -201,7 +206,7 @@ class Factory
     }
 
     /**
-     * Get the database presence verifier instance.
+     * Obtenez l’instance du vérificateur de présence de base de données.
      *
      * @return \Two\Validation\DatabasePresenceVerifier
      */
@@ -211,7 +216,7 @@ class Factory
     }
 
     /**
-     * Set the database presence verifier implementation.
+     * Définissez l’implémentation du vérificateur de présence de base de données.
      *
      * @param  \Two\Validation\DatabasePresenceVerifier  $presenceVerifier
      * @return void

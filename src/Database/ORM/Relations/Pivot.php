@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM\Relations;
 
 use Two\Database\ORM\Model;
@@ -9,35 +14,35 @@ use Two\Database\ORM\Builder;
 class Pivot extends Model
 {
     /**
-     * The parent model of the relationship.
+     * Le modèle parent de la relation.
      *
      * @var \Two\Database\ORM\Model
      */
     protected $parent;
 
     /**
-     * The name of the foreign key column.
+     * Le nom de la colonne de clé étrangère.
      *
      * @var string
      */
     protected $foreignKey;
 
     /**
-     * The name of the "other key" column.
+     * Le nom de la colonne « autre clé ».
      *
      * @var string
      */
     protected $otherKey;
 
     /**
-     * The attributes that aren't mass assignable.
+     * Les attributs qui ne sont pas attribuables en masse.
      *
      * @var array
      */
     protected $guarded = array();
 
     /**
-     * Create a new pivot model instance.
+     * Créez une nouvelle instance de modèle pivot.
      *
      * @param  \Two\Database\ORM\Model  $parent
      * @param  array   $attributes
@@ -65,7 +70,7 @@ class Pivot extends Model
     }
 
     /**
-     * Set the keys for a save update query.
+     * Définissez les clés pour une requête de mise à jour de sauvegarde.
      *
      * @param  \Two\Database\ORM\Builder
      * @return \Two\Database\ORM\Builder
@@ -78,7 +83,7 @@ class Pivot extends Model
     }
 
     /**
-     * Delete the pivot model record from the database.
+     * Supprimez l'enregistrement du modèle pivot de la base de données.
      *
      * @return int
      */
@@ -88,7 +93,7 @@ class Pivot extends Model
     }
 
     /**
-     * Get the query builder for a delete operation on the pivot.
+     * Obtenez le générateur de requêtes pour une opération de suppression sur le pivot.
      *
      * @return \Two\Database\ORM\Builder
      */
@@ -102,7 +107,7 @@ class Pivot extends Model
     }
 
     /**
-     * Get the foreign key column name.
+     * Obtenez le nom de la colonne de clé étrangère.
      *
      * @return string
      */
@@ -112,7 +117,7 @@ class Pivot extends Model
     }
 
     /**
-     * Get the "other key" column name.
+     * Obtenez le nom de la colonne « autre clé ».
      *
      * @return string
      */
@@ -122,7 +127,7 @@ class Pivot extends Model
     }
 
     /**
-     * Set the key names for the pivot model instance.
+     * Définissez les noms de clé pour l'instance de modèle pivot.
      *
      * @param  string  $foreignKey
      * @param  string  $otherKey
@@ -138,7 +143,7 @@ class Pivot extends Model
     }
 
     /**
-     * Determine if the pivot model has timestamp attributes.
+     * Déterminez si le modèle pivot possède des attributs d'horodatage.
      *
      * @return bool
      */
@@ -148,7 +153,7 @@ class Pivot extends Model
     }
 
     /**
-     * Get the name of the "created at" column.
+     * Obtenez le nom de la colonne "créé à".
      *
      * @return string
      */
@@ -158,7 +163,7 @@ class Pivot extends Model
     }
 
     /**
-     * Get the name of the "updated at" column.
+     * Obtenez le nom de la colonne « mis à jour à ».
      *
      * @return string
      */

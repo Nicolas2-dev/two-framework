@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM\Relations;
 
 use Two\Database\ORM\Model;
@@ -11,28 +16,28 @@ use Two\Database\ORM\Collection;
 class BelongsTo extends Relation
 {
     /**
-     * The foreign key of the parent model.
+     * La clé étrangère du modèle parent.
      *
      * @var string
      */
     protected $foreignKey;
 
     /**
-     * The associated key on the parent model.
+     * La clé associée sur le modèle parent.
      *
      * @var string
      */
     protected $otherKey;
 
     /**
-     * The name of the relationship.
+     * Le nom de la relation.
      *
      * @var string
      */
     protected $relation;
 
     /**
-     * Create a new belongs to relationship instance.
+     * Créez une nouvelle instance de relation Appartient à.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Model  $parent
@@ -51,7 +56,7 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Get the results of the relationship.
+     * Obtenez les résultats de la relation.
      *
      * @return mixed
      */
@@ -61,7 +66,7 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Set the base constraints on the relation query.
+     * Définissez les contraintes de base sur la requête relationnelle.
      *
      * @return void
      */
@@ -75,7 +80,7 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Add the constraints for a relationship count query.
+     * Ajoutez les contraintes pour une requête de nombre de relations.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Builder  $parent
@@ -91,7 +96,7 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Set the constraints for an eager load of the relation.
+     * Définissez les contraintes pour un chargement hâtif de la relation.
      *
      * @param  array  $models
      * @return void
@@ -104,7 +109,7 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Gather the keys from an array of related models.
+     * Rassemblez les clés d’un éventail de modèles associés.
      *
      * @param  array  $models
      * @return array
@@ -127,7 +132,7 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Initialize the relation on a set of models.
+     * Initialisez la relation sur un ensemble de modèles.
      *
      * @param  array   $models
      * @param  string  $relation
@@ -143,7 +148,7 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Match the eagerly loaded results to their parents.
+     * Faites correspondre les résultats chargés avec impatience à leurs parents.
      *
      * @param  array   $models
      * @param  \Two\Database\ORM\Collection  $results
@@ -172,7 +177,7 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Associate the model instance to the given parent.
+     * Associez l'instance de modèle au parent donné.
      *
      * @param  \Two\Database\ORM\Model  $model
      * @return \Two\Database\ORM\Model
@@ -185,7 +190,7 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Dissociate previously associated model from the given parent.
+     * Dissocier le modèle précédemment associé du parent donné.
      *
      * @return \Two\Database\ORM\Model
      */
@@ -197,7 +202,7 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Update the parent model on the relationship.
+     * Mettez à jour le modèle parent sur la relation.
      *
      * @param  array  $attributes
      * @return mixed
@@ -210,7 +215,7 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Get the foreign key of the relationship.
+     * Obtenez la clé étrangère de la relation.
      *
      * @return string
      */
@@ -220,7 +225,7 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Get the fully qualified foreign key of the relationship.
+     * Obtenez la clé étrangère pleinement qualifiée de la relation.
      *
      * @return string
      */
@@ -230,7 +235,7 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Get the associated key of the relationship.
+     * Obtenez la clé associée à la relation.
      *
      * @return string
      */
@@ -240,7 +245,7 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Get the fully qualified associated key of the relationship.
+     * Obtenez la clé associée pleinement qualifiée de la relation.
      *
      * @return string
      */

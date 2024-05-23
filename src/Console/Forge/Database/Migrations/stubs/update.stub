@@ -1,0 +1,35 @@
+<?php
+
+use Two\Database\Schema\Blueprint;
+use Two\Database\Migrations\Migration;
+
+
+class {{class}} extends Migration
+{
+    /**
+     * Exécutez les migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('{{table}}', function (Blueprint $table)
+        {
+            //
+        });
+    }
+
+    /**
+     * Inversez les migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('{{table}}', function (Blueprint $table)
+        {
+            //
+        });
+    }
+
+}

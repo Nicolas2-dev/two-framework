@@ -1,10 +1,19 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Log;
 
-use Two\Events\DispatcherInterface as EventsDispatcher;
-use Two\Contracts\JsonableInterface as Jsonable;
-use Two\Contracts\ArrayableInterface as Arrayable;
+use Closure;
+use RuntimeException;
+use InvalidArgumentException;
+
+use Two\Events\Contracts\DispatcherInterface as EventsDispatcher;
+use Two\Application\Contracts\JsonableInterface as Jsonable;
+use Two\Application\Contracts\ArrayableInterface as Arrayable;
 
 use Monolog\Handler\SyslogHandler;
 use Monolog\Handler\StreamHandler;
@@ -15,29 +24,26 @@ use Monolog\Handler\RotatingFileHandler;
 
 use Psr\Log\LoggerInterface as PsrLoggerInterface;
 
-use Closure;
-use RuntimeException;
-use InvalidArgumentException;
-
 
 class Writer implements PsrLoggerInterface
 {
+
     /**
-     * The Monolog logger instance.
+     * L'instance de l'enregistreur Monolog.
      *
      * @var \Monolog\Logger
      */
     protected $monolog;
 
     /**
-     * The event dispatcher instance.
+     * Instance du répartiteur d’événements.
      *
-     * @var \Two\Events\DispatcherInterface
+     * @var \Two\Events\Contracts\DispatcherInterface
      */
     protected $events;
 
     /**
-     * The Log levels.
+     * Les niveaux de journalisation.
      *
      * @var array
      */
@@ -54,10 +60,10 @@ class Writer implements PsrLoggerInterface
 
 
     /**
-     * Create a new log writer instance.
+     * Créez une nouvelle instance de rédacteur de journal.
      *
      * @param  \Monolog\Logger  $monolog
-     * @param  \Two\Events\DispatcherInterface  $dispatcher
+     * @param  \Two\Events\Contracts\DispatcherInterface  $dispatcher
      * @return void
      */
     public function __construct(MonologLogger $monolog, EventsDispatcher $events = null)
@@ -70,7 +76,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Log an emergency message to the logs.
+     * Enregistrez un message d'urgence dans les journaux.
      *
      * @param  string  $message
      * @param  array  $context
@@ -82,7 +88,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Log an alert message to the logs.
+     * Enregistrez un message d'alerte dans les journaux.
      *
      * @param  string  $message
      * @param  array  $context
@@ -94,7 +100,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Log a critical message to the logs.
+     * Enregistrez un message critique dans les journaux.
      *
      * @param  string  $message
      * @param  array  $context
@@ -106,7 +112,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Log an error message to the logs.
+     * Enregistrez un message d'erreur dans les journaux.
      *
      * @param  string  $message
      * @param  array  $context
@@ -118,7 +124,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Log a warning message to the logs.
+     * Enregistrez un message d'avertissement dans les journaux.
      *
      * @param  string  $message
      * @param  array  $context
@@ -130,7 +136,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Log a notice to the logs.
+     * Enregistrez un avis dans les journaux.
      *
      * @param  string  $message
      * @param  array  $context
@@ -142,7 +148,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Log an informational message to the logs.
+     * Enregistrez un message d'information dans les journaux.
      *
      * @param  string  $message
      * @param  array  $context
@@ -154,7 +160,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Log a debug message to the logs.
+     * Enregistrez un message de débogage dans les journaux.
      *
      * @param  string  $message
      * @param  array  $context
@@ -166,7 +172,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Log a message to the logs.
+     * Enregistrez un message dans les journaux.
      *
      * @param  string  $level
      * @param  string  $message
@@ -179,7 +185,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Dynamically pass log calls into the writer.
+     * Transmettez dynamiquement les appels de journal au rédacteur.
      *
      * @param  string  $level
      * @param  string  $message
@@ -192,7 +198,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Write a message to Monolog.
+     * Écrivez un message à Monologue.
      *
      * @param  string  $level
      * @param  string  $message
@@ -207,7 +213,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Register a file log handler.
+     * Enregistrez un gestionnaire de journaux de fichiers.
      *
      * @param  string  $path
      * @param  string  $level
@@ -221,7 +227,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Register a daily file log handler.
+     * Enregistrez un gestionnaire de journaux de fichiers quotidien.
      *
      * @param  string  $path
      * @param  int     $days
@@ -238,7 +244,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Register a Syslog handler.
+     * Enregistrez un gestionnaire Syslog.
      *
      * @param  string  $name
      * @param  string  $level
@@ -250,7 +256,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Register an error_log handler.
+     * Enregistrez un gestionnaire error_log.
      *
      * @param  string  $level
      * @param  int  $messageType
@@ -266,7 +272,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Register a new callback handler for when a log event is triggered.
+     * Enregistrez un nouveau gestionnaire de rappel lorsqu'un événement de journal est déclenché.
      *
      * @param  \Closure  $callback
      * @return void
@@ -283,7 +289,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Fires a log event.
+     * Déclenche un événement de journal.
      *
      * @param  string  $level
      * @param  string  $message
@@ -298,7 +304,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Format the parameters for the logger.
+     * Formatez les paramètres de l'enregistreur.
      *
      * @param  mixed  $message
      * @return mixed
@@ -317,7 +323,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Parse the string level into a Monolog constant.
+     * Analysez le niveau de chaîne en une constante Monolog.
      *
      * @param  string  $level
      * @return int
@@ -334,7 +340,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Get the underlying Monolog instance.
+     * Obtenez l'instance Monolog sous-jacente.
      *
      * @return \Monolog\Logger
      */
@@ -344,7 +350,7 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Get a defaut Monolog formatter instance.
+     * Obtenez une instance de formateur Monolog par défaut.
      *
      * @return \Monolog\Formatter\LineFormatter
      */
@@ -354,9 +360,9 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Get the event dispatcher instance.
+     * Obtenez l’instance du répartiteur d’événements.
      *
-     * @return \Two\Events\DispatcherInterface
+     * @return \Two\Events\Contracts\DispatcherInterface
      */
     public function getEventDispatcher()
     {
@@ -364,9 +370,9 @@ class Writer implements PsrLoggerInterface
     }
 
     /**
-     * Set the event dispatcher instance.
+     * Définissez l’instance du répartiteur d’événements.
      *
-     * @param  \Two\Events\DispatcherInterface  $events
+     * @param  \Two\Events\Contracts\DispatcherInterface  $events
      * @return void
      */
     public function setEventDispatcher(EventsDispatcher $events)

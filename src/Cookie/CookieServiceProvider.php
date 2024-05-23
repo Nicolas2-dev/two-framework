@@ -1,22 +1,21 @@
 <?php
 /**
- * CookieServiceProvider - Implements a Service Provider for CookieJar.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
  */
-
 namespace Two\Cookie;
 
 use Two\Cookie\CookieJar;
 
-use Two\Support\ServiceProvider;
+use Two\Application\Providers\ServiceProvider;
 
 
 class CookieServiceProvider extends ServiceProvider
 {
     /**
-     * Register the Service Provider.
+     * Enregistrez le fournisseur de services.
      *
      * @return void
      */

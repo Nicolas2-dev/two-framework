@@ -1,0 +1,83 @@
+<?php
+
+namespace {{namespace}};
+
+use Two\Routing\Controller as BaseController;
+
+
+class {{className}} extends BaseController
+{
+    /**
+     * Afficher une liste de la ressource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Afficher le formulaire de création d'une nouvelle ressource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Stockez une ressource nouvellement créée dans le stockage.
+     *
+     * @return Response
+     */
+    public function store()
+    {
+        //
+    }
+
+    /**
+     * Affiche la ressource spécifiée.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Afficher le formulaire de modification de la ressource spécifiée.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Mettez à jour la ressource spécifiée dans le stockage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function update($id)
+    {
+        //
+    }
+
+    /**
+     * Supprimez la ressource spécifiée du stockage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+}

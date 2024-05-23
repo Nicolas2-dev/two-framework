@@ -1,11 +1,16 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Auth;
 
-use Two\Auth\GuardHelpersTrait;
-use Two\Auth\GuardInterface;
-use Two\Auth\UserProviderInterface;
 use Two\Http\Request;
+use Two\Auth\Contracts\GuardInterface;
+use Two\Auth\Contracts\UserProviderInterface;
+use Two\Auth\Traits\GuardHelpersTrait;
 
 
 class TokenGuard implements GuardInterface
@@ -37,7 +42,7 @@ class TokenGuard implements GuardInterface
     /**
      * Create a new authentication guard.
      *
-     * @param  \Two\Auth\UserProviderInterface  $provider
+     * @param  \Two\Auth\Contracts\UserProviderInterface  $provider
      * @param  \Two\Http\Request  $request
      * @return void
      */
@@ -53,7 +58,7 @@ class TokenGuard implements GuardInterface
     /**
      * Get the currently authenticated user.
      *
-     * @return \Two\Auth\UserInterface|null
+     * @return \Two\Auth\Contracts\UserInterface|null
      */
     public function user()
     {

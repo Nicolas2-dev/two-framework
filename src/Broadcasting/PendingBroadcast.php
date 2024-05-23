@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Broadcasting;
 
 use Two\Events\Dispatcher;
@@ -8,14 +13,14 @@ use Two\Events\Dispatcher;
 class PendingBroadcast
 {
     /**
-     * The event dispatcher implementation.
+     * L’implémentation du répartiteur d’événements.
      *
      * @var \Two\Events\Dispatcher
      */
     protected $events;
 
     /**
-     * The event instance.
+     * L'instance d'événement.
      *
      * @var mixed
      */
@@ -23,7 +28,7 @@ class PendingBroadcast
 
 
     /**
-     * Create a new pending broadcast instance.
+     * Créez une nouvelle instance de diffusion en attente.
      *
      * @param  \Two\Events\Dispatcher  $events
      * @param  mixed  $event
@@ -36,7 +41,7 @@ class PendingBroadcast
     }
 
     /**
-     * Handle the object's destruction.
+     * Gérez la destruction de l'objet.
      *
      * @return void
      */
@@ -46,7 +51,7 @@ class PendingBroadcast
     }
 
     /**
-     * Broadcast the event to everyone except the current user.
+     * Diffusez l'événement à tout le monde sauf à l'utilisateur actuel.
      *
      * @return $this
      */

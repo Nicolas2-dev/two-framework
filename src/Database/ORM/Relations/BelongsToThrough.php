@@ -1,47 +1,52 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM\Relations;
 
-use Two\Database\ORM\Relations\Relation;
+use Two\Database\ORM\Model;
 use Two\Database\ORM\Builder;
 use Two\Database\ORM\Collection;
-use Two\Database\ORM\Model;
-use Two\Database\ORM\ModelNotFoundException;
 use Two\Database\Query\Expression;
+use Two\Database\ORM\Relations\Relation;
+use Two\Database\Exception\ModelNotFoundException;
 
 
 class BelongsToThrough extends Relation
 {
     /**
-     * The distance parent model instance.
+     * Instance de modèle parent à distance.
      *
      * @var \Two\Database\ORM\Model
      */
     protected $farParent;
 
     /**
-     * The near key on the relationship.
+     * La clé la plus proche de la relation.
      *
      * @var string
      */
     protected $firstKey;
 
     /**
-     * The far key on the relationship.
+     * La clé lointaine de la relation.
      *
      * @var string
      */
     protected $secondKey;
 
     /**
-     * The local key on the relationship.
+     * La clé locale sur la relation.
      *
      * @var string
      */
     protected $localKey;
 
     /**
-     * Create a new has many through relationship instance.
+     * Créez une nouvelle instance de relation à plusieurs voies.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Model  $farParent
@@ -62,7 +67,7 @@ class BelongsToThrough extends Relation
     }
 
     /**
-     * Set the base constraints on the relation query.
+     * Définissez les contraintes de base sur la requête relationnelle.
      *
      * @return void
      */
@@ -80,7 +85,7 @@ class BelongsToThrough extends Relation
     }
 
     /**
-     * Add the constraints for a relationship count query.
+     * Ajoutez les contraintes pour une requête de nombre de relations.
      *
      * @param  \Two\Database\ORM\Builder  $query
      * @param  \Two\Database\ORM\Builder  $parent
@@ -100,7 +105,7 @@ class BelongsToThrough extends Relation
     }
 
     /**
-     * Set the join clause on the query.
+     * Définissez la clause de jointure sur la requête.
      *
      * @param  \Two\Database\ORM\Builder|null  $query
      * @return void
@@ -117,7 +122,7 @@ class BelongsToThrough extends Relation
     }
 
     /**
-     * Set the constraints for an eager load of the relation.
+     * Définissez les contraintes pour un chargement hâtif de la relation.
      *
      * @param  array  $models
      * @return void
@@ -130,7 +135,7 @@ class BelongsToThrough extends Relation
     }
 
     /**
-     * Initialize the relation on a set of models.
+     * Initialisez la relation sur un ensemble de modèles.
      *
      * @param  array   $models
      * @param  string  $relation
@@ -146,7 +151,7 @@ class BelongsToThrough extends Relation
     }
 
     /**
-     * Match the eagerly loaded results to their parents.
+     * Faites correspondre les résultats chargés avec impatience à leurs parents.
      *
      * @param  array   $models
      * @param  \Two\Database\ORM\Collection  $results
@@ -171,7 +176,7 @@ class BelongsToThrough extends Relation
     }
 
     /**
-     * Build model dictionary keyed by the relation's foreign key.
+     * Construisez un dictionnaire de modèle saisi par la clé étrangère de la relation.
      *
      * @param  \Two\Database\ORM\Collection  $results
      * @return array
@@ -190,7 +195,7 @@ class BelongsToThrough extends Relation
     }
 
     /**
-     * Get the results of the relationship.
+     * Obtenez les résultats de la relation.
      *
      * @return mixed
      */
@@ -200,7 +205,7 @@ class BelongsToThrough extends Relation
     }
 
     /**
-     * Execute the query and get the first related model.
+     * Exécutez la requête et obtenez le premier modèle associé.
      *
      * @param  array   $columns
      * @return mixed
@@ -213,12 +218,12 @@ class BelongsToThrough extends Relation
     }
 
     /**
-     * Execute the query and get the first result or throw an exception.
+     * Exécutez la requête et obtenez le premier résultat ou lancez une exception.
      *
      * @param  array  $columns
      * @return \Two\Database\ORM\Model|static
      *
-     * @throws \Two\Database\ORM\ModelNotFoundException
+     * @throws \Two\Database\Exception\ModelNotFoundException
      */
     public function firstOrFail($columns = array('*'))
     {
@@ -230,7 +235,7 @@ class BelongsToThrough extends Relation
     }
 
     /**
-     * Execute the query as a "select" statement.
+     * Exécutez la requête en tant qu'instruction "select".
      *
      * @param  array  $columns
      * @return \Two\Database\ORM\Collection
@@ -251,7 +256,7 @@ class BelongsToThrough extends Relation
     }
 
     /**
-     * Set the select clause for the relation query.
+     * Définissez la clause select pour la requête de relation.
      *
      * @param  array  $columns
      * @return array
@@ -266,7 +271,7 @@ class BelongsToThrough extends Relation
     }
 
     /**
-     * Get the key for comparing against the parent key in "has" query.
+     * Obtenez la clé à comparer avec la clé parent dans la requête "has".
      *
      * @return string
      */

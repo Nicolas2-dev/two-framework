@@ -1,0 +1,87 @@
+<?php
+
+namespace {{namespace}}\Providers;
+
+use Two\Packages\Providers\PackageServiceProvider as ServiceProvider;
+
+
+class PackageServiceProvider extends ServiceProvider
+{
+    /**
+     * Noms de classe de fournisseur supplémentaires.
+     *
+     * @var array
+     */
+    protected $providers = array(
+        '{{namespace}}\Providers\AuthServiceProvider',
+        '{{namespace}}\Providers\EventServiceProvider',
+        '{{namespace}}\Providers\RouteServiceProvider'
+    );
+
+
+    /**
+     * Amorcez les événements d’application.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $path = realpath(__DIR__ .'/../');
+
+        // Configurez le package.
+        $this->package('{{package}}', '{{slug}}', $path);
+
+        // Amorcez le package.
+        $bootstrap = $path .DS .'Bootstrap.php';
+
+        $this->bootstrapFrom($bootstrap);
+
+        // Chargement du helper
+        $this->boot_helper($path);
+
+        // Chargement du block boxe
+        $this->boot_box($path);
+    }
+
+    /**
+     * Enregistrez le fournisseur de services de package {{name}}.
+     *
+     * Ce fournisseur de services est un endroit pratique pour enregistrer vos colis
+     * services dans le conteneur IoC. Si vous le souhaitez, vous pouvez faire des compléments
+     * méthodes ou prestataires de services pour garder le code plus ciblé et plus granulaire.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        parent::register();
+
+        //
+    }
+
+    /** 
+     * Chargement du helpers
+     * 
+     * @return void
+     */
+    private function boot_helper($path)
+    {
+        // 
+        $path = $path .DS .'Support' .DS. 'helpers.php';
+
+        $this->bootstrapFrom($path);
+    }
+
+    /**
+     * Chargement du block boxe
+     * 
+     * @return void
+     */
+    private function boot_box($path)
+    {
+        $path = $path .DS .'Blocks' .DS. 'Boxe.php';
+
+        $this->bootstrapFrom($path); 
+    }
+
+}

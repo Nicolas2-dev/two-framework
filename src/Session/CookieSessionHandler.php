@@ -1,35 +1,42 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Session;
+
+use SessionHandlerInterface;
 
 use Two\Cookie\CookieJar;
 
 use Symfony\Component\HttpFoundation\Request;
 
 
-class CookieSessionHandler implements \SessionHandlerInterface
+class CookieSessionHandler implements SessionHandlerInterface
 {
     /**
-     * The cookie jar instance.
+     * L'instance du pot à cookies.
      *
      * @var \Two\Cookie\CookieJar
      */
     protected $cookies;
 
     /**
-     * The request instance.
+     * L’instance de requête.
      *
      * @var \Symfony\Component\HttpFoundation\Request
      */
     protected $request;
 
     /** 
-     * 
+     * Créez une nouvelle instance de gestionnaire pilotée par les cookies.
      */
     protected $minutes;
 
     /**
-     * Create a new cookie driven handler instance.
+     * 
      *
      * @param  \Two\Cookie\CookieJar  $cookie
      * @param  int  $minutes
@@ -100,7 +107,7 @@ class CookieSessionHandler implements \SessionHandlerInterface
     }
 
     /**
-     * Set the request instance.
+     * Définissez l'instance de requête.
      *
      * @param  string  $sessionId
      * @return string
@@ -111,7 +118,7 @@ class CookieSessionHandler implements \SessionHandlerInterface
     }
 
     /**
-     * Set the request instance.
+     * Définissez l'instance de requête.
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @return void

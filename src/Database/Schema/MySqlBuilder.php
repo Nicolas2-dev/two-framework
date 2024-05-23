@@ -1,12 +1,17 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Schema;
 
 
 class MySqlBuilder extends Builder
 {
     /**
-     * Determine if the given table exists.
+     * Déterminez si la table donnée existe.
      *
      * @param  string  $table
      * @return bool
@@ -23,7 +28,7 @@ class MySqlBuilder extends Builder
     }
 
     /**
-     * Get the column listing for a given table.
+     * Obtenez la liste des colonnes pour une table donnée.
      *
      * @param  string  $table
      * @return array

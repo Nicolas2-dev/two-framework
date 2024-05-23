@@ -1,16 +1,22 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Broadcasting;
+
 
 use Two\Broadcasting\BroadcastManager;
 
-use Two\Support\ServiceProvider;
+use Two\Application\Providers\ServiceProvider;
 
 
 class BroadcastServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
+     * Indique si le chargement du fournisseur est différé.
      *
      * @var bool
      */
@@ -18,7 +24,7 @@ class BroadcastServiceProvider extends ServiceProvider
 
 
     /**
-     * Register the service provider.
+     * Enregistrez le fournisseur de services.
      *
      * @return void
      */
@@ -29,18 +35,18 @@ class BroadcastServiceProvider extends ServiceProvider
             return new BroadcastManager($app);
         });
 
-        $this->app->singleton('Two\Broadcasting\BroadcasterInterface', function ($app)
+        $this->app->singleton('Two\Broadcasting\Contracts\BroadcasterInterface', function ($app)
         {
             return $app->make('Two\Broadcasting\BroadcastManager')->connection();
         });
 
         $this->app->alias(
-            'Two\Broadcasting\BroadcastManager', 'Two\Broadcasting\FactoryInterface'
+            'Two\Broadcasting\BroadcastManager', 'Two\Broadcasting\Contracts\FactoryInterface'
         );
     }
 
     /**
-     * Get the services provided by the provider.
+     * Obtenez les services fournis par le fournisseur.
      *
      * @return array
      */
@@ -48,8 +54,8 @@ class BroadcastServiceProvider extends ServiceProvider
     {
         return array(
             'Two\Broadcasting\BroadcastManager',
-            'Two\Broadcasting\FactoryInterface',
-            'Two\Broadcasting\BroadcasterInterface',
+            'Two\Broadcasting\Contracts\FactoryInterface',
+            'Two\Broadcasting\Contracts\BroadcasterInterface',
         );
     }
 }

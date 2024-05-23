@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications\Messages;
 
 use Two\Notifications\Messages\SimpleMessage;
@@ -8,7 +13,7 @@ use Two\Notifications\Messages\SimpleMessage;
 class MailMessage extends SimpleMessage
 {
     /**
-     * The view for the message.
+     * La vue du message.
      *
      * @var array
      */
@@ -18,56 +23,56 @@ class MailMessage extends SimpleMessage
     );
 
     /**
-     * The view data for the message.
+     * Afficher les données du message.
      *
      * @var array
      */
     public $viewData = array();
 
     /**
-     * The "from" information for the message.
+     * Les informations « de » pour le message.
      *
      * @var array
      */
     public $from = array();
 
     /**
-     * The recipient information for the message.
+     * Informations sur le destinataire du message.
      *
      * @var array
      */
     public $to = array();
 
     /**
-     * The "cc" recipients of the message.
+     * Les destinataires « cc » du message.
      *
      * @var array
      */
     public $cc = array();
 
     /**
-     * The "reply to" information for the message.
+     * Les informations « Répondre à » pour le message.
      *
      * @var array
      */
     public $replyTo = array();
 
     /**
-     * The attachments for the message.
+     * Les pièces jointes du message.
      *
      * @var array
      */
     public $attachments = array();
 
     /**
-     * The raw attachments for the message.
+     * Les pièces jointes brutes du message.
      *
      * @var array
      */
     public $rawAttachments = array();
 
     /**
-     * Priority level of the message.
+     * Niveau de priorité du message.
      *
      * @var int
      */
@@ -75,7 +80,7 @@ class MailMessage extends SimpleMessage
 
 
     /**
-     * Set the view for the mail message.
+     * Définissez l'affichage du message électronique.
      *
      * @param  string  $view
      * @param  array  $data
@@ -91,7 +96,7 @@ class MailMessage extends SimpleMessage
     }
 
     /**
-     * Set the from address for the mail message.
+     * Définissez l'adresse d'expéditeur du message électronique.
      *
      * @param  string  $address
      * @param  string|null  $name
@@ -105,7 +110,7 @@ class MailMessage extends SimpleMessage
     }
 
     /**
-     * Set the recipient address for the mail message.
+     * Définissez l'adresse du destinataire du message électronique.
      *
      * @param  string|array  $address
      * @return $this
@@ -118,7 +123,7 @@ class MailMessage extends SimpleMessage
     }
 
     /**
-     * Set the recipients of the message.
+     * Définissez les destinataires du message.
      *
      * @param  string|array  $address
      * @return $this
@@ -131,7 +136,7 @@ class MailMessage extends SimpleMessage
     }
 
     /**
-     * Set the "reply to" address of the message.
+     * Définissez l'adresse « répondre à » du message.
      *
      * @param  array|string $address
      * @param null $name
@@ -145,7 +150,7 @@ class MailMessage extends SimpleMessage
     }
 
     /**
-     * Attach a file to the message.
+     * Joindre un fichier au message.
      *
      * @param  string  $file
      * @param  array  $options
@@ -159,7 +164,7 @@ class MailMessage extends SimpleMessage
     }
 
     /**
-     * Attach in-memory data as an attachment.
+     * Joignez des données en mémoire en pièce jointe.
      *
      * @param  string  $data
      * @param  string  $name
@@ -174,9 +179,9 @@ class MailMessage extends SimpleMessage
     }
 
     /**
-     * Set the priority of this message.
+     * Définissez la priorité de ce message.
      *
-     * The value is an integer where 1 is the highest priority and 5 is the lowest.
+     * La valeur est un nombre entier où 1 est la priorité la plus élevée et 5 la plus basse.
      *
      * @param  int  $level
      * @return $this
@@ -189,7 +194,7 @@ class MailMessage extends SimpleMessage
     }
 
     /**
-     * Get the data array for the mail message.
+     * Obtenez le tableau de données pour le message électronique.
      *
      * @return array
      */

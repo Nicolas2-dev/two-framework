@@ -1,39 +1,45 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\Query;
+
 
 class JoinClause
 {
     /**
-     * The type of join being performed.
+     * Type de jointure en cours d'exécution.
      *
      * @var string
      */
     public $type;
 
     /**
-     * The table the join clause is joining to.
+     * Table à laquelle la clause de jointure se joint.
      *
      * @var string
      */
     public $table;
 
     /**
-     * The "on" clauses for the join.
+     * Les clauses "on" pour la jointure.
      *
      * @var array
      */
     public $clauses = array();
 
     /**
-    * The "on" bindings for the join.
+    * Les liaisons « on » pour la jointure.
     *
     * @var array
     */
     public $bindings = array();
 
     /**
-     * Create a new join clause instance.
+     * Créez une nouvelle instance de clause de jointure.
      *
      * @param  string  $type
      * @param  string  $table
@@ -46,7 +52,7 @@ class JoinClause
     }
 
     /**
-     * Add an "on" clause to the join.
+     * Ajoutez une clause "on" à la jointure.
      *
      * @param  string  $first
      * @param  string  $operator
@@ -65,7 +71,7 @@ class JoinClause
     }
 
     /**
-     * Add an "or on" clause to the join.
+     * Ajoutez une clause "ou sur" à la jointure.
      *
      * @param  string  $first
      * @param  string  $operator
@@ -78,7 +84,7 @@ class JoinClause
     }
 
     /**
-     * Add an "on where" clause to the join.
+     * Ajoutez une clause « sur où » à la jointure.
      *
      * @param  string  $first
      * @param  string  $operator
@@ -92,7 +98,7 @@ class JoinClause
     }
 
     /**
-     * Add an "or on where" clause to the join.
+     * Ajoutez une clause "ou sur où" à la jointure.
      *
      * @param  string  $first
      * @param  string  $operator
@@ -105,7 +111,7 @@ class JoinClause
     }
 
     /**
-     * Add an "on where is null" clause to the join
+     * Ajouter une clause "onwhere is null" à la jointure
      *
      * @param  string  $column
      * @param  string  $boolean

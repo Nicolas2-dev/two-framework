@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Jobs;
 
 use Two\Container\Container;
@@ -10,14 +15,14 @@ class SyncJob extends Job
 {
 
     /**
-     * The class name of the job.
+     * Le nom de classe du travail.
      *
      * @var string
      */
     protected $job;
 
     /**
-     * The queue message data.
+     * Les données des messages de file d'attente.
      *
      * @var string
      */
@@ -25,7 +30,7 @@ class SyncJob extends Job
 
 
     /**
-     * Create a new job instance.
+     * Créez une nouvelle instance de travail.
      *
      * @param  \Two\Container\Container  $container
      * @param  string  $job
@@ -40,7 +45,7 @@ class SyncJob extends Job
     }
 
     /**
-     * Fire the job.
+     * Licenciez le travail.
      *
      * @return void
      */
@@ -52,7 +57,7 @@ class SyncJob extends Job
     }
 
     /**
-     * Get the raw body string for the job.
+     * Obtenez la corde de corps brute pour le travail.
      *
      * @return string
      */
@@ -62,7 +67,7 @@ class SyncJob extends Job
     }
 
     /**
-     * Release the job back into the queue.
+     * Remettez le travail dans la file d'attente.
      *
      * @param  int   $delay
      * @return void
@@ -73,7 +78,7 @@ class SyncJob extends Job
     }
 
     /**
-     * Get the number of times the job has been attempted.
+     * Obtenez le nombre de tentatives de travail.
      *
      * @return int
      */
@@ -83,7 +88,7 @@ class SyncJob extends Job
     }
 
     /**
-     * Get the job identifier.
+     * Obtenez l'identifiant du travail.
      *
      * @return string
      */

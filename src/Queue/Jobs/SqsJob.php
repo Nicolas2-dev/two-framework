@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Jobs;
 
 use Two\Container\Container;
@@ -12,21 +17,21 @@ class SqsJob extends Job
 {
 
     /**
-     * The Amazon SQS client instance.
+     * L'instance client Amazon SQS.
      *
      * @var \Aws\Sqs\SqsClient
      */
     protected $sqs;
 
     /**
-     * The Amazon SQS job instance.
+     * L'instance de travail Amazon SQS.
      *
      * @var array
      */
     protected $job;
 
     /**
-     * Create a new job instance.
+     * Créez une nouvelle instance de travail.
      *
      * @param  \Two\Container\Container  $container
      * @param  \Aws\Sqs\SqsClient  $sqs
@@ -46,7 +51,7 @@ class SqsJob extends Job
     }
 
     /**
-     * Fire the job.
+     * Licenciez le travail.
      *
      * @return void
      */
@@ -58,7 +63,7 @@ class SqsJob extends Job
     }
 
     /**
-     * Get the raw body string for the job.
+     * Obtenez la corde de corps brute pour le travail.
      *
      * @return string
      */
@@ -68,7 +73,7 @@ class SqsJob extends Job
     }
 
     /**
-     * Delete the job from the queue.
+     * Supprimez le travail de la file d'attente.
      *
      * @return void
      */
@@ -84,18 +89,18 @@ class SqsJob extends Job
     }
 
     /**
-     * Release the job back into the queue.
+     * Remettez le travail dans la file d'attente.
      *
      * @param  int   $delay
      * @return void
      */
     public function release($delay = 0)
     {
-        // SQS job releases are handled by the server configuration...
+        // Les versions de travaux SQS sont gérées par la configuration du serveur...
     }
 
     /**
-     * Get the number of times the job has been attempted.
+     * Obtenez le nombre de tentatives de travail.
      *
      * @return int
      */
@@ -105,7 +110,7 @@ class SqsJob extends Job
     }
 
     /**
-     * Get the job identifier.
+     * Obtenez l'identifiant du travail.
      *
      * @return string
      */
@@ -115,7 +120,7 @@ class SqsJob extends Job
     }
 
     /**
-     * Get the IoC container instance.
+     * Obtenez l'instance de conteneur IoC.
      *
      * @return \Two\Container\Container
      */
@@ -125,7 +130,7 @@ class SqsJob extends Job
     }
 
     /**
-     * Get the underlying SQS client instance.
+     * Obtenez l'instance client SQS sous-jacente.
      *
      * @return \Aws\Sqs\SqsClient
      */
@@ -135,7 +140,7 @@ class SqsJob extends Job
     }
 
     /**
-     * Get the underlying raw SQS job.
+     * Obtenez le travail SQS brut sous-jacent.
      *
      * @return array
      */

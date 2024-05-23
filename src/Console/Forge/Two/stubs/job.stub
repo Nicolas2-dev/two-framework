@@ -1,0 +1,33 @@
+<?php
+
+namespace {{namespace}};
+
+use Two\Bus\Traits\QueueableTrait;
+use Two\Bus\Traits\DispatchableTrait;
+
+
+class {{className}}
+{
+    use DispatchableTrait, QueueableTrait;
+
+
+    /**
+     * Créez une nouvelle instance de travail.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Exécutez le travail.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        //
+    }
+}

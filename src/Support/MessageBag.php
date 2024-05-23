@@ -1,28 +1,33 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Support;
 
-use Two\Contracts\ArrayableInterface;
+use Two\Application\Contracts\ArrayableInterface;
 
 
 class MessageBag Implements ArrayableInterface
 {
     /**
-     * All of the registered messages.
+     * Tous les messages enregistrés.
      *
      * @var array
      */
     protected $messages = array();
 
     /**
-     * Default format for message output.
+     * Format par défaut pour la sortie des messages.
      *
      * @var string
      */
     protected $format = ':message';
 
     /**
-     * Create a new Message Bag instance.
+     * Créez une nouvelle instance de Message Bag.
      *
      * @param  array  $messages
      * @return void
@@ -35,7 +40,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Add a message to the bag.
+     * Ajoutez un message au sac.
      *
      * @param  string  $key
      * @param  string  $message
@@ -51,7 +56,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Merge a new array of messages into the bag.
+     * Fusionnez un nouveau tableau de messages dans le sac.
      *
      * @param  array  $messages
      * @return \Two\Support\MessageBag
@@ -64,7 +69,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Determine if a key and message combination already exists.
+     * Déterminez si une combinaison de clé et de message existe déjà.
      *
      * @param  string  $key
      * @param  string  $message
@@ -78,7 +83,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Determine if messages exist for a given key.
+     * Déterminez si des messages existent pour une clé donnée.
      *
      * @param  string  $key
      * @return bool
@@ -89,7 +94,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Get the first message from the bag for a given key.
+     * Recevez le premier message du sac pour une clé donnée.
      *
      * @param  string  $key
      * @param  string  $format
@@ -103,7 +108,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Get all of the messages from the bag for a given key.
+     * Récupérez tous les messages du sac pour une clé donnée.
      *
      * @param  string  $key
      * @param  string  $format
@@ -121,7 +126,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Get all of the messages for every key in the bag.
+     * Recevez tous les messages pour chaque clé dans le sac.
      *
      * @param  string  $format
      * @return array
@@ -140,7 +145,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Format an array of messages.
+     * Formatez un tableau de messages.
      *
      * @param  array   $messages
      * @param  string  $format
@@ -157,7 +162,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Get the appropriate format based on the given format.
+     * Obtenez le format approprié en fonction du format donné.
      *
      * @param  string  $format
      * @return string
@@ -168,7 +173,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Get the raw messages in the container.
+     * Récupérez les messages bruts dans le conteneur.
      *
      * @return array
      */
@@ -178,7 +183,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Get the messages for the instance.
+     * Récupérez les messages de l'instance.
      *
      * @return \Two\Support\MessageBag
      */
@@ -188,7 +193,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Get the default message format.
+     * Obtenez le format de message par défaut.
      *
      * @return string
      */
@@ -198,7 +203,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Set the default message format.
+     * Définissez le format de message par défaut.
      *
      * @param  string  $format
      * @return \Two\Support\MessageBag
@@ -211,7 +216,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Determine if the message bag has any messages.
+     * Déterminez si le sac de messages contient des messages.
      *
      * @return bool
      */
@@ -221,7 +226,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Determine if the message bag has any messages.
+     * Déterminez si le sac de messages contient des messages.
      *
      * @return bool
      */
@@ -231,7 +236,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Get the number of messages in the container.
+     * Obtenez le nombre de messages dans le conteneur.
      *
      * @return int
      */
@@ -241,7 +246,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Clear the messages array.
+     * Effacez le tableau des messages.
      *
      * @return void
      */
@@ -251,7 +256,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Get the instance as an array.
+     * Obtenez l'instance sous forme de tableau.
      *
      * @return array
      */
@@ -261,7 +266,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Convert the object to its JSON representation.
+     * Convertissez l'objet en sa représentation JSON.
      *
      * @param  int  $options
      * @return string
@@ -272,7 +277,7 @@ class MessageBag Implements ArrayableInterface
     }
 
     /**
-     * Convert the message bag to its string representation.
+     * Convertissez le sac de messages en sa représentation sous forme de chaîne.
      *
      * @return string
      */

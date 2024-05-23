@@ -1,12 +1,16 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Queue\Queues;
 
-//use Two\Database\Query\Expression;
 use Two\Database\Connection;
 use Two\Queue\Jobs\DatabaseJob;
 use Two\Queue\Queue;
-use Two\Queue\QueueInterface;
+use Two\Queue\Contracts\QueueInterface;
 
 use Carbon\Carbon;
 
@@ -16,28 +20,28 @@ use DateTime;
 class DatabaseQueue extends Queue implements QueueInterface
 {
     /**
-     * The database connection instance.
+     * L'instance de connexion à la base de données.
      *
      * @var \Two\Database\Connection
      */
     protected $database;
 
     /**
-     * The database table that holds the jobs.
+     * Table de base de données qui contient les tâches.
      *
      * @var string
      */
     protected $table;
 
     /**
-     * The name of the default queue.
+     * Le nom de la file d'attente par défaut.
      *
      * @var string
      */
     protected $default;
 
     /**
-     * The expiration time of a job.
+     * Le délai d'expiration d'un travail.
      *
      * @var int|null
      */
@@ -49,7 +53,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     protected $expire;
 
     /**
-     * Create a new database queue instance.
+     * Créez une nouvelle instance de file d'attente de base de données.
      *
      * @param  \Two\Database\Connection  $database
      * @param  string  $table
@@ -66,7 +70,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a new job onto the queue.
+     * Placez un nouveau travail dans la file d'attente.
      *
      * @param  string  $job
      * @param  mixed   $data
@@ -79,7 +83,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a raw payload onto the queue.
+     * Insérez une charge utile brute dans la file d'attente.
      *
      * @param  string  $payload
      * @param  string  $queue
@@ -92,7 +96,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a new job onto the queue after a delay.
+     * Placez une nouvelle tâche dans la file d'attente après un certain délai.
      *
      * @param  \DateTime|int  $delay
      * @param  string  $job
@@ -106,7 +110,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push an array of jobs onto the queue.
+     * Placez un ensemble de tâches dans la file d'attente.
      *
      * @param  array   $jobs
      * @param  mixed   $data
@@ -131,7 +135,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Release a reserved job back onto the queue.
+     * Remettez une tâche réservée dans la file d'attente.
      *
      * @param  string  $queue
      * @param  \StdClass  $job
@@ -144,7 +148,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Push a raw payload to the database with a given delay.
+     * Envoyez une charge utile brute vers la base de données avec un délai donné.
      *
      * @param  \DateTime|int  $delay
      * @param  string|null  $queue
@@ -162,7 +166,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Pop the next job off of the queue.
+     * Retirez le travail suivant de la file d'attente.
      *
      * @param  string  $queue
      * @return \Two\Queue\Job|null
@@ -184,7 +188,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the next available job for the queue.
+     * Obtenez le prochain travail disponible pour la file d'attente.
      *
      * @param  string|null  $queue
      * @return \StdClass|null
@@ -208,8 +212,8 @@ class DatabaseQueue extends Queue implements QueueInterface
         }
     }
 
-   /**
-     * Modify the query to check for available jobs.
+    /**
+     * Modifiez la requête pour vérifier les tâches disponibles.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return void
@@ -223,7 +227,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Modify the query to check for jobs that are reserved but have expired.
+     * Modifiez la requête pour rechercher les tâches réservées mais expirées.
      *
      * @param  \Two\Database\Query\Builder  $query
      * @return void
@@ -239,7 +243,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Mark the given job ID as reserved.
+     * Marquez l'ID de travail donné comme réservé.
      *
      * @param  string  $id
      * @param  int     $attempts
@@ -254,7 +258,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Delete a reserved job from the queue.
+     * Supprimez une tâche réservée de la file d'attente.
      *
      * @param  string  $queue
      * @param  string  $id
@@ -273,7 +277,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the "available at" UNIX timestamp.
+     * Obtenez l'horodatage UNIX "disponible à".
      *
      * @param  \DateTime|int  $delay
      * @return int
@@ -286,7 +290,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Create an array to insert for the given job.
+     * Créez un tableau à insérer pour le travail donné.
      *
      * @param  string|null  $queue
      * @param  string  $payload
@@ -307,7 +311,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the queue or return the default.
+     * Obtenez la file d'attente ou renvoyez la valeur par défaut.
      *
      * @param  string|null  $queue
      * @return string
@@ -318,7 +322,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the underlying database instance.
+     * Obtenez l'instance de base de données sous-jacente.
      *
      * @return \Two\Database\Connection
      */
@@ -328,7 +332,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Get the expiration time in seconds.
+     * Obtenez le délai d'expiration en secondes.
      *
      * @return int|null
      */
@@ -338,7 +342,7 @@ class DatabaseQueue extends Queue implements QueueInterface
     }
 
     /**
-     * Set the expiration time in seconds.
+     * Définissez le délai d'expiration en secondes.
      *
      * @param  int|null  $seconds
      * @return void

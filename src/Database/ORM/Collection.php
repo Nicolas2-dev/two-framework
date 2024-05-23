@@ -1,14 +1,19 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Database\ORM;
 
-use Two\Support\Collection as BaseCollection;
+use Two\Collection\Collection as BaseCollection;
 
 
 class Collection extends BaseCollection
 {
     /**
-     * Find a model in the collection by key.
+     * Rechercher un modèle dans la collection par clé.
      *
      * @param  mixed  $key
      * @param  mixed  $default
@@ -28,7 +33,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Load a set of relationships onto the collection.
+     * Chargez un ensemble de relations dans la collection.
      *
      * @param  mixed  $relations
      * @return $this
@@ -47,7 +52,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Add an item to the collection.
+     * Ajoutez un élément à la collection.
      *
      * @param  mixed  $item
      * @return $this
@@ -60,7 +65,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Determine if a key exists in the collection.
+     * Déterminez si une clé existe dans la collection.
      *
      * @param  mixed  $key
      * @return bool
@@ -71,7 +76,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Fetch a nested element of the collection.
+     * Récupère un élément imbriqué de la collection.
      *
      * @param  string  $key
      * @return static
@@ -82,7 +87,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Get the max value of a given key.
+     * Obtenez la valeur maximale d'une clé donnée.
      *
      * @param  string  $key
      * @return mixed
@@ -96,7 +101,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Get the min value of a given key.
+     * Obtenez la valeur minimale d'une clé donnée.
      *
      * @param  string  $key
      * @return mixed
@@ -110,7 +115,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Get the array of primary keys
+     * Obtenez le tableau de clés primaires
      *
      * @return array
      */
@@ -120,7 +125,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Merge the collection with the given items.
+     * Fusionnez la collection avec les éléments donnés.
      *
      * @param  \ArrayAccess|array  $items
      * @return static
@@ -137,7 +142,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Diff the collection with the given items.
+     * Différez la collection avec les éléments donnés.
      *
      * @param  \ArrayAccess|array  $items
      * @return static
@@ -158,9 +163,9 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Intersect the collection with the given items.
+     * Intersection de la collection avec les éléments donnés.
      *
-      * @param  \ArrayAccess|array  $items
+     * @param  \ArrayAccess|array  $items
      * @return static
      */
     public function intersect($items)
@@ -179,7 +184,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Return only unique items from the collection.
+     * Renvoyez uniquement les éléments uniques de la collection.
      *
      * @return static
      */
@@ -191,7 +196,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Returns only the models from the collection with the specified keys.
+     * Renvoie uniquement les modèles de la collection avec les clés spécifiées.
      *
      * @param  mixed  $keys
      * @return static
@@ -204,7 +209,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Returns all models in the collection except the models with specified keys.
+     * Renvoie tous les modèles de la collection à l'exception des modèles avec les clés spécifiées.
      *
      * @param  mixed  $keys
      * @return static
@@ -217,7 +222,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Get a dictionary keyed by primary keys.
+     * Obtenez un dictionnaire saisi par clés primaires.
      *
      * @param  \ArrayAccess|array  $items
      * @return array
@@ -236,11 +241,11 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Get an array with the values of a given key.
+     * Obtenez un tableau avec les valeurs d'une clé donnée.
      *
      * @param  string  $value
      * @param  string|null  $key
-     * @return \Two\Support\Collection
+     * @return \Two\Collection\Collection
      */
     public function pluck($value, $key = null)
     {
@@ -248,9 +253,9 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Get a base Support collection instance from this collection.
+     * Obtenez une instance de collection Support de base à partir de cette collection.
      *
-     * @return \Two\Support\Collection
+     * @return \Two\Collection\Collection
      */
     public function toBase()
     {

@@ -1,69 +1,77 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\View;
 
-use Two\Container\Container;
-use Two\Events\Dispatcher;
-use Two\Contracts\ArrayableInterface as Arrayable;
-use Two\View\Engines\EngineResolver;
-use Two\View\View;
-use Two\View\ViewFinderInterface;
-
 use Closure;
+use Two\View\View;
+use Two\Events\Dispatcher;
+
+use BadMethodCallException;
+use Two\Container\Container;
 use InvalidArgumentException;
+use Two\View\Engines\EngineResolver;
+use Two\View\Contracts\ViewFinderInterface;
+use Two\Application\Contracts\ArrayableInterface as Arrayable;
 
 
 class Factory
 {
     /**
-     * The Engines Resolver instance.
+     * L’instance du résolveur de moteurs.
      *
      * @var \Two\View\Engines\EngineResolver
      */
     protected $engines;
 
     /**
-     * The view finder implementation.
+     * L’implémentation du viseur.
      *
      * @var \Two\View\Contracts\ViewFinderInterface
      */
     protected $finder;
 
     /**
-     * The event dispatcher instance.
+     * Instance du répartiteur d’événements.
      *
      * @var \Two\Events\Dispatcher
      */
     protected $events;
 
     /**
-     * The IoC container instance.
+     * L'instance de conteneur IoC.
      *
      * @var \Two\Container\Container
      */
     protected $container;
 
     /**
-     * @var array Array of shared data
+     * Tableau de données partagées
+     * 
+     * @var array 
      */
     protected $shared = array();
 
     /**
-     * Array of registered view name aliases.
+     * Tableau d’alias de nom de vue enregistrés.
      *
      * @var array
      */
     protected $aliases = array();
 
     /**
-     * All of the registered view names.
+     * Tous les noms de vues enregistrés.
      *
      * @var array
      */
     protected $names = array();
 
     /**
-     * The extension to Engine bindings.
+     * L'extension des liaisons Engine.
      *
      * @var array
      */
@@ -76,56 +84,56 @@ class Factory
     );
 
     /**
-     * The view composer events.
+     * Les événements du compositeur de vue.
      *
      * @var array
      */
     protected $composers = array();
 
     /**
-     * All of the finished, captured sections.
+     * Toutes les sections terminées et capturées.
      *
      * @var array
      */
     protected $sections = array();
 
     /**
-     * The stack of in-progress sections.
+     * La pile des sections en cours.
      *
      * @var array
      */
     protected $sectionStack = array();
 
     /**
-     * The number of active rendering operations.
+     * Le nombre d'opérations de rendu actives.
      *
      * @var int
      */
     protected $renderCount = 0;
 
     /**
-     *  Cached information about Modules.
+     * Informations mises en cache sur les modules.
      *
      * @var array
      */
     protected $modules = array();
 
     /**
-     *  Cached information about Plugins.
+     * Informations mises en cache sur les plugins.
      *
      * @var array
      */
     protected $plugins = array();
 
     /**
-     * Cached information about the default Theme.
+     * Informations mises en cache sur le thème par défaut.
      *
      * @var string|null
      */
     protected $defaultTheme;
 
     /**
-     * Cached information about the current Language.
+     * Informations mises en cache sur la langue actuelle.
      *
      * @var \Two\Language\Language
      */
@@ -133,7 +141,7 @@ class Factory
 
 
     /**
-     * Create new View Factory instance.
+     * Créez une nouvelle instance de View Factory.
      *
      * @param  \Two\View\Engines\EngineResolver  $engines
      * @param  \Two\View\Contracts\ViewFinderInterface  $finder
@@ -151,7 +159,7 @@ class Factory
     }
 
     /**
-     * Create a View instance
+     * Créer une instance de vue
      *
      * @param string $path
      * @param mixed $data
@@ -166,7 +174,7 @@ class Factory
         $path = $this->finder->find($view);
 
         if (is_null($path) || ! is_readable($path)) {
-            throw new \BadMethodCallException("File path [$path] does not exist");
+            throw new BadMethodCallException("File path [$path] does not exist");
         }
 
         $data = array_except(
@@ -181,7 +189,7 @@ class Factory
     }
 
     /**
-     * Create a View instance and return its rendered content.
+     * Créez une instance View et renvoyez son contenu rendu.
      *
      * @return string
      */
@@ -193,7 +201,7 @@ class Factory
     }
 
     /**
-     * Parse the given data into a raw array.
+     * Analysez les données données dans un tableau brut.
      *
      * @param  mixed  $data
      * @return array
@@ -204,7 +212,7 @@ class Factory
     }
 
     /**
-     * Get the evaluated view contents for a named view.
+     * Obtenez le contenu de la vue évaluée pour une vue nommée.
      *
      * @param  string  $view
      * @param  mixed   $data
@@ -216,7 +224,7 @@ class Factory
     }
 
     /**
-     * Register a named view.
+     * Enregistrez une vue nommée.
      *
      * @param  string  $view
      * @param  string  $name
@@ -228,7 +236,7 @@ class Factory
     }
 
     /**
-     * Add an alias for a view.
+     * Ajoutez un alias pour une vue.
      *
      * @param  string  $view
      * @param  string  $alias
@@ -240,7 +248,7 @@ class Factory
     }
 
     /**
-     * Check if the view file exists.
+     * Vérifiez si le fichier de vue existe.
      *
      * @param    string     $view
      * @return    bool
@@ -258,7 +266,7 @@ class Factory
     }
 
     /**
-     * Get the rendered contents of a partial from a loop.
+     * Obtenez le contenu rendu d'un partiel à partir d'une boucle.
      *
      * @param  string  $view
      * @param  array   $data
@@ -274,9 +282,9 @@ class Factory
         //
         $result = '';
 
-        // If is actually data in the array, we will loop through the data and append
-        // an instance of the partial view to the final result HTML passing in the
-        // iterated value of this data array, allowing the views to access them.
+        // S'il y a réellement des données dans le tableau, nous allons parcourir les données et ajouter
+        // une instance de la vue partielle du résultat final HTML passant dans le
+        // valeur itérée de ce tableau de données, permettant aux vues d'y accéder.
         if (count($data) > 0) {
             foreach ($data as $key => $value) {
                 $data = array('key' => $key, $iterator => $value);
@@ -285,9 +293,9 @@ class Factory
             }
         }
 
-        // If there is no data in the array, we will render the contents of the empty
-        // view. Alternatively, the "empty view" could be a raw string that begins
-        // with "raw|" for convenience and to let this know that it is a string.
+        // S'il n'y a pas de données dans le tableau, nous rendrons le contenu du tableau vide
+        // voir. Alternativement, la « vue vide » pourrait être une chaîne brute commençant par
+        // avec "brut|" pour plus de commodité et pour faire savoir qu'il s'agit d'une chaîne.
         else if (! starts_with($empty, 'raw|')) {
             $result = $this->make($empty)->render();
         } else {
@@ -298,10 +306,10 @@ class Factory
     }
 
     /**
-     * Get the appropriate View Engine for the given path.
+     * Obtenez le View Engine approprié pour le chemin donné.
      *
      * @param  string  $path
-     * @return \Two\View\Engines\EngineInterface
+     * @return \Two\View\Contracts\Engines\EngineInterface
      */
     public function getEngineFromPath($path)
     {
@@ -313,7 +321,7 @@ class Factory
     }
 
     /**
-     * Get the extension used by the view file.
+     * Obtenez l'extension utilisée par le fichier de vue.
      *
      * @param  string  $path
      * @return string
@@ -329,7 +337,7 @@ class Factory
     }
 
     /**
-     * Add a piece of shared data to the Factory.
+     * Ajoutez un élément de données partagées à la Factory.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -345,7 +353,7 @@ class Factory
     }
 
     /**
-     * Register a view creator event.
+     * Enregistrez un événement de création de vue.
      *
      * @param  array|string     $views
      * @param  \Closure|string  $callback
@@ -363,7 +371,7 @@ class Factory
     }
 
     /**
-     * Register multiple view composers via an array.
+     * Enregistrez plusieurs compositeurs de vues via un tableau.
      *
      * @param  array  $composers
      * @return array
@@ -380,7 +388,7 @@ class Factory
     }
 
     /**
-     * Register a view composer event.
+     * Enregistrez un événement View Composer.
      *
      * @param  array|string  $views
      * @param  \Closure|string  $callback
@@ -399,7 +407,7 @@ class Factory
     }
 
     /**
-     * Add an event for a given view.
+     * Ajoutez un événement pour une vue donnée.
      *
      * @param  string  $view
      * @param  \Closure|string  $callback
@@ -419,7 +427,7 @@ class Factory
     }
 
     /**
-     * Register a class based view composer.
+     * Enregistrez un compositeur de vues basé sur une classe.
      *
      * @param  string    $view
      * @param  string    $class
@@ -431,9 +439,9 @@ class Factory
     {
         $name = $prefix.$view;
 
-        // When registering a class based view "composer", we will simply resolve the
-        // classes from the application IoC container then call the compose method
-        // on the instance. This allows for convenient, testable view composers.
+        // Lors de l'enregistrement d'une vue basée sur la classe "composer", nous résoudrons simplement le
+        // les classes du conteneur IoC de l'application puis appellent la méthode compose
+        // sur l'instance. Cela permet des compositeurs de vues pratiques et testables.
         $callback = $this->buildClassEventCallback($class, $prefix);
 
         $this->addEventListener($name, $callback, $priority);
@@ -442,7 +450,7 @@ class Factory
     }
 
     /**
-     * Add a listener to the event dispatcher.
+     * Ajoutez un écouteur au répartiteur d'événements.
      *
      * @param  string   $name
      * @param  \Closure $callback
@@ -459,7 +467,7 @@ class Factory
     }
 
     /**
-     * Build a class based container callback Closure.
+     * Créez une fermeture de rappel de conteneur basée sur une classe.
      *
      * @param  string  $class
      * @param  string  $prefix
@@ -471,9 +479,9 @@ class Factory
 
         list($class, $method) = $this->parseClassEvent($class, $prefix);
 
-        // Once we have the class and method name, we can build the Closure to resolve
-        // the instance out of the IoC container and call the method on it with the
-        // given arguments that are passed to the Closure as the composer's data.
+        // Une fois que nous avons le nom de la classe et de la méthode, nous pouvons créer la fermeture pour résoudre
+        // l'instance hors du conteneur IoC et appelle la méthode dessus avec le
+        // étant donné les arguments qui sont transmis à la Closure en tant que données du compositeur.
         return function() use ($class, $method, $container)
         {
             $callable = array($container->make($class), $method);
@@ -483,7 +491,7 @@ class Factory
     }
 
     /**
-     * Parse a class based composer name.
+     * Analyser un nom de compositeur basé sur une classe.
      *
      * @param  string  $class
      * @param  string  $prefix
@@ -501,7 +509,7 @@ class Factory
     }
 
     /**
-     * Call the composer for a given view.
+     * Appelez le compositeur pour une vue donnée.
      *
      * @param  \Two\View\View  $view
      * @return void
@@ -512,7 +520,7 @@ class Factory
     }
 
     /**
-     * Call the creator for a given view.
+     * Appelez le créateur pour une vue donnée.
      *
      * @param  \Two\View\View  $view
      * @return void
@@ -523,7 +531,7 @@ class Factory
     }
 
     /**
-     * Start injecting content into a section.
+     * Commencez à injecter du contenu dans une section.
      *
      * @param  string  $section
      * @param  string  $content
@@ -539,7 +547,7 @@ class Factory
     }
 
     /**
-     * Inject inline content into a section.
+     * Injectez du contenu en ligne dans une section.
      *
      * @param  string  $section
      * @param  string  $content
@@ -551,7 +559,7 @@ class Factory
     }
 
     /**
-     * Stop injecting content into a section and return its contents.
+     * Arrêtez d'injecter du contenu dans une section et renvoyez son contenu.
      *
      * @return string
      */
@@ -561,7 +569,7 @@ class Factory
     }
 
     /**
-     * Stop injecting content into a section.
+     * Arrêtez d’injecter du contenu dans une section.
      *
      * @param  bool  $overwrite
      * @return string
@@ -580,7 +588,7 @@ class Factory
     }
 
     /**
-     * Stop injecting content into a section and append it.
+     * Arrêtez d’injecter du contenu dans une section et ajoutez-le.
      *
      * @return string
      */
@@ -598,7 +606,7 @@ class Factory
     }
 
     /**
-     * Append content to a given section.
+     * Ajouter du contenu à une section donnée.
      *
      * @param  string  $section
      * @param  string  $content
@@ -614,7 +622,7 @@ class Factory
     }
 
     /**
-     * Get the string contents of a section.
+     * Obtenez le contenu de la chaîne d'une section.
      *
      * @param  string  $section
      * @param  string  $default
@@ -632,7 +640,7 @@ class Factory
     }
 
     /**
-     * Flush all of the section contents.
+     * Videz tout le contenu de la section.
      *
      * @return void
      */
@@ -646,7 +654,7 @@ class Factory
     }
 
     /**
-     * Flush all of the section contents if done rendering.
+     * Videz tout le contenu de la section si le rendu est terminé.
      *
      * @return void
      */
@@ -658,7 +666,7 @@ class Factory
     }
 
     /**
-     * Increment the rendering counter.
+     * Incrémentez le compteur de rendu.
      *
      * @return void
      */
@@ -668,7 +676,7 @@ class Factory
     }
 
     /**
-     * Decrement the rendering counter.
+     * Décrémentez le compteur de rendu.
      *
      * @return void
      */
@@ -678,7 +686,7 @@ class Factory
     }
 
     /**
-     * Check if there are no active render operations.
+     * Vérifiez s'il n'y a pas d'opérations de rendu actives.
      *
      * @return bool
      */
@@ -688,7 +696,7 @@ class Factory
     }
 
     /**
-     * Add a location to the array of view locations.
+     * Ajoutez un emplacement au tableau d’emplacements de vue.
      *
      * @param  string  $location
      * @return void
@@ -699,7 +707,7 @@ class Factory
     }
 
     /**
-     * Add a new namespace to the loader.
+     * Ajoutez un nouvel espace de noms au chargeur.
      *
      * @param  string  $namespace
      * @param  string|array  $hints
@@ -711,7 +719,7 @@ class Factory
     }
 
     /**
-     * Register a valid view extension and its engine.
+     * Enregistrez une extension de vue valide et son moteur.
      *
      * @param  string   $extension
      * @param  string   $engine
@@ -732,7 +740,7 @@ class Factory
     }
 
     /**
-     * Setup the paths for Views overriding.
+     * Configurez les chemins pour le remplacement des vues.
      *
      * @param  string  $namespace
      * @return void
@@ -743,7 +751,7 @@ class Factory
     }
 
     /**
-     * Get the extension to engine bindings.
+     * Obtenez l'extension des liaisons du moteur.
      *
      * @return array
      */
@@ -753,7 +761,7 @@ class Factory
     }
 
     /**
-     * Get the engine resolver instance.
+     * Obtenez l’instance du résolveur de moteur.
      *
      * @return \Two\View\Engines\EngineResolver
      */
@@ -763,7 +771,7 @@ class Factory
     }
 
     /**
-     * Get the View Finder instance.
+     * Obtenez l’instance View Finder.
      *
      * @return \Two\View\Contracts\ViewFinderInterface
      */
@@ -773,7 +781,7 @@ class Factory
     }
 
     /**
-     * Set the View Finder instance.
+     * Définissez l’instance du View Finder.
      *
      * @return void
      */
@@ -783,7 +791,7 @@ class Factory
     }
 
     /**
-     * Get the event dispatcher instance.
+     * Obtenez l’instance du répartiteur d’événements.
      *
      * @return \Two\Events\Dispatcher
      */
@@ -793,7 +801,7 @@ class Factory
     }
 
     /**
-     * Set the event dispatcher instance.
+     * Définissez l’instance du répartiteur d’événements.
      *
      * @param  \Two\Events\Dispatcher
      * @return void
@@ -804,7 +812,7 @@ class Factory
     }
 
     /**
-     * Get the IoC container instance.
+     * Obtenez l'instance de conteneur IoC.
      *
      * @return \Two\Container\Container
      */
@@ -814,7 +822,7 @@ class Factory
     }
 
     /**
-     * Set the IoC container instance.
+     * Définissez l'instance de conteneur IoC.
      *
      * @param  \Two\Container\Container  $container
      * @return void
@@ -825,7 +833,7 @@ class Factory
     }
 
     /**
-     * Get an item from the shared data.
+     * Obtenez un élément à partir des données partagées.
      *
      * @param  string  $key
      * @param  mixed   $default
@@ -837,7 +845,7 @@ class Factory
     }
 
     /**
-     * Get all of the shared data for the Factory.
+     * Obtenez toutes les données partagées pour l'usine.
      *
      * @return array
      */
@@ -847,7 +855,7 @@ class Factory
     }
 
     /**
-     * Get the entire array of sections.
+     * Obtenez toute la gamme de sections.
      *
      * @return array
      */
@@ -857,7 +865,7 @@ class Factory
     }
 
     /**
-     * Get all of the registered named views in environment.
+     * Obtenez toutes les vues nommées enregistrées dans l’environnement.
      *
      * @return array
      */

@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\View;
 
 use Two\View\Factory;
@@ -19,7 +24,7 @@ class Section
     }
 
     /**
-     * Start injecting content into a section.
+     * Commencez à injecter du contenu dans une section.
      *
      * @param  string  $section
      * @param  string  $content
@@ -31,7 +36,7 @@ class Section
     }
 
     /**
-     * Stop injecting content into a section and output its contents.
+     * Arrêtez d'injecter du contenu dans une section et affichez son contenu.
      *
      * @return string
      */
@@ -41,7 +46,7 @@ class Section
     }
 
     /**
-     * Stop injecting content into a section and return its contents.
+     * Arrêtez d'injecter du contenu dans une section et renvoyez son contenu.
      *
      * @return string
      */
@@ -51,7 +56,7 @@ class Section
     }
 
     /**
-     * Stop injecting content into a section.
+     * Arrêtez d’injecter du contenu dans une section.
      *
      * @return string
      */
@@ -61,7 +66,7 @@ class Section
     }
 
     /**
-     * Stop injecting content into a section.
+     * Arrêtez d’injecter du contenu dans une section.
      *
      * @return string
      */
@@ -71,7 +76,7 @@ class Section
     }
 
     /**
-     * Stop injecting content into a section.
+     * Arrêtez d’injecter du contenu dans une section.
      *
      * @return string
      */
@@ -81,7 +86,7 @@ class Section
     }
 
     /**
-     * Stop injecting content into a section and append it.
+     * Arrêtez d’injecter du contenu dans une section et ajoutez-le.
      *
      * @return string
      */
@@ -91,7 +96,7 @@ class Section
     }
 
     /**
-     * Get the string contents of a section.
+     * Obtenez le contenu de la chaîne d'une section.
      *
      * @param  string  $section
      * @param  string  $default

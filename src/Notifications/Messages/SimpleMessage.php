@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Notifications\Messages;
 
 use Two\Notifications\Action;
@@ -8,49 +13,49 @@ use Two\Notifications\Action;
 class SimpleMessage
 {
     /**
-     * The "level" of the notification (info, success, error).
+     * Le "niveau" de la notification (info, réussite, erreur).
      *
      * @var string
      */
     public $level = 'info';
 
     /**
-     * The subject of the notification.
+     * Objet de la notification.
      *
      * @var string
      */
     public $subject;
 
     /**
-     * The notification's greeting.
+     * Le message d'accueil de la notification.
      *
      * @var string
      */
     public $greeting;
 
     /**
-     * The "intro" lines of the notification.
+     * Les lignes "intro" de la notification.
      *
      * @var array
      */
     public $introLines = array();
 
     /**
-     * The "outro" lines of the notification.
+     * Les lignes "outro" de la notification.
      *
      * @var array
      */
     public $outroLines = array();
 
     /**
-     * The text / label for the action.
+     * Le texte/libellé de l'action.
      *
      * @var string
      */
     public $actionText;
 
     /**
-     * The action URL.
+     * L'URL de l'action.
      *
      * @var string
      */
@@ -58,7 +63,7 @@ class SimpleMessage
 
 
     /**
-     * Indicate that the notification gives information about a successful operation.
+     * Indiquez que la notification donne des informations sur une opération réussie.
      *
      * @return $this
      */
@@ -70,7 +75,7 @@ class SimpleMessage
     }
 
     /**
-     * Indicate that the notification gives information about an error.
+     * Indiquez que la notification donne des informations sur une erreur.
      *
      * @return $this
      */
@@ -82,7 +87,7 @@ class SimpleMessage
     }
 
     /**
-     * Set the "level" of the notification (success, error, etc.).
+     * Définissez le "niveau" de la notification (succès, erreur, etc.).
      *
      * @param  string  $level
      * @return $this
@@ -95,7 +100,7 @@ class SimpleMessage
     }
 
     /**
-     * Set the subject of the notification.
+     * Définissez l'objet de la notification.
      *
      * @param  string  $subject
      * @return $this
@@ -108,7 +113,7 @@ class SimpleMessage
     }
 
     /**
-     * Set the greeting of the notification.
+     * Définissez le message d'accueil de la notification.
      *
      * @param  string  $greeting
      * @return $this
@@ -121,7 +126,7 @@ class SimpleMessage
     }
 
     /**
-     * Add a line of text to the notification.
+     * Ajoutez une ligne de texte à la notification.
      *
      * @param  \Two\Notifications\Action|string  $line
      * @return $this
@@ -132,7 +137,7 @@ class SimpleMessage
     }
 
     /**
-     * Add a line of text to the notification.
+     * Ajoutez une ligne de texte à la notification.
      *
      * @param  \Two\Notifications\Action|string|array  $line
      * @return $this
@@ -151,7 +156,7 @@ class SimpleMessage
     }
 
     /**
-     * Format the given line of text.
+     * Formatez la ligne de texte donnée.
      *
      * @param  string|array  $line
      * @return string
@@ -168,7 +173,7 @@ class SimpleMessage
     }
 
     /**
-     * Configure the "call to action" button.
+     * Configurez le bouton "appel à l'action".
      *
      * @param  string  $text
      * @param  string  $url
@@ -184,7 +189,7 @@ class SimpleMessage
     }
 
     /**
-     * Get an array representation of the message.
+     * Obtenez une représentation matricielle du message.
      *
      * @return array
      */

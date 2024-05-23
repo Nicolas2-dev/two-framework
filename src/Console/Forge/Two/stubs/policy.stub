@@ -1,0 +1,73 @@
+<?php
+
+namespace {{namespace}};
+
+use {{fullUserModel}};
+use {{fullModel}};
+
+use Two\Auth\Access\Traits\HandlesAuthorizationTrait;
+
+
+class {{className}}
+{
+    use HandlesAuthorizationTrait;
+
+
+    /**
+     * Déterminez si l'utilisateur peut afficher la liste {{pluralModel}}.
+     *
+     * @param  \{{fullUserModel}}  $authUser
+     * @return mixed
+     */
+    public function lists({{userModel}} $authUser)
+    {
+        //
+    }
+
+    /**
+     * Déterminez si l'utilisateur peut afficher le {{camelModel}}.
+     *
+     * @param  \{{fullUserModel}}  $authUser
+     * @param  \{{fullModel}}  ${{camelModel}}
+     * @return mixed
+     */
+    public function view({{userModel}} $authUser, {{model}} ${{camelModel}})
+    {
+        //
+    }
+
+    /**
+     * Déterminez si l'utilisateur peut créer {{pluralModel}}.
+     *
+     * @param  \{{fullUserModel}}  $authUser
+     * @return mixed
+     */
+    public function create({{userModel}} $authUser)
+    {
+        //
+    }
+
+    /**
+     * Déterminez si l'utilisateur peut mettre à jour le {{camelModel}}.
+     *
+     * @param  \{{fullUserModel}}  $authUser
+     * @param  \{{fullModel}}  ${{camelModel}}
+     * @return mixed
+     */
+    public function update({{userModel}} $authUser, {{model}} ${{camelModel}})
+    {
+        //
+    }
+
+    /**
+     * Déterminez si l'utilisateur peut supprimer le {{camelModel}}.
+     *
+     * @param  \{{fullUserModel}}  $authUser
+     * @param  \{{fullModel}}  ${{camelModel}}
+     * @return mixed
+     */
+    public function delete({{userModel}} $authUser, {{model}} ${{camelModel}})
+    {
+        //
+    }
+}

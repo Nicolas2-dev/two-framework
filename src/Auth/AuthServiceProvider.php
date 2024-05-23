@@ -1,9 +1,14 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Auth;
 
 use Two\Auth\Access\Gate;
-use Two\Support\ServiceProvider;
+use Two\Application\Providers\ServiceProvider;
 
 
 class AuthServiceProvider extends ServiceProvider
@@ -55,7 +60,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected function registerUserResolver()
     {
-        $this->app->bind('Two\Auth\UserInterface', function ($app)
+        $this->app->bind('Two\Auth\Contracts\UserInterface', function ($app)
         {
             $callback = $app['auth']->userResolver();
 
@@ -70,7 +75,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected function registerAccessGate()
     {
-        $this->app->singleton('Two\Auth\Access\GateInterface', function ($app)
+        $this->app->singleton('Two\Auth\Contracts\GateInterface', function ($app)
         {
             return new Gate($app, function() use ($app)
             {

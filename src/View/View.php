@@ -1,63 +1,77 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\View;
 
-use Two\Contracts\ArrayableInterface as Arrayable;
-use Two\Contracts\RenderableInterface as Renderable;
-use Two\Contracts\MessageProviderInterface as MessageProvider;
-use Two\Support\MessageBag;
-use Two\Support\Arr;
-use Two\Support\Str;
-use Two\View\Engines\EngineInterface;
-use Two\View\Factory;
-
-use ArrayAccess;
 use Closure;
 use Exception;
+use ArrayAccess;
+use BadMethodCallException;
+
+use Two\Support\Arr;
+use Two\Support\Str;
+use Two\View\Factory;
+use Two\Support\MessageBag;
+use Two\View\Contracts\Engines\EngineInterface;
+use Two\Application\Contracts\ArrayableInterface as Arrayable;
+use Two\Application\Contracts\RenderableInterface as Renderable;
+use Two\Application\Contracts\MessageProviderInterface as MessageProvider;
 
 
 /**
- * View class to load template and views files.
+ * Classe View pour charger les fichiers de modèles et de vues.
  */
 class View implements ArrayAccess, Renderable
 {
     /**
-     * The View Factory instance.
+     * L’instance de View Factory.
      *
      * @var \Two\View\Factory
      */
     protected $factory;
 
     /**
-     * The View Engine instance.
+     * L'instance du moteur de visualisation.
      *
-     * @var \Two\View\Engines\EngineInterface
+     * @var \Two\View\Contracts\Engines\EngineInterface
      */
     protected $engine;
 
     /**
-     * @var string The given View name.
+     * Le nom de la vue donné.
+     * 
+     * @var string 
      */
     protected $view = null;
 
     /**
-     * @var string The path to the View file on disk.
+     * Le chemin d'accès au fichier View sur le disque.
+     * 
+     * @var string 
      */
     protected $path = null;
 
     /**
-     * @var array Array of local data.
+     * Tableau de données locales.
+     * 
+     * @var array 
      */
     protected $data = array();
 
     /**
-     * @var bool  Either or not the View is an Layout.
+     * Que la vue soit ou non une mise en page.
+     * 
+     * @var bool  
      */
     protected $layout = false;
 
 
     /**
-     * Constructor
+     * Constructeur
      * @param mixed $path
      * @param array $data
      */
@@ -74,7 +88,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Get the string contents of the View.
+     * Obtenez le contenu de la chaîne de la vue.
      *
      * @param  \Closure  $callback
      * @return string
@@ -86,9 +100,9 @@ class View implements ArrayAccess, Renderable
 
             $response = isset($callback) ? $callback($this, $contents) : null;
 
-            // Once we have the contents of the view, we will flush the sections if we are
-            // done rendering all views so that there is nothing left hanging over when
-            // another view gets rendered in the future by the application developer.
+            // Une fois que nous avons le contenu de la vue, nous viderons les sections si nous sommes
+            // terminé le rendu de toutes les vues afin qu'il ne reste plus rien en suspens lorsque
+            // une autre vue sera rendue ultérieurement par le développeur de l'application.
             $this->factory->flushSectionsIfDoneRendering();
 
             return $response ?: $contents;
@@ -101,31 +115,31 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Render the View and return the result.
+     * Rendre la vue et renvoyer le résultat.
      *
      * @return string
      */
     public function renderContents()
     {
-        // We will keep track of the amount of views being rendered so we can flush
-        // the section after the complete rendering operation is done. This will
-        // clear out the sections for any separate views that may be rendered.
+        // Nous garderons une trace du nombre de vues rendues afin de pouvoir vider
+        // la section après que l'opération de rendu complète soit terminée. Cette volonté
+        // efface les sections pour toutes les vues distinctes qui peuvent être rendues.
         $this->factory->incrementRender();
 
         $this->factory->callComposer($this);
 
         $contents = $this->getContents();
 
-        // Once we've finished rendering the view, we'll decrement the render count
-        // so that each sections get flushed out next time a view is created and
-        // no old sections are staying around in the memory of an environment.
+        // Une fois que nous aurons fini de rendre la vue, nous diminuerons le nombre de rendus
+        // pour que chaque section soit vidée la prochaine fois qu'une vue est créée et
+        // aucune ancienne section ne reste dans la mémoire d'un environnement.
         $this->factory->decrementRender();
 
         return $contents;
     }
 
     /**
-     * Get the sections of the rendered view.
+     * Obtenez les sections de la vue rendue.
      *
      * @return array
      */
@@ -138,7 +152,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Get the evaluated contents of the view.
+     * Obtenez le contenu évalué de la vue.
      *
      * @return string
      */
@@ -148,7 +162,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Return all variables stored on local and shared data.
+     * Renvoie toutes les variables stockées sur les données locales et partagées.
      *
      * @return array
      */
@@ -164,7 +178,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Add a view instance to the view data.
+     * Ajoutez une instance de vue aux données de vue.
      *
      * <code>
      *     // Add a View instance to a View's data
@@ -181,7 +195,7 @@ class View implements ArrayAccess, Renderable
      */
     public function nest($key, $view, array $data = array())
     {
-        // The nested View instance inherits the parent Data if none is given.
+        // L'instance de View imbriquée hérite des données parent si aucune n'est donnée.
         if (empty($data)) {
             $data = $this->getData();
         }
@@ -190,9 +204,9 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Add a key / value pair to the view data.
+     * Ajoutez une paire clé/valeur aux données de la vue.
      *
-     * Bound data will be available to the view as variables.
+     * Les données liées seront disponibles dans la vue sous forme de variables.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -210,9 +224,9 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Add validation errors to the view.
+     * Ajoutez des erreurs de validation à la vue.
      *
-     * @param  \Two\Support\Contracts\MessageProviderInterface|array  $provider
+     * @param  \Two\Application\Contracts\MessageProviderInterface|array  $provider
      * @return \Two\View\View
      */
     public function withErrors($provider)
@@ -227,9 +241,9 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Add a key / value pair to the shared view data.
+     * Ajoutez une paire clé/valeur aux données de la vue partagée.
      *
-     * Shared view data is accessible to every view created by the application.
+     * Les données de vue partagées sont accessibles à chaque vue créée par l'application.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -243,7 +257,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Set/Get the Layout flag on this View instance.
+     * Définir/obtenir l’indicateur de mise en page sur cette instance de vue.
      *
      * @param  bool|null  $value
      * @return View|bool
@@ -260,7 +274,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Get the View Factory instance.
+     * Obtenez l’instance View Factory.
      *
      * @return \Two\View\Factory
      */
@@ -270,7 +284,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Get the name of the view.
+     * Obtenez le nom de la vue.
      *
      * @return string
      */
@@ -280,7 +294,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Get the array of view data.
+     * Obtenez le tableau des données de vue.
      *
      * @return array
      */
@@ -290,7 +304,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Get the path to the view file.
+     * Obtenez le chemin d'accès au fichier de vue.
      *
      * @return string
      */
@@ -300,7 +314,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Set the path to the view.
+     * Définissez le chemin d'accès à la vue.
      *
      * @param  string  $path
      * @return void
@@ -311,7 +325,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Implementation of the ArrayAccess offsetExists method.
+     * Implémentation de la méthode ArrayAccess offsetExists.
      */
     public function offsetExists($offset): bool
     {
@@ -319,7 +333,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Implementation of the ArrayAccess offsetGet method.
+     * Implémentation de la méthode ArrayAccess offsetGet.
      */
     public function offsetGet($offset): mixed
     {
@@ -327,15 +341,15 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-      * Implementation of the ArrayAccess offsetSet method.
-      */
+     * Implémentation de la méthode ArrayAccess offsetSet.
+     */
     public function offsetSet($offset, $value): void
     {
         $this->data[$offset] = $value;
     }
 
     /**
-     * Implementation of the ArrayAccess offsetUnset method.
+     * Implémentation de la méthode ArrayAccess offsetUnset.
      */
     public function offsetUnset($offset): void
     {
@@ -343,7 +357,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Magic Method for handling dynamic data access.
+     * Méthode magique pour gérer l’accès dynamique aux données.
      */
     public function __get($key)
     {
@@ -351,7 +365,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Magic Method for handling the dynamic setting of data.
+     * Méthode magique pour gérer le paramétrage dynamique des données.
      */
     public function __set($key, $value)
     {
@@ -359,7 +373,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Magic Method for checking dynamically set data.
+     * Méthode magique pour vérifier les données définies dynamiquement.
      */
     public function __isset($key)
     {
@@ -367,7 +381,7 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Magic Method for handling dynamic functions.
+     * Méthode magique pour gérer les fonctions dynamiques.
      *
      * @param  string  $method
      * @param  array   $params
@@ -377,19 +391,19 @@ class View implements ArrayAccess, Renderable
      */
     public function __call($method, $params)
     {
-        // Add the support for the dynamic withX Methods.
+        // Ajoutez la prise en charge des méthodes dynamiques withX.
         if (Str::startsWith($method, 'with')) {
             $name = Str::camel(substr($method, 4));
 
             return $this->with($name, array_shift($params));
         }
 
-        throw new \BadMethodCallException("Method [$method] does not exist on " .get_class($this));
+        throw new BadMethodCallException("Method [$method] does not exist on " .get_class($this));
     }
 
 
     /**
-     * Get the evaluated string content of the View.
+     * Obtenez le contenu de la chaîne évaluée de la vue.
      *
      * @return string
      */
@@ -397,7 +411,7 @@ class View implements ArrayAccess, Renderable
     {
         try {
             return $this->render();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return '';
         }
     }

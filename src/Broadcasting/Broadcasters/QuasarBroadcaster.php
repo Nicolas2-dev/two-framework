@@ -1,26 +1,27 @@
 <?php
-
+/**
+ * @author  Nicolas Devoy
+ * @email   nicolas@Two-framework.fr 
+ * @version 1.0.0
+ * @date    15 mai 2024
+ */
 namespace Two\Broadcasting\Broadcasters;
 
-use Two\Broadcasting\Broadcaster;
-use Two\Broadcasting\BroadcastException;
-
-use Two\Container\Container;
-
-use Two\Http\Request;
-
-//use Two\Support\Facades\Config;
 use Two\Support\Arr;
 use Two\Support\Str;
+use Two\Http\Request;
+use Two\Container\Container;
+use Two\Broadcasting\Broadcaster;
+use Two\Broadcasting\Exception\BroadcastException;
 
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Exception\RequestException;
 
 
 class QuasarBroadcaster extends Broadcaster
 {
     /**
-     * The application ID to access the Push Server.
+     * L'ID de l'application pour accéder au serveur Push.
      *
      * @var string
      */
@@ -28,14 +29,14 @@ class QuasarBroadcaster extends Broadcaster
 
 
     /**
-     * The secret key to access the Push Server.
+     * La clé secrète pour accéder au serveur Push.
      *
      * @var string
      */
     protected $secretKey;
 
     /**
-     * The options for connnecting to the Push Server.
+     * Les options de connexion au serveur Push.
      *
      * @var array
      */
@@ -43,7 +44,7 @@ class QuasarBroadcaster extends Broadcaster
 
 
     /**
-     * Create a new broadcaster instance.
+     * Créez une nouvelle instance de diffuseur.
      *
      * @param  \Two\Container\Container  $container
      * @return void
@@ -60,7 +61,7 @@ class QuasarBroadcaster extends Broadcaster
     }
 
     /**
-     * Return the valid authentication response.
+     * Renvoie la réponse d'authentification valide.
      *
      * @param  \Two\Http\Request  $request
      * @param  mixed  $result
@@ -86,7 +87,7 @@ class QuasarBroadcaster extends Broadcaster
     }
 
     /**
-     * Creates a socket signature.
+     * Crée une signature de socket.
      *
      * @param string $socketId
      * @param string $customData
@@ -112,7 +113,7 @@ class QuasarBroadcaster extends Broadcaster
 
         $signature = compact('auth');
 
-        // Add the custom data if it has been supplied.
+        // Ajoutez les données personnalisées si elles ont été fournies.
         if (! is_null($customData)) {
             $signature['payload'] = $customData;
         }
@@ -121,7 +122,7 @@ class QuasarBroadcaster extends Broadcaster
     }
 
     /**
-     * Creates a presence signature (an extension of socket signing).
+     * Crée une signature de présence (une extension de la signature de socket).
      *
      * @param string $socketId
      * @param string $userId
@@ -153,10 +154,10 @@ class QuasarBroadcaster extends Broadcaster
     }
 
     /**
-     * Trigger an event by providing event name and payload.
-     * Optionally provide a socket ID to exclude a client (most likely the sender).
+     * Déclenchez un événement en fournissant le nom de l'événement et la charge utile.
+     * Fournissez éventuellement un ID de socket pour exclure un client (très probablement l'expéditeur).
      *
-     * @param array|string $channels        A channel name or an array of channel names to publish the event on.
+     * @param array|string $channels        Un nom de canal ou un tableau de noms de canaux sur lequel publier l'événement.
      * @param string       $event
      * @param mixed        $data            Event data
      * @param string|null  $socketId        [optional]
@@ -184,7 +185,7 @@ class QuasarBroadcaster extends Broadcaster
     }
 
     /**
-     * Compute the full URL to server.
+     * Calculez l'URL complète du serveur.
      *
      * @param string  $path
      *
@@ -200,7 +201,7 @@ class QuasarBroadcaster extends Broadcaster
     }
 
     /**
-     * Compute the request hash from path and data.
+     * Calculez le hachage de la demande à partir du chemin et des données.
      *
      * @param string  $path
      * @param array  $data
@@ -215,14 +216,14 @@ class QuasarBroadcaster extends Broadcaster
     }
 
     /**
-     * Execute a HTTP request to the Quasar webserver.
+     * Exécutez une requête HTTP sur le serveur Web Quasar.
      *
      * @param string  $url
      * @param array  $payload
      * @param string  $hash
      *
      * @return bool
-     * @throws \Two\Broadcasting\BroadcastException
+     * @throws \Two\Broadcasting\Exception\BroadcastException
      */
     protected function executeHttpRequest($url, array $payload, $hash)
     {
